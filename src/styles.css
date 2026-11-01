@@ -15,3 +15,207 @@ body {
   color: var(--texto);
   font-family: Inter, Arial, sans-serif;
 }
+
+/* ---------- Layout de login y register ---------- */
+.auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 64px;
+  padding: 64px;
+}
+
+.auth-ilustracion {
+  position: relative;
+  width: 640px;
+  height: 620px;
+  border-radius: 20px;
+  border: 1px solid var(--borde);
+  background-color: var(--superficie);
+  background-image:
+    linear-gradient(var(--borde) 1px, transparent 1px),
+    linear-gradient(90deg, var(--borde) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.auth-mensaje {
+  position: absolute;
+  left: 32px;
+  bottom: 32px;
+  max-width: 420px;
+  padding: 20px 24px;
+  background: var(--elevado);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.auth-mensaje h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.auth-mensaje p {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+.auth-card {
+  width: 480px;
+  box-sizing: border-box;
+  padding: 40px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.auth-card h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.auth-subtitulo {
+  margin: 0 0 24px;
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+/* Formularios */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo label {
+  color: var(--texto-suave);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.campo input {
+  padding: 14px 16px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  color: var(--texto);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.campo input::placeholder {
+  color: var(--texto-suave);
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--primario);
+}
+
+/* Mensajes de error  */
+.error {
+  color: #F87171;
+  font-size: 12px;
+}
+
+.error-general {
+  margin: 0;
+  padding: 12px 16px;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid #F87171;
+  border-radius: 12px;
+  color: #F87171;
+  font-size: 13px;
+}
+
+.opciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.opciones label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.opciones input {
+  accent-color: var(--primario);
+}
+
+.opciones a,
+.auth-alterno a {
+  color: var(--acento);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Botones */
+.btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--texto);
+  cursor: pointer;
+}
+
+.btn-primario {
+  background: var(--primario);
+  color: white;
+}
+
+.btn-secundario {
+  background: var(--elevado);
+  border-color: var(--borde);
+}
+
+.btn-bloque {
+  width: 100%;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+/* Separador y pie del formulario */
+.separador {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--texto-suave);
+  font-size: 12px;
+}
+
+.separador::before,
+.separador::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--borde);
+}
+
+.auth-alterno {
+  margin: 20px 0 0;
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+
+@media (max-width: 1000px) {
+  .auth { padding: 24px 16px; }
+  .auth-ilustracion { display: none; }
+  .auth-card { width: 100%; max-width: 480px; }
+}

@@ -1,0 +1,56 @@
+<section class="auth">
+  <div class="auth-ilustracion">
+    <div class="auth-mensaje">
+      <h3>El mundo en vuelo, a un clic.</h3>
+      <p>Rastrea vuelos y llega al aeropuerto sin perderte.</p>
+    </div>
+  </div>
+
+  <div class="auth-card">
+    <h1>Crea tu cuenta</h1>
+    <p class="auth-subtitulo">Es gratis y toma menos de un minuto.</p>
+
+    <form class="formulario">
+      <p class="error-general" hidden>No se pudo crear la cuenta. Intenta de nuevo.</p>
+
+      <div class="campo">
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" name="nombre" type="text" placeholder="Juan Pérez" autocomplete="name" required>
+        <small class="error" hidden>Ingresa tu nombre.</small>
+      </div>
+
+      <div class="campo">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
+        <small class="error" hidden>Ingresa un correo válido o usa otro: este ya está registrado.</small>
+      </div>
+
+      <div class="campo">
+        <label for="contrasena">Contraseña</label>
+        <input id="contrasena" name="contrasena" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" required>
+        <small class="error" hidden>Debe tener mínimo 8 caracteres, una mayúscula y un número.</small>
+      </div>
+
+      <div class="campo">
+        <label for="confirmar">Confirmar contraseña</label>
+        <input id="confirmar" name="confirmar" type="password" placeholder="Repite tu contraseña" autocomplete="new-password" required>
+        <small class="error" hidden>Las contraseñas no coinciden.</small>
+      </div>
+
+      <div class="opciones">
+        <label>
+          <input type="checkbox" name="terminos" required>
+          Acepto los términos y la política de privacidad
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primario btn-bloque">Crear cuenta</button>
+    </form>
+
+    <div class="separador">o</div>
+
+    <button type="button" class="btn btn-secundario btn-bloque">Registrarse con Google</button>
+
+    <p class="auth-alterno">¿Ya tienes cuenta? <a routerLink="/login">Ingresa</a></p>
+  </div>
+</section>
