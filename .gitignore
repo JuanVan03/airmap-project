@@ -1,0 +1,10 @@
+# IDEs (configuración local de cada integrante)
+.idea/
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Credenciales
+.env

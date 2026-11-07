@@ -1,0 +1,83 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 72px;
+  padding: 0 64px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borde);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--texto);
+}
+
+.logo-icono {
+  background: var(--primario);
+  color: white;
+  padding: 6px 9px;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.logo-texto {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.enlaces {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.enlaces a {
+  color: var(--texto-suave);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.enlaces a:hover,
+.enlaces a.activo {
+  color: var(--acento);
+}
+
+.acciones {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--texto);
+}
+
+.btn-secundario {
+  background: var(--elevado);
+  border: 1px solid var(--borde);
+}
+
+.btn-primario {
+  background: var(--primario);
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .navbar { padding: 0 20px; }
+  .enlaces { display: none; }
+}

@@ -1,0 +1,82 @@
+.footer {
+  background: var(--superficie);
+  padding: 48px 64px 32px;
+}
+
+.footer-superior {
+  display: flex;
+  justify-content: space-between;
+  gap: 64px;
+}
+
+.marca {
+  max-width: 320px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.logo-icono {
+  background: var(--primario);
+  color: white;
+  padding: 6px 9px;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.logo-texto {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.marca p {
+  color: var(--texto-suave);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.columna h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.columna a,
+.columna span {
+  color: var(--texto-suave);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.columna a:hover {
+  color: var(--acento);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--borde);
+  margin: 40px 0 24px;
+}
+
+.footer-inferior {
+  display: flex;
+  justify-content: space-between;
+  color: var(--texto-suave);
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .footer { padding: 32px 20px; }
+  .footer-superior { flex-direction: column; gap: 32px; }
+}
