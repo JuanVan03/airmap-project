@@ -16,7 +16,7 @@ body {
   font-family: Inter, Arial, sans-serif;
 }
 
-/* ---------- Layout de login y register ---------- */
+/* Layout de login y register */
 .auth {
   display: flex;
   justify-content: center;

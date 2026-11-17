@@ -1,1 +1,71 @@
-<p>iniciocomponent works!</p>
+<section class="hero">
+  <div class="hero-texto">
+    <span class="etiqueta">● Vuelos activos en tiempo real</span>
+
+    <h1>Todos los vuelos del mundo, en un solo mapa.</h1>
+    <p class="subtitulo">
+      Sigue cualquier vuelo activo, conoce su destino y llega al aeropuerto por la ruta terrestre más corta desde donde estás.
+    </p>
+
+    <form class="buscador" (ngSubmit)="buscar()">
+      <input name="texto" [(ngModel)]="texto" placeholder="Número de vuelo, ej. AV010">
+      <button type="submit" class="btn btn-primario">Buscar</button>
+    </form>
+
+    @if (mensaje()) {
+      <p class="mensaje">{{ mensaje() }}</p>
+    }
+
+    <div class="botones">
+      <a class="btn btn-primario" routerLink="/vuelos">Ver mapa en vivo</a>
+      <a class="btn btn-secundario" routerLink="/asistente">Preguntar al asistente IA</a>
+    </div>
+  </div>
+
+  <div class="hero-mapa">
+    <app-mapacomponent
+      [vuelos]="vuelos()"
+      [vueloSeleccionado]="vueloSeleccionado()?.id ?? null"
+      (vueloClick)="seleccionar($event)"
+    ></app-mapacomponent>
+
+    @if (vueloSeleccionado(); as vuelo) {
+      <div class="tarjeta-flotante">
+        <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="funciones">
+  <h2>Todo lo que necesitas para seguir un vuelo</h2>
+  <p class="funciones-subtitulo">De la posición del avión a la puerta del aeropuerto.</p>
+
+  <div class="tarjetas">
+    <article class="funcion">
+      <span class="icono">🗺️</span>
+      <h3>Mapa en vivo</h3>
+      <p>Visualiza en un mapamundi todos los vuelos activos y filtra por aerolínea, país o altitud.</p>
+    </article>
+
+    <article class="funcion">
+      <span class="icono">📍</span>
+      <h3>Ruta al aeropuerto</h3>
+      <p>Usa tu ubicación para calcular la ruta terrestre más corta al aeropuerto de destino.</p>
+    </article>
+
+    <article class="funcion">
+      <span class="icono">✨</span>
+      <h3>Asistente de IA</h3>
+      <p>Pregunta en lenguaje natural y recibe opciones de viaje explicadas paso a paso.</p>
+    </article>
+  </div>
+</section>
+
+<section class="registro">
+  <div class="registro-texto">
+    <h2>Crea tu cuenta y guarda tus vuelos favoritos</h2>
+    <p>Recibe el estado de tus vuelos y rutas al aeropuerto en un solo lugar.</p>
+  </div>
+  <a class="btn btn-secundario" routerLink="/register">Registrarse gratis</a>
+</section>

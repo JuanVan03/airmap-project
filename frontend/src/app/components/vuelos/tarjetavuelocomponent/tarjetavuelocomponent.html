@@ -1,0 +1,30 @@
+<article class="tarjeta">
+  <div class="fila">
+    <span class="aerolinea">{{ vuelo.aerolinea || 'Sin aerolínea' }} · {{ vuelo.numeroVuelo }}</span>
+    <span [class]="'estado ' + vuelo.estado">{{ vuelo.estado.replace('_', ' ') }}</span>
+  </div>
+
+  <div class="ruta">
+    <span class="codigo">{{ vuelo.origen?.codigo || '---' }}</span>
+    <span class="avion">✈</span>
+    <span class="codigo">{{ vuelo.destino?.codigo || '---' }}</span>
+  </div>
+
+  <p class="detalle">
+    {{ vuelo.origen?.ciudad || 'Origen desconocido' }} → {{ vuelo.destino?.ciudad || 'Destino desconocido' }}
+  </p>
+  <p class="detalle">Llega: {{ (vuelo.horaLlegada | date: 'HH:mm') || 'No disponible' }}</p>
+
+  <div class="datos">
+    <div class="dato">
+      <span class="etiqueta">Altitud</span>
+      <span class="valor">{{ vuelo.altitud }} m</span>
+    </div>
+    <div class="dato">
+      <span class="etiqueta">Velocidad</span>
+      <span class="valor">{{ vuelo.velocidad }} km/h</span>
+    </div>
+  </div>
+
+  <a class="enlace" [hidden]="!verDetalles" [routerLink]="['/informacion', vuelo.id]">Ver detalles</a>
+</article>
