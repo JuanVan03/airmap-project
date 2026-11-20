@@ -1,0 +1,112 @@
+.vuelos {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  height: 720px;
+}
+
+/* ---------- Panel izquierdo ---------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  padding: 24px;
+  overflow-y: auto;
+  background: var(--superficie);
+  border-right: 1px solid var(--borde);
+}
+
+.buscador {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.buscador label {
+  color: var(--texto-suave);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.caja {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+}
+
+.caja input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 10px;
+  background: transparent;
+  border: none;
+  color: var(--texto);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.caja input:focus {
+  outline: none;
+}
+
+.contador {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+
+.mensaje {
+  margin: 0;
+  color: #FBBF24;
+  font-size: 14px;
+}
+
+.ayuda {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.resultado {
+  border: 2px solid transparent;
+  border-radius: 22px;
+  cursor: pointer;
+}
+
+.resultado.activo {
+  border-color: var(--primario);
+}
+
+/* ---------- Mapa ---------- */
+.zona-mapa {
+  position: relative;
+  height: 100%;
+}
+
+.tarjeta-flotante {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  width: 340px;
+}
+
+@media (max-width: 900px) {
+  .vuelos {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .panel {
+    border-right: none;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .zona-mapa {
+    height: 520px;
+  }
+}

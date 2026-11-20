@@ -56,7 +56,8 @@ export class Mapacomponent implements AfterViewInit, OnChanges, OnDestroy {
       const seleccionado = vuelo.id === this.vueloSeleccionado;
 
       const punto = L.circleMarker([vuelo.latitud, vuelo.longitud], {
-        radius: seleccionado ? 9 : 4,
+        radius: seleccionado ? 8 : 2,
+        weight: seleccionado ? 2 : 1,
         color: seleccionado ? '#F1F5F9' : '#22D3EE',
         fillColor: seleccionado ? '#2F80ED' : '#22D3EE',
         fillOpacity: 0.9,
@@ -64,6 +65,11 @@ export class Mapacomponent implements AfterViewInit, OnChanges, OnDestroy {
 
       punto.on('click', () => this.vueloClick.emit(vuelo.id));
       this.capa.addLayer(punto);
+
+      // El mapa se centra en el vuelo seleccionado
+      if (seleccionado) {
+        this.mapa.setView([vuelo.latitud, vuelo.longitud], Math.max(this.mapa.getZoom(), 4));
+      }
     }
   }
 }

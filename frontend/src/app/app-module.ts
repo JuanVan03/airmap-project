@@ -12,6 +12,8 @@ import { Logincomponent } from './components/logincomponent/logincomponent';
 import { Registercomponent } from './components/registercomponent/registercomponent';
 import { Tarjetavuelocomponent } from './components/vuelos/tarjetavuelocomponent/tarjetavuelocomponent';
 import { Mapacomponent } from './components/vuelos/mapacomponent/mapacomponent';
+import { Vuelocomponent } from './components/vuelos/vuelocomponent/vuelocomponent';
+import { Informacioncomponent } from './components/vuelos/informacioncomponent/informacioncomponent';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { Mapacomponent } from './components/vuelos/mapacomponent/mapacomponent';
     Registercomponent,
     Tarjetavuelocomponent,
     Mapacomponent,
+    Vuelocomponent,
+    Informacioncomponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],

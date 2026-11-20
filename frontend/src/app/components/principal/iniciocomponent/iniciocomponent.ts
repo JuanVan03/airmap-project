@@ -48,8 +48,8 @@ export class Iniciocomponent implements OnInit {
     this.vueloService.buscar(this.texto.trim()).subscribe({
       next: (lista) => {
         if (lista.length > 0) {
-          this.vueloSeleccionado.set(lista[0]);
-          this.mensaje.set('');
+          // Se pide el detalle del primer resultado para que traiga origen y destino
+          this.seleccionar(lista[0].id);
         } else {
           this.mensaje.set('No se encontró ningún vuelo con ese número.');
         }

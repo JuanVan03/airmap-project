@@ -1,0 +1,31 @@
+.notfound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 96px 24px;
+  text-align: center;
+}
+
+.codigo {
+  color: var(--acento);
+  font-size: 96px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+p {
+  margin: 0;
+  max-width: 420px;
+  color: var(--texto-suave);
+}
+
+a {
+  margin-top: 8px;
+  text-decoration: none;
+}

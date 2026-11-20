@@ -1,0 +1,41 @@
+<section class="vuelos">
+  <aside class="panel">
+    <form class="buscador" (ngSubmit)="buscar()">
+      <label for="texto">Buscar vuelo</label>
+      <div class="caja">
+        <input id="texto" name="texto" [(ngModel)]="texto" placeholder="Indicativo, ej. AVA010">
+        <button type="submit" class="btn btn-primario">Buscar</button>
+      </div>
+    </form>
+
+    <p class="contador">{{ vuelos().length }} vuelos visibles</p>
+
+    @if (mensaje()) {
+      <p class="mensaje">{{ mensaje() }}</p>
+    }
+
+    @if (resultados().length === 0 && !mensaje()) {
+      <p class="ayuda">Busca un vuelo por su indicativo o haz clic en un avión del mapa.</p>
+    }
+
+    @for (vuelo of resultados(); track vuelo.id) {
+      <div class="resultado" [class.activo]="vuelo.id === vueloSeleccionado()?.id" (click)="seleccionar(vuelo.id)">
+        <app-tarjetavuelocomponent [vuelo]="vuelo" [verDetalles]="false"></app-tarjetavuelocomponent>
+      </div>
+    }
+  </aside>
+
+  <div class="zona-mapa">
+    <app-mapacomponent
+      [vuelos]="puntos()"
+      [vueloSeleccionado]="vueloSeleccionado()?.id ?? null"
+      (vueloClick)="seleccionar($event)"
+    ></app-mapacomponent>
+
+    @if (vueloSeleccionado(); as vuelo) {
+      <div class="tarjeta-flotante">
+        <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+      </div>
+    }
+  </div>
+</section>
