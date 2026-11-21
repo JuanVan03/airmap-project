@@ -36,6 +36,15 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  width: 100%;
+}
+
+.titulo a {
+  text-decoration: none;
+}
+
+.boton-ruta {
+  margin-left: auto;
 }
 
 h1 {

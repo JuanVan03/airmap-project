@@ -21,13 +21,21 @@ public class ExternalHTTPRequestHandler {
 	private static final Gson GSON = new GsonBuilder().create();
 
 	public static <T> T doGetAndConvertToDto(String url, Class<T> clazz) {
-		return convert(getBody(url), clazz, url);
-	}
-
-	private static String getBody(String url) {
 		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url)).header("Accept", "application/json")
 				.timeout(Duration.ofSeconds(30)).build();
+		return convert(getBody(request), clazz, url);
+	}
 
+	// POST con cuerpo JSON y la clave de la API en el encabezado Authorization
+	public static <T> T doPostAndConvertToDto(String url, String apiKey, Object body, Class<T> clazz) {
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
+				.header("Content-Type", "application/json").header("Accept", "application/json, application/geo+json")
+				.header("Authorization", apiKey).timeout(Duration.ofSeconds(30))
+				.POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(body))).build();
+		return convert(getBody(request), clazz, url);
+	}
+
+	private static String getBody(HttpRequest request) {
 		HttpResponse<String> response = send(request);
 		if (response.statusCode() >= 400) {
 			throw new ExternalApiException("La API respondio " + response.statusCode() + ": " + response.body(),

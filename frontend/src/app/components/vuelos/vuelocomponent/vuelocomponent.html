@@ -36,6 +36,8 @@
       <div class="tarjeta-flotante">
         <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
       </div>
+
+      <a class="btn btn-primario boton-ruta" routerLink="/viajes-terrestres" [queryParams]="{ vuelo: vuelo.id }">Cómo llegar al aeropuerto</a>
     }
   </div>
 </section>

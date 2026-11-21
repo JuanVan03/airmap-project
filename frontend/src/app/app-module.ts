@@ -14,6 +14,11 @@ import { Tarjetavuelocomponent } from './components/vuelos/tarjetavuelocomponent
 import { Mapacomponent } from './components/vuelos/mapacomponent/mapacomponent';
 import { Vuelocomponent } from './components/vuelos/vuelocomponent/vuelocomponent';
 import { Informacioncomponent } from './components/vuelos/informacioncomponent/informacioncomponent';
+import { Viajesterrestrescomponent } from './components/viajes/viajesterrestrescomponent/viajesterrestrescomponent';
+import { Maparutacomponent } from './components/viajes/maparutacomponent/maparutacomponent';
+import { Perfilcomponent } from './components/perfil/perfilcomponent/perfilcomponent';
+import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
+import { Asistentecomponent } from './components/asistente/asistentecomponent/asistentecomponent';
 
 @NgModule({
   declarations: [
@@ -28,6 +33,11 @@ import { Informacioncomponent } from './components/vuelos/informacioncomponent/i
     Mapacomponent,
     Vuelocomponent,
     Informacioncomponent,
+    Viajesterrestrescomponent,
+    Maparutacomponent,
+    Asistentecomponent,
+    Perfilcomponent,
+    Recuperarcomponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],

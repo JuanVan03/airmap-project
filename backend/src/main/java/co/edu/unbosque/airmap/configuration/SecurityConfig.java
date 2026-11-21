@@ -15,8 +15,8 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()).cors(Customizer.withDefaults())
 				.authorizeHttpRequests(auth -> auth
-						// El mapa de vuelos es publico
-						.requestMatchers("/api/vuelos", "/api/vuelos/**").permitAll()
+						// El mapa de vuelos, los aeropuertos y las rutas son publicos
+						.requestMatchers("/api/vuelos", "/api/vuelos/**", "/api/aeropuertos", "/api/rutas").permitAll()
 						.anyRequest().authenticated());
 		return http.build();
 	}

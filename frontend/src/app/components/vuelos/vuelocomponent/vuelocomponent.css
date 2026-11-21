@@ -95,6 +95,14 @@
   width: 340px;
 }
 
+.boton-ruta {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  text-decoration: none;
+}
+
 @media (max-width: 900px) {
   .vuelos {
     grid-template-columns: 1fr;
