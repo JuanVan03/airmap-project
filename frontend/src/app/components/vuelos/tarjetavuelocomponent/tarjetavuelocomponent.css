@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.derecha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aerolinea {
+  color: var(--texto-suave);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.estado {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.EN_VUELO {
+  background: rgba(52, 211, 153, 0.16);
+  color: #34D399;
+}
+
+.ATERRIZANDO {
+  background: rgba(251, 191, 36, 0.16);
+  color: #FBBF24;
+}
+
+.PROGRAMADO {
+  background: rgba(47, 128, 237, 0.16);
+  color: var(--primario);
+}
+
+.ATERRIZADO {
+  background: var(--elevado);
+  color: var(--texto-suave);
+}
+
+.CANCELADO {
+  background: rgba(248, 113, 113, 0.16);
+  color: #F87171;
+}
+
+.ruta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.codigo {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.avion {
+  color: var(--acento);
+  font-size: 22px;
+}
+
+.detalle {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+
+.datos {
+  display: flex;
+  gap: 24px;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.etiqueta {
+  color: var(--texto-suave);
+  font-size: 11px;
+}
+
+.valor {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.enlace {
+  align-self: flex-start;
+  color: var(--acento);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}

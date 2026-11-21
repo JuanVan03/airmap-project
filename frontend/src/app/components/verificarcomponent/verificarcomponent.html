@@ -1,0 +1,24 @@
+<section class="verificar">
+  <div class="auth-card">
+    @switch (estado()) {
+      @case ('cargando') {
+        <span class="icono">⏳</span>
+        <h1>Confirmando tu correo...</h1>
+        <p class="auth-subtitulo">Un momento, estamos validando tu enlace.</p>
+      }
+      @case ('ok') {
+        <span class="icono exito">✓</span>
+        <h1>¡Correo confirmado!</h1>
+        <p class="auth-subtitulo">{{ mensaje() }}</p>
+        <a class="btn btn-primario btn-bloque" routerLink="/login">Ingresar a AirMap</a>
+      }
+      @case ('error') {
+        <span class="icono fallo">!</span>
+        <h1>No pudimos confirmar tu correo</h1>
+        <p class="auth-subtitulo">{{ mensaje() }}</p>
+        <p class="nota">Si el enlace venció, intenta ingresar con tu correo y contraseña y te mostraremos cómo recibir uno nuevo.</p>
+        <a class="btn btn-primario btn-bloque" routerLink="/login">Ir a ingresar</a>
+      }
+    }
+  </div>
+</section>

@@ -1,0 +1,47 @@
+<section class="restablecer">
+  <div class="auth-card">
+    @if (listo()) {
+      <span class="icono exito">✓</span>
+      <h1>¡Contraseña cambiada!</h1>
+      <p class="auth-subtitulo">Ya puedes ingresar con tu contraseña nueva.</p>
+      <a class="btn btn-primario btn-bloque" routerLink="/login">Ingresar a AirMap</a>
+    } @else if (enlaceInvalido()) {
+      <span class="icono fallo">!</span>
+      <h1>Enlace no válido</h1>
+      <p class="auth-subtitulo">Abre el botón del correo que te enviamos, o pide uno nuevo.</p>
+      <a class="btn btn-primario btn-bloque" routerLink="/recuperar">Pedir un enlace nuevo</a>
+    } @else {
+      <h1>Crea tu nueva contraseña</h1>
+      <p class="auth-subtitulo">Elige una contraseña segura que no uses en otros sitios.</p>
+
+      <form class="formulario" #formulario="ngForm" (ngSubmit)="cambiar(formulario)">
+        @if (error()) {
+          <p class="error-general">{{ error() }}</p>
+          <a class="enlace-nuevo" routerLink="/recuperar">Pedir un enlace nuevo</a>
+        }
+
+        <div class="campo">
+          <label for="contrasena">Contraseña nueva</label>
+          <input id="contrasena" name="contrasena" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password"
+                 [(ngModel)]="contrasena" required>
+          @if (intentado() && !contrasenaValida()) {
+            <small class="error">Debe tener mínimo 8 caracteres, una mayúscula y un número.</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="confirmar">Confirmar contraseña</label>
+          <input id="confirmar" name="confirmar" type="password" placeholder="Repite tu contraseña" autocomplete="new-password"
+                 [(ngModel)]="confirmar" required>
+          @if (intentado() && !contrasenasCoinciden()) {
+            <small class="error">Las contraseñas no coinciden.</small>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primario btn-bloque" [disabled]="cargando()">
+          {{ cargando() ? 'Guardando...' : 'Cambiar contraseña' }}
+        </button>
+      </form>
+    }
+  </div>
+</section>

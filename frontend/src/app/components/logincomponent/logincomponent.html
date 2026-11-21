@@ -1,5 +1,7 @@
 <section class="auth">
   <div class="auth-ilustracion">
+    <app-mapacomponent [vuelos]="vuelos()"></app-mapacomponent>
+
     <div class="auth-mensaje">
       <h3>El mundo en vuelo, a un clic.</h3>
       <p>Rastrea vuelos y llega al aeropuerto sin perderte.</p>
@@ -10,35 +12,55 @@
     <h1>Bienvenido de nuevo</h1>
     <p class="auth-subtitulo">Ingresa para ver tus vuelos favoritos y rutas guardadas.</p>
 
-    <form class="formulario">
-      <p class="error-general" hidden>Correo o contraseña incorrectos.</p>
+    <form class="formulario" #formulario="ngForm" (ngSubmit)="ingresar(formulario)">
+      @if (error()) {
+        <p class="error-general">{{ error() }}</p>
+      }
+      @if (sinVerificar()) {
+        <button type="button" class="btn btn-secundario btn-bloque" (click)="reenviar()">Reenviar correo de confirmación</button>
+      }
+      @if (aviso()) {
+        <p class="aviso-ok">{{ aviso() }}</p>
+      }
 
       <div class="campo">
         <label for="correo">Correo electrónico</label>
-        <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
-        <small class="error" hidden>Ingresa un correo válido.</small>
+        <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email"
+               [(ngModel)]="correo" #correoCampo="ngModel" required email>
+        @if (intentado() && correoCampo.invalid) {
+          <small class="error">Ingresa un correo válido.</small>
+        }
       </div>
 
       <div class="campo">
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" name="contrasena" type="password" placeholder="Tu contraseña" autocomplete="current-password" required>
-        <small class="error" hidden>La contraseña es obligatoria.</small>
+        <input id="contrasena" name="contrasena" type="password" placeholder="Tu contraseña" autocomplete="current-password"
+               [(ngModel)]="contrasena" #contrasenaCampo="ngModel" required>
+        @if (intentado() && contrasenaCampo.invalid) {
+          <small class="error">La contraseña es obligatoria.</small>
+        }
       </div>
 
       <div class="opciones">
         <label>
-          <input type="checkbox" name="recordarme">
+          <input type="checkbox" name="recordar" [(ngModel)]="recordar">
           Recordarme
         </label>
         <a routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
       </div>
 
-      <button type="submit" class="btn btn-primario btn-bloque">Ingresar</button>
+      <button type="submit" class="btn btn-primario btn-bloque" [disabled]="cargando()">
+        {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
     </form>
 
     <div class="separador">o</div>
 
-    <button type="button" class="btn btn-secundario btn-bloque">Continuar con Google</button>
+    <!-- Google dibuja aqui su boton "Continuar con Google" -->
+    <div class="boton-google" #botonGoogle></div>
+    @if (!googleDisponible()) {
+      <p class="nota-google">El ingreso con Google no está disponible por ahora.</p>
+    }
 
     <p class="auth-alterno">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
   </div>

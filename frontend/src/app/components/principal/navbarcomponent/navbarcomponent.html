@@ -13,7 +13,16 @@
   </ul>
 
   <div class="acciones">
-    <a class="btn btn-secundario" routerLink="/login">Ingresar</a>
-    <a class="btn btn-primario" routerLink="/register">Registrarse</a>
+    @if (autenticado()) {
+      @if (esAdmin()) {
+        <a class="btn btn-secundario" routerLink="/admin">Administración</a>
+      } @else {
+        <a class="btn btn-secundario" routerLink="/perfil">{{ primerNombre() }}</a>
+      }
+      <button type="button" class="btn btn-primario" (click)="cerrarSesion()">Cerrar sesión</button>
+    } @else {
+      <a class="btn btn-secundario" routerLink="/login">Ingresar</a>
+      <a class="btn btn-primario" routerLink="/register">Registrarse</a>
+    }
   </div>
 </nav>

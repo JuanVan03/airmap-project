@@ -1,0 +1,205 @@
+/* ---------- Hero ---------- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  padding: 72px 64px;
+}
+
+.hero-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.etiqueta {
+  padding: 6px 12px;
+  background: var(--elevado);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  color: var(--acento);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+h1 {
+  margin: 0;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.subtitulo {
+  margin: 0;
+  max-width: 560px;
+  color: var(--texto-suave);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.buscador {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 560px;
+  padding: 8px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.buscador input {
+  flex: 1;
+  padding: 0 12px;
+  background: transparent;
+  border: none;
+  color: var(--texto);
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.buscador input:focus {
+  outline: none;
+}
+
+.mensaje {
+  margin: 0;
+  color: #FBBF24;
+  font-size: 14px;
+}
+
+.botones {
+  display: flex;
+  gap: 12px;
+}
+
+.botones a {
+  text-decoration: none;
+}
+
+/* ---------- Mapa y tarjeta ---------- */
+.hero-mapa {
+  position: relative;
+  flex: 1;
+  height: 480px;
+  overflow: hidden;
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.tarjeta-flotante {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 320px;
+  z-index: 1100;
+}
+
+/* ---------- Funciones ---------- */
+.funciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 64px;
+}
+
+.funciones h2 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.funciones-subtitulo {
+  margin: 0 0 20px;
+  color: var(--texto-suave);
+}
+
+.tarjetas {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+}
+
+.funcion {
+  flex: 1;
+  padding: 28px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.icono {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 10px;
+  background: var(--elevado);
+  border-radius: 12px;
+  font-size: 22px;
+}
+
+.funcion h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.funcion p {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---------- Registro ---------- */
+.registro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin: 0 64px 64px;
+  padding: 40px 48px;
+  background: var(--primario);
+  border-radius: 20px;
+}
+
+.registro h2 {
+  margin: 0 0 8px;
+  font-size: 26px;
+  color: white;
+}
+
+.registro p {
+  margin: 0;
+  color: white;
+}
+
+.registro a {
+  text-decoration: none;
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 1000px) {
+  .hero {
+    flex-direction: column;
+    padding: 32px 20px;
+  }
+
+  .hero-mapa {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  .tarjetas {
+    flex-direction: column;
+  }
+
+  .registro {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 20px 40px;
+  }
+}
