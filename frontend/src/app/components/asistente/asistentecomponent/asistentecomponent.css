@@ -1,0 +1,212 @@
+.pagina-asistente {
+  display: grid;
+  grid-template-columns: 290px 1fr 340px;
+  grid-template-rows: minmax(0, 1fr);
+  height: calc(100vh - 150px);
+  min-height: 560px;
+}
+
+/* ---------- Columna izquierda ---------- */
+.lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 24px 20px;
+  overflow-y: auto;
+  background: var(--superficie);
+  border-right: 1px solid var(--borde);
+}
+
+.titulo-lateral {
+  margin-top: 8px;
+  color: var(--texto-suave);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sugerencia {
+  padding: 12px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--texto-suave);
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sugerencia:hover {
+  background: var(--elevado);
+  color: var(--texto);
+}
+
+/* ---------- Conversacion ---------- */
+.conversacion {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 24px 32px;
+  gap: 16px;
+}
+
+.chat {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.mensaje {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.mensaje.usuario {
+  justify-content: flex-end;
+}
+
+.avatar {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  background: var(--primario);
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+}
+
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 78%;
+}
+
+.burbuja {
+  margin: 0;
+  padding: 14px 18px;
+  background: var(--superficie);
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.usuario .burbuja {
+  background: var(--primario);
+  color: white;
+}
+
+.vuelos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* ---------- Caja de texto ---------- */
+.entrada {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 10px 10px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.entrada input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  color: var(--texto);
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.entrada input:focus {
+  outline: none;
+}
+
+.enviar {
+  width: 44px;
+  height: 44px;
+  background: var(--primario);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.enviar:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- Columna derecha ---------- */
+.contexto {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  padding: 24px;
+  overflow-y: auto;
+  border-left: 1px solid var(--borde);
+}
+
+.contexto h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.contexto a {
+  text-align: center;
+  text-decoration: none;
+}
+
+.ayuda {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.aviso {
+  margin: 8px 0 0;
+  color: var(--texto-suave);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1100px) {
+  .pagina-asistente {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    height: auto;
+  }
+
+  .lateral,
+  .contexto {
+    border: none;
+  }
+
+  .conversacion {
+    height: 600px;
+    padding: 16px;
+  }
+
+  .vuelos {
+    grid-template-columns: 1fr;
+  }
+}

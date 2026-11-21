@@ -1,0 +1,148 @@
+<section class="perfil">
+  <div class="cabecera">
+    <div class="avatar">{{ iniciales() }}</div>
+    <div class="datos-usuario">
+      <h1>{{ usuario().nombre }}</h1>
+      <span>{{ usuario().correo }}</span>
+    </div>
+    <button type="button" class="btn btn-secundario" (click)="cambiarPestana('ajustes')">Editar perfil</button>
+  </div>
+
+  <div class="pestanas">
+    <button type="button" class="chip" [class.activo]="pestana() === 'favoritos'" (click)="cambiarPestana('favoritos')">Favoritos</button>
+    <button type="button" class="chip" [class.activo]="pestana() === 'historial'" (click)="cambiarPestana('historial')">Historial</button>
+    <button type="button" class="chip" [class.activo]="pestana() === 'rutas'" (click)="cambiarPestana('rutas')">Rutas guardadas</button>
+    <button type="button" class="chip" [class.activo]="pestana() === 'ajustes'" (click)="cambiarPestana('ajustes')">Ajustes</button>
+  </div>
+
+  @if (pestana() === 'favoritos') {
+    <h2>Vuelos favoritos</h2>
+    @if (favoritos().length === 0) {
+      <p class="vacio">Aún no tienes vuelos favoritos. Toca la estrella ☆ de un vuelo para guardarlo aquí.</p>
+    } @else {
+      <div class="vuelos">
+        @for (favorito of favoritos(); track favorito.vueloId) {
+          @let vuelo = vueloDe(favorito);
+          @if (vuelo) {
+            <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+          } @else if (vuelo === null) {
+            <article class="inactivo">
+              <strong>{{ favorito.numeroVuelo || 'Vuelo' }}</strong>
+              <span>Este vuelo ya no está en el aire.</span>
+              <button type="button" class="btn btn-secundario" (click)="quitarFavorito(favorito)">Quitar de favoritos</button>
+            </article>
+          } @else {
+            <article class="inactivo">
+              <strong>{{ favorito.numeroVuelo || 'Vuelo' }}</strong>
+              <span>Cargando datos del vuelo...</span>
+            </article>
+          }
+        }
+      </div>
+    }
+
+    <h2>Rutas guardadas</h2>
+    <ng-container *ngTemplateOutlet="listaRutas"></ng-container>
+  }
+
+  @if (pestana() === 'historial') {
+    <h2>Historial de vuelos</h2>
+
+    @if (errorHistorial()) {
+      <p class="error-general">{{ errorHistorial() }}</p>
+    }
+
+    @if (cargandoHistorial()) {
+      <p class="vacio">Cargando tu historial...</p>
+    } @else if (historial().length === 0) {
+      <p class="vacio">Aún no has consultado vuelos. Abre la información de un vuelo y quedará aquí.</p>
+    } @else {
+      <div class="acciones-historial">
+        <button type="button" class="btn btn-secundario" (click)="vaciarHistorial()">Borrar historial</button>
+      </div>
+      <div class="rutas">
+        @for (vuelo of historial(); track vuelo.vueloId) {
+          <div class="ruta">
+            <div class="ruta-texto">
+              <strong>{{ vuelo.numeroVuelo || 'Vuelo' }}</strong>
+              <span>Visto el {{ vuelo.fechaVista | date: 'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <div class="ruta-acciones">
+              <a class="btn btn-secundario" [routerLink]="['/informacion', vuelo.vueloId]">Ver</a>
+              <button type="button" class="btn btn-secundario" (click)="quitarDelHistorial(vuelo)">Quitar</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  @if (pestana() === 'rutas') {
+    <h2>Rutas guardadas</h2>
+    <ng-container *ngTemplateOutlet="listaRutas"></ng-container>
+  }
+
+  @if (pestana() === 'ajustes') {
+    <h2>Ajustes de la cuenta</h2>
+    <form class="formulario ajustes" (ngSubmit)="guardarAjustes()">
+      @if (errorAjustes()) {
+        <p class="error-general">{{ errorAjustes() }}</p>
+      }
+      @if (exitoAjustes()) {
+        <p class="exito-general">Tus cambios se guardaron.</p>
+      }
+
+      <div class="campo">
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" name="nombre" type="text" autocomplete="name" maxlength="100"
+               [(ngModel)]="nombreEditado" required>
+      </div>
+
+      <div class="campo">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" name="correo" type="email" [value]="usuario().correo" readonly>
+        <small class="ayuda-campo">El correo no se puede cambiar.</small>
+      </div>
+
+      @if (usuario().proveedor === 'GOOGLE') {
+        <p class="nota">Ingresaste con Google, así que tu contraseña se gestiona desde tu cuenta de Google.</p>
+      }
+
+      <div class="botones">
+        <button type="submit" class="btn btn-primario" [disabled]="guardandoAjustes()">
+          {{ guardandoAjustes() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+        <button type="button" class="btn btn-secundario" (click)="cerrarSesion()">Cerrar sesión</button>
+      </div>
+    </form>
+  }
+</section>
+
+<!-- Lista de rutas guardadas (se usa en dos pestanas) -->
+<ng-template #listaRutas>
+  @if (errorRutas()) {
+    <p class="error-general">{{ errorRutas() }}</p>
+  }
+
+  @if (cargandoRutas()) {
+    <p class="vacio">Cargando tus rutas...</p>
+  } @else if (rutasGuardadas().length === 0) {
+    <p class="vacio">Aún no has guardado rutas. Calcula una en "Viajes terrestres" y toca "Guardar ruta".</p>
+  } @else {
+    <div class="rutas">
+      @for (ruta of rutasGuardadas(); track ruta.id) {
+        <div class="ruta">
+          <div class="ruta-texto">
+            <strong>{{ ruta.nombre }}</strong>
+            <span>{{ ruta.destinoNombre }} · {{ formatoTiempo(ruta.duracionMin) }} · {{ ruta.distanciaKm }} km · {{ textoModo(ruta.modo) }}</span>
+          </div>
+          <div class="ruta-acciones">
+            <a class="btn btn-secundario" routerLink="/viajes-terrestres"
+               [queryParams]="{ origenLat: ruta.origenLat, origenLon: ruta.origenLon, destino: ruta.destinoCodigo, modo: ruta.modo }">Abrir</a>
+            <button type="button" class="btn btn-secundario" (click)="eliminarRuta(ruta)">Eliminar</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</ng-template>

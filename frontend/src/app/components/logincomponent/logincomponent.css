@@ -1,0 +1,23 @@
+
+/* Boton de Google (lo dibuja Google dentro de este contenedor) */
+.boton-google {
+  display: flex;
+  justify-content: center;
+}
+
+.nota-google {
+  margin: 0;
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+
+.aviso-ok {
+  margin: 0;
+  padding: 12px 16px;
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid var(--acento);
+  border-radius: 12px;
+  color: var(--acento);
+  font-size: 13px;
+}

@@ -1,0 +1,29 @@
+package co.edu.unbosque.airmap.repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import co.edu.unbosque.airmap.entity.Auditoria;
+
+public interface AuditoriaRepository extends JpaRepository<Auditoria, Long> {
+
+	// Los filtros vacios ('') no filtran; las fechas siempre llegan (el servicio pone un rango amplio si no hay)
+	@Query("select a from Auditoria a where (:accion = '' or a.accion = :accion) "
+			+ "and (:resultado = '' or a.resultado = :resultado) "
+			+ "and (:usuario = '' or lower(a.usuario) like lower(concat('%', :usuario, '%'))) "
+			+ "and a.fecha >= :desde and a.fecha <= :hasta order by a.fecha desc, a.id desc")
+	Page<Auditoria> buscar(@Param("accion") String accion, @Param("resultado") String resultado,
+			@Param("usuario") String usuario, @Param("desde") LocalDateTime desde,
+			@Param("hasta") LocalDateTime hasta, Pageable pageable);
+
+	// Las acciones que ya aparecen en el registro (para el filtro de la pantalla)
+	@Query("select distinct a.accion from Auditoria a order by a.accion")
+	List<String> acciones();
+
+}

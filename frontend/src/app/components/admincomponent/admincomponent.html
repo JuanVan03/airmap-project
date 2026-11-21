@@ -1,0 +1,106 @@
+<section class="admin">
+  <header class="cabecera">
+    <div>
+      <h1>Panel de administración</h1>
+      <p>Auditoría: registro de todo lo que ocurre en AirMap. Solo el administrador puede verlo.</p>
+    </div>
+    @if (resultados(); as r) {
+      <div class="total">
+        <strong>{{ r.totalElementos }}</strong>
+        <span>registros</span>
+      </div>
+    }
+  </header>
+
+  <form class="filtros" (ngSubmit)="buscar()">
+    <div class="campo">
+      <label for="usuario">Usuario</label>
+      <input id="usuario" name="usuario" type="text" placeholder="correo@ejemplo.com" [(ngModel)]="filtros.usuario">
+    </div>
+
+    <div class="campo">
+      <label for="accion">Acción</label>
+      <select id="accion" name="accion" [(ngModel)]="filtros.accion">
+        <option value="">Todas</option>
+        @for (codigo of acciones(); track codigo) {
+          <option [value]="codigo">{{ etiqueta(codigo) }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="resultado">Resultado</label>
+      <select id="resultado" name="resultado" [(ngModel)]="filtros.resultado">
+        <option value="">Todos</option>
+        <option value="EXITO">Éxito</option>
+        <option value="FALLO">Fallo</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="desde">Desde</label>
+      <input id="desde" name="desde" type="date" [(ngModel)]="filtros.desde">
+    </div>
+
+    <div class="campo">
+      <label for="hasta">Hasta</label>
+      <input id="hasta" name="hasta" type="date" [(ngModel)]="filtros.hasta">
+    </div>
+
+    <div class="botones">
+      <button type="submit" class="btn btn-primario" [disabled]="cargando()">Buscar</button>
+      <button type="button" class="btn btn-secundario" (click)="limpiar()" [disabled]="cargando()">Limpiar</button>
+    </div>
+  </form>
+
+  @if (error()) {
+    <p class="error-general">{{ error() }}</p>
+  }
+
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Usuario</th>
+          <th>Acción</th>
+          <th>Resultado</th>
+          <th>Detalle</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (registro of resultados()?.contenido ?? []; track registro.id) {
+          <tr>
+            <td class="fecha">{{ registro.fecha | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+            <td class="usuario">{{ registro.usuario }}</td>
+            <td>{{ etiqueta(registro.accion) }}</td>
+            <td>
+              <span class="insignia" [class.exito]="registro.resultado === 'EXITO'" [class.fallo]="registro.resultado === 'FALLO'">
+                {{ registro.resultado === 'EXITO' ? 'Éxito' : 'Fallo' }}
+              </span>
+            </td>
+            <td class="detalle" [title]="registro.navegador ?? ''">{{ registro.detalle }}</td>
+            <td class="ip">{{ registro.ip }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (cargando()) {
+      <p class="estado">Cargando registros...</p>
+    } @else if (resultados() && resultados()!.contenido.length === 0) {
+      <p class="estado">No hay registros con esos filtros.</p>
+    }
+  </div>
+
+  @if (resultados(); as r) {
+    <footer class="paginacion">
+      <span>Página {{ r.totalPaginas === 0 ? 0 : r.pagina + 1 }} de {{ r.totalPaginas }}</span>
+      <div class="botones">
+        <button type="button" class="btn btn-secundario" (click)="irA(r.pagina - 1)" [disabled]="cargando() || r.pagina === 0">Anterior</button>
+        <button type="button" class="btn btn-secundario" (click)="irA(r.pagina + 1)" [disabled]="cargando() || r.pagina + 1 >= r.totalPaginas">Siguiente</button>
+      </div>
+    </footer>
+  }
+</section>

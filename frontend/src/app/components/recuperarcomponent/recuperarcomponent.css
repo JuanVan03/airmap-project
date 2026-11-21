@@ -1,0 +1,14 @@
+.recuperar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 40px 16px;
+}
+
+.nota {
+  margin: 20px 0 0;
+  color: var(--texto-suave);
+  font-size: 13px;
+  line-height: 1.5;
+}

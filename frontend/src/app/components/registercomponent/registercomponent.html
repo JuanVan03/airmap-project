@@ -1,5 +1,7 @@
 <section class="auth">
   <div class="auth-ilustracion">
+    <app-mapacomponent [vuelos]="vuelos()"></app-mapacomponent>
+
     <div class="auth-mensaje">
       <h3>El mundo en vuelo, a un clic.</h3>
       <p>Rastrea vuelos y llega al aeropuerto sin perderte.</p>
@@ -7,50 +9,94 @@
   </div>
 
   <div class="auth-card">
-    <h1>Crea tu cuenta</h1>
-    <p class="auth-subtitulo">Es gratis y toma menos de un minuto.</p>
+    @if (enviadoA()) {
+      <div class="confirmacion">
+        <span class="icono-correo">✉</span>
+        <h1>Revisa tu correo</h1>
+        <p class="auth-subtitulo">
+          Te enviamos un enlace de confirmación a <strong>{{ enviadoA() }}</strong>.
+          Ábrelo para activar tu cuenta; después podrás ingresar. Si no lo ves, revisa la carpeta de spam.
+        </p>
 
-    <form class="formulario">
-      <p class="error-general" hidden>No se pudo crear la cuenta. Intenta de nuevo.</p>
+        @if (error()) {
+          <p class="error-general">{{ error() }}</p>
+        }
+        @if (aviso()) {
+          <p class="aviso-ok">{{ aviso() }}</p>
+        }
 
-      <div class="campo">
-        <label for="nombre">Nombre completo</label>
-        <input id="nombre" name="nombre" type="text" placeholder="Juan Pérez" autocomplete="name" required>
-        <small class="error" hidden>Ingresa tu nombre.</small>
+        <button type="button" class="btn btn-secundario btn-bloque" (click)="reenviar()">Reenviar correo</button>
+        <a class="btn btn-primario btn-bloque" routerLink="/login">Ir a ingresar</a>
       </div>
+    } @else {
+      <h1>Crea tu cuenta</h1>
+      <p class="auth-subtitulo">Es gratis y toma menos de un minuto.</p>
 
-      <div class="campo">
-        <label for="correo">Correo electrónico</label>
-        <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
-        <small class="error" hidden>Ingresa un correo válido o usa otro: este ya está registrado.</small>
-      </div>
+      <form class="formulario" #formulario="ngForm" (ngSubmit)="registrar(formulario)">
+        @if (error()) {
+          <p class="error-general">{{ error() }}</p>
+        }
 
-      <div class="campo">
-        <label for="contrasena">Contraseña</label>
-        <input id="contrasena" name="contrasena" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" required>
-        <small class="error" hidden>Debe tener mínimo 8 caracteres, una mayúscula y un número.</small>
-      </div>
+        <div class="campo">
+          <label for="nombre">Nombre completo</label>
+          <input id="nombre" name="nombre" type="text" placeholder="Juan Pérez" autocomplete="name"
+                 [(ngModel)]="nombre" #nombreCampo="ngModel" required maxlength="100">
+          @if (intentado() && nombreCampo.invalid) {
+            <small class="error">Ingresa tu nombre.</small>
+          }
+        </div>
 
-      <div class="campo">
-        <label for="confirmar">Confirmar contraseña</label>
-        <input id="confirmar" name="confirmar" type="password" placeholder="Repite tu contraseña" autocomplete="new-password" required>
-        <small class="error" hidden>Las contraseñas no coinciden.</small>
-      </div>
+        <div class="campo">
+          <label for="correo">Correo electrónico</label>
+          <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email"
+                 [(ngModel)]="correo" #correoCampo="ngModel" required email pattern="[^@\s]+@[^@\s]+\.[A-Za-z]{2,}">
+          @if (intentado() && correoCampo.invalid) {
+            <small class="error">Ingresa un correo válido, por ejemplo nombre@correo.com.</small>
+          }
+        </div>
 
-      <div class="opciones">
-        <label>
-          <input type="checkbox" name="terminos" required>
-          Acepto los términos y la política de privacidad
-        </label>
-      </div>
+        <div class="campo">
+          <label for="contrasena">Contraseña</label>
+          <input id="contrasena" name="contrasena" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password"
+                 [(ngModel)]="contrasena" required>
+          @if (intentado() && !contrasenaValida()) {
+            <small class="error">Debe tener mínimo 8 caracteres, una mayúscula y un número.</small>
+          }
+        </div>
 
-      <button type="submit" class="btn btn-primario btn-bloque">Crear cuenta</button>
-    </form>
+        <div class="campo">
+          <label for="confirmar">Confirmar contraseña</label>
+          <input id="confirmar" name="confirmar" type="password" placeholder="Repite tu contraseña" autocomplete="new-password"
+                 [(ngModel)]="confirmar" required>
+          @if (intentado() && !contrasenasCoinciden()) {
+            <small class="error">Las contraseñas no coinciden.</small>
+          }
+        </div>
 
-    <div class="separador">o</div>
+        <div class="opciones">
+          <label>
+            <input type="checkbox" name="terminos" [(ngModel)]="terminos" #terminosCampo="ngModel" required>
+            Acepto los términos y la política de privacidad
+          </label>
+        </div>
+        @if (intentado() && terminosCampo.invalid) {
+          <small class="error">Debes aceptar los términos para continuar.</small>
+        }
 
-    <button type="button" class="btn btn-secundario btn-bloque">Registrarse con Google</button>
+        <button type="submit" class="btn btn-primario btn-bloque" [disabled]="cargando()">
+          {{ cargando() ? 'Creando cuenta...' : 'Crear cuenta' }}
+        </button>
+      </form>
 
-    <p class="auth-alterno">¿Ya tienes cuenta? <a routerLink="/login">Ingresa</a></p>
+      <div class="separador">o</div>
+
+      <!-- Google dibuja aqui su boton "Registrarse con Google" -->
+      <div class="boton-google" #botonGoogle></div>
+      @if (!googleDisponible()) {
+        <p class="nota-google">El registro con Google no está disponible por ahora.</p>
+      }
+
+      <p class="auth-alterno">¿Ya tienes cuenta? <a routerLink="/login">Ingresa</a></p>
+    }
   </div>
 </section>

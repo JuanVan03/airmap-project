@@ -1,0 +1,72 @@
+<section class="pagina-asistente">
+  <aside class="lateral">
+    <button type="button" class="btn btn-primario" (click)="nuevaConversacion()">+ Nueva conversación</button>
+
+    <span class="titulo-lateral">PREGUNTAS SUGERIDAS</span>
+    @for (sugerencia of sugerencias; track sugerencia) {
+      <button type="button" class="sugerencia" (click)="enviar(sugerencia)">{{ sugerencia }}</button>
+    }
+  </aside>
+
+  <div class="conversacion">
+    <div class="chat" #chat>
+      <div class="mensaje asistente">
+        <span class="avatar">✦</span>
+        <div class="contenido">
+          <p class="burbuja">
+            ¡Hola! Soy el asistente de AirMap. Puedo darte información de vuelos y aeropuertos, consejos de viaje y mostrarte un vuelo si me das su indicativo (por ejemplo AVA010). ¿En qué te ayudo?
+          </p>
+        </div>
+      </div>
+
+      @for (mensaje of mensajes(); track $index) {
+        <div class="mensaje" [class.usuario]="mensaje.rol === 'usuario'" [class.asistente]="mensaje.rol === 'asistente'">
+          @if (mensaje.rol === 'asistente') {
+            <span class="avatar">✦</span>
+          }
+          <div class="contenido">
+            <p class="burbuja">{{ mensaje.texto }}</p>
+
+            @if (mensaje.vuelos && mensaje.vuelos.length > 0) {
+              <div class="vuelos">
+                @for (vuelo of mensaje.vuelos; track vuelo.id) {
+                  <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (escribiendo()) {
+        <div class="mensaje asistente">
+          <span class="avatar">✦</span>
+          <div class="contenido">
+            <p class="burbuja">Escribiendo...</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <form class="entrada" (ngSubmit)="enviar(texto)">
+      <input name="texto" [(ngModel)]="texto" placeholder="Pregunta sobre vuelos, rutas o viajes..." [disabled]="escribiendo()">
+      <button type="submit" class="enviar" [disabled]="escribiendo()">➤</button>
+    </form>
+  </div>
+
+  <aside class="contexto">
+    <h2>Vuelo en contexto</h2>
+
+    @if (vuelo(); as v) {
+      <app-tarjetavuelocomponent [vuelo]="v" [verDetalles]="false"></app-tarjetavuelocomponent>
+
+      <span class="titulo-lateral">Acciones rápidas</span>
+      <a class="btn btn-secundario" [routerLink]="['/informacion', v.id]">Ver detalles del vuelo</a>
+      <a class="btn btn-secundario" routerLink="/viajes-terrestres" [queryParams]="{ vuelo: v.id }">Cómo llegar al aeropuerto</a>
+    } @else {
+      <p class="ayuda">Todavía no hay un vuelo en contexto. Abre el asistente desde un vuelo y lo tendré en cuenta en mis respuestas.</p>
+    }
+
+    <p class="aviso">Respuestas generadas con IA. Verifica horarios con la aerolínea antes de viajar.</p>
+  </aside>
+</section>

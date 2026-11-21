@@ -1,0 +1,97 @@
+<section class="viajes">
+  <aside class="panel">
+    <h1>Cómo llegar al aeropuerto</h1>
+
+    @if (vuelo(); as v) {
+      <p class="subtitulo">Calculamos la ruta desde tu ubicación hasta el aeropuerto de destino del vuelo {{ v.numeroVuelo }}.</p>
+    } @else {
+      <p class="subtitulo">Calculamos la ruta desde tu ubicación hasta el aeropuerto que elijas.</p>
+    }
+
+    <div class="grupo">
+      <span class="etiqueta">Tu ubicación</span>
+      <div class="caja">{{ estadoUbicacion() }}</div>
+      @if (!ubicacion() || origenGuardado()) {
+        <button type="button" class="btn btn-secundario" (click)="pedirUbicacion()">Usar mi ubicación</button>
+      }
+    </div>
+
+    <div class="grupo">
+      <span class="etiqueta">Aeropuerto de destino</span>
+      @if (destino(); as d) {
+        <div class="caja">{{ d.nombre }} ({{ d.codigo }}) · {{ d.ciudad }}</div>
+      } @else {
+        <div class="caja vacio">Aún no has elegido un aeropuerto</div>
+      }
+
+      <form class="buscador" (ngSubmit)="buscarAeropuerto()">
+        <input name="texto" [(ngModel)]="texto" placeholder="Busca por nombre, ciudad o código">
+        <button type="submit" class="btn btn-secundario">Buscar</button>
+      </form>
+
+      @for (a of sugerencias(); track a.codigo) {
+        <button type="button" class="sugerencia" (click)="elegirAeropuerto(a)">
+          <strong>{{ a.codigo }}</strong> {{ a.nombre }} · {{ a.ciudad }}, {{ a.pais }}
+        </button>
+      }
+    </div>
+
+    @if (mensaje()) {
+      <p class="mensaje">{{ mensaje() }}</p>
+    }
+
+    <div class="modos">
+      <button type="button" class="chip" [class.activo]="modo() === 'auto'" (click)="cambiarModo('auto')">Auto</button>
+      <button type="button" class="chip" [class.activo]="modo() === 'pie'" (click)="cambiarModo('pie')">A pie</button>
+      <button type="button" class="chip" [class.activo]="modo() === 'bici'" (click)="cambiarModo('bici')">Bici</button>
+    </div>
+
+    @if (cargando()) {
+      <p class="ayuda">Calculando la ruta...</p>
+    }
+
+    @if (ruta(); as r) {
+      <div class="resultado">
+        <span class="resumen">{{ formatoTiempo(r.duracionMin) }} · {{ r.distanciaKm }} km</span>
+        <span class="detalle">Ruta más corta calculada desde {{ origenGuardado() ? 'la ubicación guardada' : 'tu ubicación' }}.</span>
+
+        @if (rutaGuardada()) {
+          <span class="guardada">✓ Ruta guardada. La encuentras en tu perfil.</span>
+        } @else if (guardando()) {
+          <form class="guardar-formulario" (ngSubmit)="confirmarGuardado()">
+            <input name="nombreRuta" [(ngModel)]="nombreRuta" maxlength="100" placeholder="Nombre de la ruta">
+            <button type="submit" class="btn btn-primario">Guardar</button>
+            <button type="button" class="btn btn-secundario" (click)="guardando.set(false)">Cancelar</button>
+          </form>
+        } @else {
+          <button type="button" class="btn btn-secundario" (click)="abrirGuardado()">Guardar ruta</button>
+        }
+      </div>
+    }
+  </aside>
+
+  <div class="zona-mapa">
+    <app-maparutacomponent
+      [origen]="ubicacion()"
+      [destino]="destino()"
+      [ruta]="ruta()?.coordenadas ?? []"
+    ></app-maparutacomponent>
+
+    @if (ruta(); as r) {
+      <div class="resumen-mapa">
+        <div class="dato">
+          <span class="etiqueta">Tiempo</span>
+          <span class="valor">{{ formatoTiempo(r.duracionMin) }}</span>
+        </div>
+        <div class="dato">
+          <span class="etiqueta">Distancia</span>
+          <span class="valor">{{ r.distanciaKm }} km</span>
+        </div>
+        <div class="dato">
+          <span class="etiqueta">Destino</span>
+          <span class="valor">{{ destino()?.nombre }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</section>

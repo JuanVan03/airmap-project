@@ -16,7 +16,7 @@ body {
   font-family: Inter, Arial, sans-serif;
 }
 
-/* ---------- Layout de login y register ---------- */
+/* Layout de login y register */
 .auth {
   display: flex;
   justify-content: center;
@@ -29,6 +29,7 @@ body {
   position: relative;
   width: 640px;
   height: 620px;
+  overflow: hidden;
   border-radius: 20px;
   border: 1px solid var(--borde);
   background-color: var(--superficie);
@@ -42,6 +43,7 @@ body {
   position: absolute;
   left: 32px;
   bottom: 32px;
+  z-index: 1000;
   max-width: 420px;
   padding: 20px 24px;
   background: var(--elevado);

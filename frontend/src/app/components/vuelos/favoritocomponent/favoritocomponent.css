@@ -1,0 +1,17 @@
+.estrella {
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: var(--texto-suave);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.estrella:hover {
+  color: #FBBF24;
+}
+
+.estrella.activa {
+  color: #FBBF24;
+}

@@ -1,0 +1,5 @@
+<button type="button" class="estrella" [class.activa]="esFavorito()" (click)="alternar()"
+        [attr.aria-label]="esFavorito() ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+        [title]="esFavorito() ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+  {{ esFavorito() ? '★' : '☆' }}
+</button>

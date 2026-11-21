@@ -1,0 +1,94 @@
+<section class="informacion">
+  <p class="migas">
+    <a routerLink="/vuelos">Vuelos</a> / {{ vuelo()?.numeroVuelo || 'Información' }}
+  </p>
+
+  @if (mensaje()) {
+    <p class="mensaje">{{ mensaje() }}</p>
+    <a class="btn btn-primario" routerLink="/vuelos">Ir al mapa de vuelos</a>
+  }
+
+  @if (!vuelo() && !mensaje()) {
+    <p class="mensaje">Cargando información del vuelo...</p>
+  }
+
+  @if (vuelo(); as v) {
+    <div class="titulo">
+      <h1>{{ v.aerolinea ? v.aerolinea + ' ' : '' }}{{ v.numeroVuelo }}</h1>
+      <span [class]="'estado ' + v.estado">{{ v.estado.replace('_', ' ') }}</span>
+      <app-favoritocomponent [vuelo]="v"></app-favoritocomponent>
+      <a class="btn btn-secundario boton-ruta" routerLink="/asistente" [queryParams]="{ vuelo: v.id }">Preguntar al asistente IA</a>
+      <a class="btn btn-primario" routerLink="/viajes-terrestres" [queryParams]="{ vuelo: v.id }">Cómo llegar al aeropuerto</a>
+    </div>
+
+    <div class="ruta">
+      <div class="extremo">
+        <span class="etiqueta">ORIGEN</span>
+        <span class="codigo">{{ v.origen?.codigo || '---' }}</span>
+        <span class="lugar">{{ v.origen ? v.origen.ciudad + ' · ' + v.origen.nombre : 'Origen desconocido' }}</span>
+        <span class="hora">Salida: {{ (v.horaSalida | date: 'HH:mm') || 'No disponible' }}</span>
+      </div>
+
+      <div class="trayecto">
+        @if (progreso(); as p) {
+          <span class="faltan">{{ p.tiempo ? 'Faltan ' + p.tiempo : '' }}</span>
+          <div class="barra">
+            <div class="avance" [style.width.%]="p.porcentaje"></div>
+            <span class="avion" [style.left.%]="p.porcentaje">✈</span>
+          </div>
+          <span class="km">{{ p.recorridos }} km recorridos · {{ p.restantes }} km restantes</span>
+        } @else {
+          <span class="faltan"></span>
+          <div class="barra"></div>
+          <span class="km">Ruta no disponible para este vuelo</span>
+        }
+      </div>
+
+      <div class="extremo derecha">
+        <span class="etiqueta">DESTINO</span>
+        <span class="codigo">{{ v.destino?.codigo || '---' }}</span>
+        <span class="lugar">{{ v.destino ? v.destino.ciudad + ' · ' + v.destino.nombre : 'Destino desconocido' }}</span>
+        <span class="hora">Llegada: {{ (v.horaLlegada | date: 'HH:mm') || 'No disponible' }}</span>
+      </div>
+    </div>
+
+    <div class="datos">
+      <div class="dato">
+        <span class="etiqueta">Altitud</span>
+        <span class="valor">{{ v.altitud | number: '1.0-0' }} m</span>
+        <span class="pequeno">{{ v.altitud * 3.281 | number: '1.0-0' }} ft</span>
+      </div>
+      <div class="dato">
+        <span class="etiqueta">Velocidad</span>
+        <span class="valor">{{ v.velocidad | number: '1.0-0' }} km/h</span>
+        <span class="pequeno">{{ v.velocidad / 1.852 | number: '1.0-0' }} kt</span>
+      </div>
+      <div class="dato">
+        <span class="etiqueta">Rumbo</span>
+        <span class="valor">{{ v.rumbo | number: '1.0-0' }}° {{ rumboCardinal(v.rumbo) }}</span>
+        <span class="pequeno">Dirección del avión</span>
+      </div>
+      <div class="dato">
+        <span class="etiqueta">Posición</span>
+        <span class="valor">{{ v.latitud | number: '1.2-2' }}, {{ v.longitud | number: '1.2-2' }}</span>
+        <span class="pequeno">Latitud, longitud</span>
+      </div>
+    </div>
+
+    <div class="inferior">
+      <div class="mapa-caja">
+        <app-mapacomponent [vuelos]="puntos()" [vueloSeleccionado]="v.id"></app-mapacomponent>
+      </div>
+
+      <div class="detalles">
+        <h2>Detalles del vuelo</h2>
+        <div class="linea"><span>Código del avión</span><strong>{{ v.id }}</strong></div>
+        <div class="linea"><span>Aerolínea</span><strong>{{ v.aerolinea || 'No disponible' }}</strong></div>
+        <div class="linea"><span>Origen</span><strong>{{ v.origen?.pais || 'No disponible' }}</strong></div>
+        <div class="linea"><span>Destino</span><strong>{{ v.destino?.pais || 'No disponible' }}</strong></div>
+        <div class="linea"><span>Hora de salida</span><strong>{{ (v.horaSalida | date: 'HH:mm') || 'No disponible' }}</strong></div>
+        <div class="linea"><span>Hora de llegada</span><strong>{{ (v.horaLlegada | date: 'HH:mm') || 'No disponible' }}</strong></div>
+      </div>
+    </div>
+  }
+</section>
