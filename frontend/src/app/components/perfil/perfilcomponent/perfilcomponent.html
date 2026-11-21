@@ -1,0 +1,101 @@
+<section class="perfil">
+  <div class="cabecera">
+    <div class="avatar">{{ iniciales() }}</div>
+    <div class="datos-usuario">
+      <h1>{{ usuario().nombre }}</h1>
+      <span>{{ usuario().correo }}</span>
+    </div>
+    <button type="button" class="btn btn-secundario" (click)="cambiarPestana('ajustes')">Editar perfil</button>
+  </div>
+
+  <div class="pestanas">
+    <button type="button" class="chip" [class.activo]="pestana() === 'favoritos'" (click)="cambiarPestana('favoritos')">Favoritos</button>
+    <button type="button" class="chip" [class.activo]="pestana() === 'historial'" (click)="cambiarPestana('historial')">Historial</button>
+    <button type="button" class="chip" [class.activo]="pestana() === 'rutas'" (click)="cambiarPestana('rutas')">Rutas guardadas</button>
+    <button type="button" class="chip" [class.activo]="pestana() === 'ajustes'" (click)="cambiarPestana('ajustes')">Ajustes</button>
+  </div>
+
+  @if (pestana() === 'favoritos') {
+    <h2>Vuelos favoritos</h2>
+    @if (favoritos().length === 0) {
+      <p class="vacio">Aún no tienes vuelos favoritos. Guarda uno desde su página de información.</p>
+    } @else {
+      <div class="vuelos">
+        @for (vuelo of favoritos(); track vuelo.id) {
+          <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+        }
+      </div>
+    }
+
+    <h2>Rutas guardadas</h2>
+    @if (rutasGuardadas().length === 0) {
+      <p class="vacio">Aún no has guardado rutas al aeropuerto.</p>
+    } @else {
+      <div class="rutas">
+        @for (ruta of rutasGuardadas(); track ruta.id) {
+          <div class="ruta">
+            <div class="ruta-texto">
+              <strong>{{ ruta.nombre }}</strong>
+              <span>{{ formatoTiempo(ruta.duracionMin) }} · {{ ruta.distanciaKm }} km · {{ textoModo(ruta.modo) }}</span>
+            </div>
+            <a class="btn btn-secundario" routerLink="/viajes-terrestres">Abrir</a>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  @if (pestana() === 'historial') {
+    <h2>Historial de vuelos</h2>
+    @if (historial().length === 0) {
+      <p class="vacio">Aún no has consultado vuelos. Los que abras aparecerán aquí.</p>
+    } @else {
+      <div class="vuelos">
+        @for (vuelo of historial(); track vuelo.id) {
+          <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+        }
+      </div>
+    }
+  }
+
+  @if (pestana() === 'rutas') {
+    <h2>Rutas guardadas</h2>
+    @if (rutasGuardadas().length === 0) {
+      <p class="vacio">Aún no has guardado rutas al aeropuerto.</p>
+    } @else {
+      <div class="rutas">
+        @for (ruta of rutasGuardadas(); track ruta.id) {
+          <div class="ruta">
+            <div class="ruta-texto">
+              <strong>{{ ruta.nombre }}</strong>
+              <span>{{ formatoTiempo(ruta.duracionMin) }} · {{ ruta.distanciaKm }} km · {{ textoModo(ruta.modo) }}</span>
+            </div>
+            <a class="btn btn-secundario" routerLink="/viajes-terrestres">Abrir</a>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  @if (pestana() === 'ajustes') {
+    <h2>Ajustes de la cuenta</h2>
+    <form class="formulario ajustes">
+      <div class="campo">
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" name="nombre" type="text" [value]="usuario().nombre">
+      </div>
+
+      <div class="campo">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" name="correo" type="email" [value]="usuario().correo" readonly>
+      </div>
+
+      <p class="nota">Si te registraste con Google, tu contraseña se gestiona desde tu cuenta de Google.</p>
+
+      <div class="botones">
+        <button type="submit" class="btn btn-primario">Guardar cambios</button>
+        <button type="button" class="btn btn-secundario">Cerrar sesión</button>
+      </div>
+    </form>
+  }
+</section>

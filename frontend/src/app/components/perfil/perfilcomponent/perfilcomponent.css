@@ -1,0 +1,161 @@
+.perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 40px 64px 64px;
+}
+
+/* ---------- Cabecera ---------- */
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 32px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 70px;
+  background: var(--primario);
+  border-radius: 50%;
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.datos-usuario {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.datos-usuario h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.datos-usuario span {
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+/* ---------- Pestanas ---------- */
+.pestanas {
+  display: flex;
+  gap: 8px;
+}
+
+.chip {
+  padding: 8px 16px;
+  background: var(--elevado);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  color: var(--texto-suave);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chip.activo {
+  background: var(--primario);
+  border-color: var(--primario);
+  color: white;
+}
+
+h2 {
+  margin: 8px 0 0;
+  font-size: 24px;
+}
+
+.vacio {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+/* ---------- Vuelos y rutas ---------- */
+.vuelos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.rutas {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+}
+
+.ruta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.ruta:last-child {
+  border-bottom: none;
+}
+
+.ruta-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ruta-texto span {
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+
+.ruta a {
+  text-decoration: none;
+}
+
+/* ---------- Ajustes ---------- */
+.ajustes {
+  max-width: 480px;
+}
+
+.campo input[readonly] {
+  color: var(--texto-suave);
+}
+
+.nota {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.botones {
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 1000px) {
+  .perfil {
+    padding: 24px 16px 48px;
+  }
+
+  .cabecera {
+    flex-wrap: wrap;
+  }
+
+  .vuelos {
+    grid-template-columns: 1fr;
+  }
+
+  .pestanas {
+    flex-wrap: wrap;
+  }
+}
