@@ -1,10 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, computed, effect, signal, untracked } from '@angular/core';
 import { Favorito } from '../../../models/favorito';
+import { HistorialVuelo } from '../../../models/historial';
 import { ModoViaje } from '../../../models/ruta';
 import { RutaGuardada } from '../../../models/ruta-guardada';
 import { Vuelo } from '../../../models/vuelo';
 import { AuthService } from '../../../services/auth.service';
 import { FavoritoService } from '../../../services/favorito.service';
+import { HistorialService } from '../../../services/historial.service';
 import { RutaGuardadaService } from '../../../services/ruta-guardada.service';
 import { VueloService } from '../../../services/vuelo.service';
 
@@ -23,6 +26,12 @@ export class Perfilcomponent implements OnInit {
   // Usuario que inicio sesion (el guard evita llegar aqui sin sesion)
   usuario = computed(() => this.auth.usuario() ?? { nombre: '', correo: '', proveedor: 'LOCAL' as const });
 
+  // Ajustes: nombre que se esta editando y estado del guardado
+  nombreEditado = '';
+  guardandoAjustes = signal(false);
+  exitoAjustes = signal(false);
+  errorAjustes = signal('');
+
   // Favoritos: la lista sale del FavoritoService
   favoritos = computed(() => this.favoritosServ.favoritos());
   // Datos en vivo de cada favorito: el Vuelo si sigue en el aire, null si ya no, y nada mientras carga
@@ -34,10 +43,16 @@ export class Perfilcomponent implements OnInit {
   cargandoRutas = signal(true);
   errorRutas = signal('');
 
+  // Historial de vuelos abiertos
+  historial = signal<HistorialVuelo[]>([]);
+  cargandoHistorial = signal(true);
+  errorHistorial = signal('');
+
   constructor(
     private auth: AuthService,
     private favoritosServ: FavoritoService,
     private rutaGuardadaServ: RutaGuardadaService,
+    private historialServ: HistorialService,
     private vueloService: VueloService,
   ) {
     // Cada vez que cambia la lista de favoritos se piden los datos en vivo de los nuevos
@@ -48,6 +63,17 @@ export class Perfilcomponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.historialServ.listar().subscribe({
+      next: (lista) => {
+        this.historial.set(lista);
+        this.cargandoHistorial.set(false);
+      },
+      error: () => {
+        this.errorHistorial.set('No se pudo cargar tu historial.');
+        this.cargandoHistorial.set(false);
+      },
+    });
+
     this.rutaGuardadaServ.listar().subscribe({
       next: (lista) => {
         this.rutasGuardadas.set(lista);
@@ -88,12 +114,62 @@ export class Perfilcomponent implements OnInit {
     });
   }
 
+  quitarDelHistorial(vuelo: HistorialVuelo): void {
+    this.errorHistorial.set('');
+    this.historialServ.quitar(vuelo.vueloId).subscribe({
+      next: () => this.historial.update((lista) => lista.filter((v) => v.vueloId !== vuelo.vueloId)),
+      error: () => this.errorHistorial.set('No se pudo quitar el vuelo del historial.'),
+    });
+  }
+
+  vaciarHistorial(): void {
+    this.errorHistorial.set('');
+    this.historialServ.vaciar().subscribe({
+      next: () => this.historial.set([]),
+      error: () => this.errorHistorial.set('No se pudo borrar el historial.'),
+    });
+  }
+
   cerrarSesion(): void {
     this.auth.cerrarSesion();
   }
 
   cambiarPestana(pestana: Pestana): void {
+    // Al abrir Ajustes el campo arranca con el nombre actual
+    if (pestana === 'ajustes') {
+      this.nombreEditado = this.usuario().nombre;
+      this.exitoAjustes.set(false);
+      this.errorAjustes.set('');
+    }
     this.pestana.set(pestana);
+  }
+
+  guardarAjustes(): void {
+    this.exitoAjustes.set(false);
+    this.errorAjustes.set('');
+
+    const nombre = this.nombreEditado.trim();
+    if (nombre === '') {
+      this.errorAjustes.set('Ingresa tu nombre.');
+      return;
+    }
+    if (nombre.length > 100) {
+      this.errorAjustes.set('El nombre es muy largo.');
+      return;
+    }
+
+    this.guardandoAjustes.set(true);
+    this.auth.actualizarPerfil(nombre).subscribe({
+      next: (usuario) => {
+        this.nombreEditado = usuario.nombre;
+        this.exitoAjustes.set(true);
+        this.guardandoAjustes.set(false);
+      },
+      error: (e: HttpErrorResponse) => {
+        this.errorAjustes.set(this.auth.mensajeDeError(e));
+        this.guardandoAjustes.set(false);
+      },
+    });
   }
 
   // "Juan Pérez" -> "JP"

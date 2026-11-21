@@ -5,19 +5,28 @@
     @if (!enviado()) {
       <p class="auth-subtitulo">Escribe tu correo y te enviaremos un enlace para crear una contraseña nueva.</p>
 
-      <form class="formulario" (ngSubmit)="enviar()">
+      <form class="formulario" #formulario="ngForm" (ngSubmit)="enviar(formulario)">
+        @if (error()) {
+          <p class="error-general">{{ error() }}</p>
+        }
+
         <div class="campo">
           <label for="correo">Correo electrónico</label>
-          <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
-          <small class="error" hidden>Ingresa un correo válido.</small>
+          <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email"
+                 [(ngModel)]="correo" #correoCampo="ngModel" required email pattern="[^@\s]+@[^@\s]+\.[A-Za-z]{2,}">
+          @if (intentado() && correoCampo.invalid) {
+            <small class="error">Ingresa un correo válido, por ejemplo nombre@correo.com.</small>
+          }
         </div>
 
-        <button type="submit" class="btn btn-primario btn-bloque">Enviar enlace</button>
+        <button type="submit" class="btn btn-primario btn-bloque" [disabled]="cargando()">
+          {{ cargando() ? 'Enviando...' : 'Enviar enlace' }}
+        </button>
       </form>
 
       <p class="nota">Si te registraste con Google no tienes contraseña en AirMap: usa el botón "Continuar con Google" al ingresar.</p>
     } @else {
-      <p class="auth-subtitulo">Si el correo está registrado, recibirás un enlace en unos minutos. Revisa también la carpeta de spam.</p>
+      <p class="auth-subtitulo">Si el correo está registrado, recibirás un enlace en unos minutos. Revisa también la carpeta de spam. El enlace dura 1 hora.</p>
     }
 
     <p class="auth-alterno"><a routerLink="/login">Volver a iniciar sesión</a></p>

@@ -11,6 +11,7 @@ export class Navbarcomponent {
   private auth = inject(AuthService);
 
   autenticado = this.auth.autenticado;
+  esAdmin = this.auth.esAdmin;
 
   // "Juan Pérez" -> "Juan"
   primerNombre = computed(() => this.auth.usuario()?.nombre.split(' ')[0] ?? '');

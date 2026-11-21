@@ -181,3 +181,25 @@ h2 {
   display: flex;
   gap: 8px;
 }
+
+/* Boton para borrar todo el historial */
+.acciones-historial {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Avisos de la pestaña Ajustes */
+.exito-general {
+  margin: 0;
+  padding: 12px 16px;
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid var(--acento);
+  border-radius: 12px;
+  color: var(--acento);
+  font-size: 13px;
+}
+
+.ayuda-campo {
+  color: var(--texto-suave);
+  font-size: 12px;
+}

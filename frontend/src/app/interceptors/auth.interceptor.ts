@@ -21,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (peticion, siguiente) => {
     catchError((error: HttpErrorResponse) => {
       // El back rechazo el token (vencio o no sirve): se cierra la sesion
       if (error.status === 401) {
-        auth.cerrarSesion('/login');
+        auth.cerrarSesion('/login', false);
       }
       return throwError(() => error);
     }),

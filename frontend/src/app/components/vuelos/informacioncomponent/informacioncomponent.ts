@@ -2,6 +2,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Vuelo } from '../../../models/vuelo';
 import { VueloResumen } from '../../../models/vuelo-resumen';
+import { AuthService } from '../../../services/auth.service';
+import { HistorialService } from '../../../services/historial.service';
 import { VueloService } from '../../../services/vuelo.service';
 
 // Datos de la barra de progreso del vuelo
@@ -31,6 +33,8 @@ export class Informacioncomponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private vueloService: VueloService,
+    private auth: AuthService,
+    private historialService: HistorialService,
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +60,11 @@ export class Informacioncomponent implements OnInit {
           },
         ]);
         this.calcularProgreso(vuelo);
+
+        // Con sesion, el vuelo queda en el historial del usuario (si falla no se nota)
+        if (this.auth.haySesion()) {
+          this.historialService.registrar(vuelo.id, vuelo.numeroVuelo).subscribe({ error: () => {} });
+        }
       },
       error: () => this.mensaje.set('No se pudo cargar el vuelo. Puede que ya no esté en el aire.'),
     });
