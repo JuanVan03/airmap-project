@@ -32,6 +32,15 @@ public class Usuario {
 
 	private LocalDateTime fechaRegistro;
 
+	// Una cuenta local no puede ingresar hasta confirmar su correo. El valor por defecto
+	// (true) hace que las cuentas que ya existian queden como confirmadas.
+	@Column(nullable = false, columnDefinition = "boolean not null default true")
+	private boolean verificado;
+
+	// USUARIO (el normal) o ADMIN (solo hay uno y no se registra: se crea al iniciar el back)
+	@Column(nullable = false, length = 10, columnDefinition = "varchar(10) not null default 'USUARIO'")
+	private String rol = "USUARIO";
+
 	public Usuario() {
 	}
 
@@ -42,6 +51,8 @@ public class Usuario {
 		this.contrasena = contrasena;
 		this.proveedor = proveedor;
 		this.fechaRegistro = LocalDateTime.now();
+		// Con Google el correo ya viene confirmado; con contrasena se confirma por correo
+		this.verificado = "GOOGLE".equals(proveedor);
 	}
 
 	public Long getId() {
@@ -90,6 +101,22 @@ public class Usuario {
 
 	public void setFechaRegistro(LocalDateTime fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
+	}
+
+	public boolean isVerificado() {
+		return verificado;
+	}
+
+	public void setVerificado(boolean verificado) {
+		this.verificado = verificado;
+	}
+
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
 	}
 
 	@Override

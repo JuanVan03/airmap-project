@@ -44,6 +44,9 @@ public class AsistenteService {
 	@Autowired
 	private VueloService vueloServ;
 
+	@Autowired
+	private AuditoriaService auditoria;
+
 	public AsistenteService() {
 	}
 
@@ -64,7 +67,15 @@ public class AsistenteService {
 		}
 
 		String instrucciones = INSTRUCCIONES + datosEnVivo(conocidos);
-		String respuesta = geminiServ.responder(instrucciones, armarConversacion(datos));
+		String respuesta;
+		try {
+			respuesta = geminiServ.responder(instrucciones, armarConversacion(datos));
+		} catch (RuntimeException ex) {
+			auditoria.registrar("CONSULTA_ASISTENTE", AuditoriaService.FALLO,
+					"Pregunta: " + datos.getMensaje() + " (error: " + ex.getMessage() + ")");
+			throw ex;
+		}
+		auditoria.registrar("CONSULTA_ASISTENTE", AuditoriaService.EXITO, "Pregunta: " + datos.getMensaje());
 		return new AsistenteRespuestaDTO(respuesta, mencionados);
 	}
 

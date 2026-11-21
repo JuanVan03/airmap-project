@@ -46,13 +46,90 @@ describe('AuthService', () => {
     expect(sessionStorage.getItem('airmap_token')).toBe('a.b.c');
   });
 
-  it('cerrarSesion borra la sesion', () => {
+  it('registrar no inicia sesion: solo avisa que se envio el correo', () => {
+    service.registrar({ nombre: 'Juan', correo: 'juan@correo.com', contrasena: 'Clave1234' }).subscribe();
+    http.expectOne(`${URL_BACK}/api/auth/registro`).flush({ mensaje: 'Te enviamos un correo' });
+
+    expect(service.autenticado()).toBe(false);
+    expect(localStorage.getItem('airmap_token')).toBeNull();
+  });
+
+  it('verificarCorreo envia el token al back', () => {
+    service.verificarCorreo('abc').subscribe();
+    const peticion = http.expectOne(`${URL_BACK}/api/auth/verificar`);
+
+    expect(peticion.request.body).toEqual({ token: 'abc' });
+    peticion.flush({ mensaje: 'ok' });
+  });
+
+  it('reenviarVerificacion envia el correo al back', () => {
+    service.reenviarVerificacion('juan@correo.com').subscribe();
+    const peticion = http.expectOne(`${URL_BACK}/api/auth/reenviar-verificacion`);
+
+    expect(peticion.request.body).toEqual({ correo: 'juan@correo.com' });
+    peticion.flush({ mensaje: 'ok' });
+  });
+
+  it('recuperarContrasena envia el correo al back', () => {
+    service.recuperarContrasena('juan@correo.com').subscribe();
+    const peticion = http.expectOne(`${URL_BACK}/api/auth/recuperar`);
+
+    expect(peticion.request.body).toEqual({ correo: 'juan@correo.com' });
+    peticion.flush({ mensaje: 'ok' });
+  });
+
+  it('restablecerContrasena envia el token y la contraseña nueva', () => {
+    service.restablecerContrasena('abc', 'Nueva1234').subscribe();
+    const peticion = http.expectOne(`${URL_BACK}/api/auth/restablecer`);
+
+    expect(peticion.request.body).toEqual({ token: 'abc', contrasena: 'Nueva1234' });
+    peticion.flush({ mensaje: 'ok' });
+  });
+
+  it('actualizarPerfil cambia el nombre en la sesion y en el almacenamiento', () => {
+    service.ingresar({ correo: 'juan@correo.com', contrasena: 'Clave1234' }, true).subscribe();
+    http.expectOne(`${URL_BACK}/api/auth/login`).flush(respuesta);
+
+    service.actualizarPerfil('Juan Camilo').subscribe();
+    const peticion = http.expectOne(`${URL_BACK}/api/auth/perfil`);
+    expect(peticion.request.method).toBe('PUT');
+    expect(peticion.request.body).toEqual({ nombre: 'Juan Camilo' });
+    peticion.flush({ nombre: 'Juan Camilo', correo: 'juan@correo.com', proveedor: 'LOCAL', rol: 'USUARIO' });
+
+    expect(service.usuario()?.nombre).toBe('Juan Camilo');
+    expect(JSON.parse(localStorage.getItem('airmap_usuario')!).nombre).toBe('Juan Camilo');
+    expect(service.token()).toBe('a.b.c');
+  });
+
+  it('cerrarSesion borra la sesion y avisa al back para la auditoria', () => {
     service.ingresar({ correo: 'juan@correo.com', contrasena: 'Clave1234' }, true).subscribe();
     http.expectOne(`${URL_BACK}/api/auth/login`).flush(respuesta);
 
     service.cerrarSesion();
+    http.expectOne(`${URL_BACK}/api/auth/logout`).flush(null, { status: 204, statusText: 'No Content' });
 
     expect(service.autenticado()).toBe(false);
     expect(localStorage.getItem('airmap_token')).toBeNull();
+  });
+
+  it('cerrarSesion sin avisar no llama al back', () => {
+    service.ingresar({ correo: 'juan@correo.com', contrasena: 'Clave1234' }, true).subscribe();
+    http.expectOne(`${URL_BACK}/api/auth/login`).flush(respuesta);
+
+    service.cerrarSesion('/login', false);
+
+    http.expectNone(`${URL_BACK}/api/auth/logout`);
+    expect(service.autenticado()).toBe(false);
+  });
+
+  it('esAdmin es true solo para el rol ADMIN', () => {
+    expect(service.esAdmin()).toBe(false);
+
+    service.ingresar({ correo: 'admin@correo.com', contrasena: 'Clave1234' }, true).subscribe();
+    http
+      .expectOne(`${URL_BACK}/api/auth/login`)
+      .flush({ token: 'a.b.c', usuario: { nombre: 'Administrador', correo: 'admin@correo.com', proveedor: 'LOCAL', rol: 'ADMIN' } });
+
+    expect(service.esAdmin()).toBe(true);
   });
 });

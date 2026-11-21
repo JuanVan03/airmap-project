@@ -24,6 +24,9 @@ public class FavoritoService {
 	@Autowired
 	private UsuarioRepository usuarioRepo;
 
+	@Autowired
+	private AuditoriaService auditoria;
+
 	public FavoritoService() {
 	}
 
@@ -45,7 +48,9 @@ public class FavoritoService {
 					"LIMITE_FAVORITOS");
 		}
 		Favorito favorito = new Favorito(usuarioId, datos.getVueloId(), datos.getNumeroVuelo());
-		return aDTO(favoritoRepo.save(favorito));
+		FavoritoDTO guardado = aDTO(favoritoRepo.save(favorito));
+		auditoria.registrar("FAVORITO_AGREGADO", correo, AuditoriaService.EXITO, "Vuelo " + datos.getNumeroVuelo());
+		return guardado;
 	}
 
 	public void quitar(String correo, String vueloId) {
@@ -53,6 +58,7 @@ public class FavoritoService {
 		Favorito favorito = favoritoRepo.findByUsuarioIdAndVueloId(usuarioId, vueloId).orElseThrow(
 				() -> new NegocioException("Ese vuelo no está en tus favoritos.", 404, "FAVORITO_NO_ENCONTRADO"));
 		favoritoRepo.delete(favorito);
+		auditoria.registrar("FAVORITO_ELIMINADO", correo, AuditoriaService.EXITO, "Vuelo " + favorito.getNumeroVuelo());
 	}
 
 	// El correo sale del token JWT, asi cada usuario solo ve lo suyo

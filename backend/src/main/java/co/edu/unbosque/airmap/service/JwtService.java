@@ -1,6 +1,7 @@
 package co.edu.unbosque.airmap.service;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,7 @@ public class JwtService {
 		Instant ahora = Instant.now();
 		JwtClaimsSet datos = JwtClaimsSet.builder().issuer("airmap").subject(usuario.getCorreo()).issuedAt(ahora)
 				.expiresAt(ahora.plusMillis(expiracion)).claim("nombre", usuario.getNombre())
-				.claim("proveedor", usuario.getProveedor()).build();
+				.claim("proveedor", usuario.getProveedor()).claim("roles", List.of(usuario.getRol())).build();
 		JwsHeader encabezado = JwsHeader.with(MacAlgorithm.HS256).build();
 		return jwtEncoder.encode(JwtEncoderParameters.from(encabezado, datos)).getTokenValue();
 	}

@@ -18,6 +18,9 @@ import { Viajesterrestrescomponent } from './components/viajes/viajesterrestresc
 import { Maparutacomponent } from './components/viajes/maparutacomponent/maparutacomponent';
 import { Perfilcomponent } from './components/perfil/perfilcomponent/perfilcomponent';
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
+import { Admincomponent } from './components/admincomponent/admincomponent';
+import { Restablecercomponent } from './components/restablecercomponent/restablecercomponent';
+import { Verificarcomponent } from './components/verificarcomponent/verificarcomponent';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { Favoritocomponent } from './components/vuelos/favoritocomponent/favoritocomponent';
 import { Asistentecomponent } from './components/asistente/asistentecomponent/asistentecomponent';
@@ -40,6 +43,9 @@ import { Asistentecomponent } from './components/asistente/asistentecomponent/as
     Asistentecomponent,
     Perfilcomponent,
     Recuperarcomponent,
+    Verificarcomponent,
+    Restablecercomponent,
+    Admincomponent,
     Favoritocomponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],

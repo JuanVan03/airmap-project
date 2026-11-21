@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unbosque.airmap.dto.RespuestaVuelosDTO;
 import co.edu.unbosque.airmap.dto.VueloDTO;
+import co.edu.unbosque.airmap.service.AuditoriaService;
 import co.edu.unbosque.airmap.service.VueloService;
 
 @RestController
@@ -23,6 +24,9 @@ public class VueloController {
 
 	@Autowired
 	private VueloService vueloServ;
+
+	@Autowired
+	private AuditoriaService auditoria;
 
 	public VueloController() {
 	}
@@ -36,13 +40,18 @@ public class VueloController {
 	// Busca vuelos por indicativo: /api/vuelos?q=AVA010
 	@GetMapping(params = "q")
 	ResponseEntity<List<VueloDTO>> buscar(@RequestParam String q) {
-		return new ResponseEntity<>(vueloServ.buscar(q), HttpStatus.OK);
+		List<VueloDTO> encontrados = vueloServ.buscar(q);
+		auditoria.registrar("BUSQUEDA_VUELO", AuditoriaService.EXITO,
+				"Buscó \"" + q + "\" (" + encontrados.size() + " resultados)");
+		return new ResponseEntity<>(encontrados, HttpStatus.OK);
 	}
 
 	// Informacion completa de un vuelo
 	@GetMapping("/{id}")
 	ResponseEntity<VueloDTO> getById(@PathVariable String id) {
-		return new ResponseEntity<>(vueloServ.getVuelo(id), HttpStatus.OK);
+		VueloDTO vuelo = vueloServ.getVuelo(id);
+		auditoria.registrar("VUELO_CONSULTADO", AuditoriaService.EXITO, "Vuelo " + vuelo.getNumeroVuelo());
+		return new ResponseEntity<>(vuelo, HttpStatus.OK);
 	}
 
 }

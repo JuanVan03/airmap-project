@@ -3,6 +3,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AuthRespuesta } from '../models/auth-respuesta';
+import { MensajeRespuesta } from '../models/mensaje-respuesta';
 import { DatosLogin, DatosRegistro } from '../models/datos-auth';
 import { Usuario } from '../models/usuario';
 
@@ -20,6 +21,7 @@ export class AuthService {
   readonly token = signal<string | null>(null);
   readonly usuario = signal<Usuario | null>(null);
   readonly autenticado = computed(() => this.token() !== null);
+  readonly esAdmin = computed(() => this.usuario()?.rol === 'ADMIN');
 
   constructor(
     private http: HttpClient,
@@ -28,10 +30,30 @@ export class AuthService {
     this.restaurarSesion();
   }
 
-  registrar(datos: DatosRegistro): Observable<AuthRespuesta> {
-    return this.http
-      .post<AuthRespuesta>(`${this.url}/registro`, datos)
-      .pipe(tap((respuesta) => this.guardarSesion(respuesta, true)));
+  // Crea la cuenta y el back envia un correo de confirmacion. No inicia sesion:
+  // la persona ingresa despues de confirmar su correo.
+  registrar(datos: DatosRegistro): Observable<MensajeRespuesta> {
+    return this.http.post<MensajeRespuesta>(`${this.url}/registro`, datos);
+  }
+
+  // Confirma el correo con el token que viene en el enlace del mensaje
+  verificarCorreo(token: string): Observable<MensajeRespuesta> {
+    return this.http.post<MensajeRespuesta>(`${this.url}/verificar`, { token });
+  }
+
+  // Pide el correo con el enlace para cambiar la contrasena
+  recuperarContrasena(correo: string): Observable<MensajeRespuesta> {
+    return this.http.post<MensajeRespuesta>(`${this.url}/recuperar`, { correo });
+  }
+
+  // Guarda la contrasena nueva con el token que viene en el enlace del correo
+  restablecerContrasena(token: string, contrasena: string): Observable<MensajeRespuesta> {
+    return this.http.post<MensajeRespuesta>(`${this.url}/restablecer`, { token, contrasena });
+  }
+
+  // Pide que se vuelva a enviar el correo de confirmacion
+  reenviarVerificacion(correo: string): Observable<MensajeRespuesta> {
+    return this.http.post<MensajeRespuesta>(`${this.url}/reenviar-verificacion`, { correo });
   }
 
   // "recordar" = true guarda la sesion aunque se cierre el navegador
@@ -48,7 +70,23 @@ export class AuthService {
       .pipe(tap((respuesta) => this.guardarSesion(respuesta, true)));
   }
 
-  cerrarSesion(destino = '/inicio'): void {
+  // Cambia el nombre del usuario. El back devuelve los datos nuevos y se actualiza la sesion guardada.
+  actualizarPerfil(nombre: string): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.url}/perfil`, { nombre }).pipe(
+      tap((usuario) => {
+        this.usuario.set(usuario);
+        this.actualizarUsuarioGuardado(usuario);
+      }),
+    );
+  }
+
+  // "avisarAlBack" deja constancia del cierre de sesion en la auditoria. Es false cuando la sesion
+  // se cierra porque el token ya no sirve (el back lo rechazaria y se repetiria el aviso sin fin).
+  cerrarSesion(destino = '/inicio', avisarAlBack = true): void {
+    if (avisarAlBack && this.token() !== null) {
+      // Si falla no importa: igual se cierra la sesion en este navegador
+      this.http.post<void>(`${this.url}/logout`, {}).subscribe({ error: () => {} });
+    }
     this.limpiarSesion();
     this.router.navigateByUrl(destino);
   }
@@ -82,6 +120,15 @@ export class AuthService {
     almacen.setItem(CLAVE_USUARIO, JSON.stringify(respuesta.usuario));
     this.token.set(respuesta.token);
     this.usuario.set(respuesta.usuario);
+  }
+
+  // Cambia los datos del usuario en el lugar donde se guardo la sesion (recordada o solo de esta pestaña)
+  private actualizarUsuarioGuardado(usuario: Usuario): void {
+    for (const almacen of [localStorage, sessionStorage]) {
+      if (almacen.getItem(CLAVE_TOKEN)) {
+        almacen.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+      }
+    }
   }
 
   // Al abrir la pagina vuelve a cargar la sesion guardada, si todavia sirve

@@ -16,6 +16,12 @@
       @if (error()) {
         <p class="error-general">{{ error() }}</p>
       }
+      @if (sinVerificar()) {
+        <button type="button" class="btn btn-secundario btn-bloque" (click)="reenviar()">Reenviar correo de confirmación</button>
+      }
+      @if (aviso()) {
+        <p class="aviso-ok">{{ aviso() }}</p>
+      }
 
       <div class="campo">
         <label for="correo">Correo electrónico</label>

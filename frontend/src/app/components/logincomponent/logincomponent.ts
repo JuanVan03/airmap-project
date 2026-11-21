@@ -27,6 +27,9 @@ export class Logincomponent implements OnInit, AfterViewInit {
   cargando = signal(false);
   error = signal('');
   googleDisponible = signal(true);
+  // El back dijo que falta confirmar el correo: se ofrece reenviar el enlace
+  sinVerificar = signal(false);
+  aviso = signal('');
 
   // Contenedor donde Google dibuja su boton
   @ViewChild('botonGoogle') botonGoogle?: ElementRef<HTMLElement>;
@@ -59,6 +62,8 @@ export class Logincomponent implements OnInit, AfterViewInit {
   ingresar(formulario: NgForm): void {
     this.intentado.set(true);
     this.error.set('');
+    this.aviso.set('');
+    this.sinVerificar.set(false);
     if (formulario.invalid) {
       return;
     }
@@ -67,6 +72,15 @@ export class Logincomponent implements OnInit, AfterViewInit {
     this.auth.ingresar({ correo: this.correo, contrasena: this.contrasena }, this.recordar).subscribe({
       next: () => this.irAlDestino(),
       error: (error: HttpErrorResponse) => this.mostrarError(error),
+    });
+  }
+
+  // Pide que el back envie otra vez el correo de confirmacion
+  reenviar(): void {
+    this.aviso.set('');
+    this.auth.reenviarVerificacion(this.correo).subscribe({
+      next: (respuesta) => this.aviso.set(respuesta.mensaje),
+      error: (error: HttpErrorResponse) => this.error.set(this.auth.mensajeDeError(error)),
     });
   }
 
@@ -80,12 +94,18 @@ export class Logincomponent implements OnInit, AfterViewInit {
   }
 
   private mostrarError(error: HttpErrorResponse): void {
+    this.sinVerificar.set(error.error?.codigo === 'CORREO_NO_VERIFICADO');
     this.error.set(this.auth.mensajeDeError(error));
     this.cargando.set(false);
   }
 
   // Si venia de una pagina protegida (ej. /perfil) vuelve a ella, si no va al inicio
   private irAlDestino(): void {
+    // El administrador siempre entra a su panel
+    if (this.auth.esAdmin()) {
+      this.router.navigateByUrl('/admin');
+      return;
+    }
     const destino = this.ruta.snapshot.queryParamMap.get('redirigir');
     const esInterno = destino !== null && destino.startsWith('/') && !destino.startsWith('//');
     this.router.navigateByUrl(esInterno ? destino : '/inicio');

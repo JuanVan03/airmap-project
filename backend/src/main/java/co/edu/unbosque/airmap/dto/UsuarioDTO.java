@@ -5,15 +5,18 @@ public class UsuarioDTO {
 	private String nombre;
 	private String correo;
 	private String proveedor;
+	// USUARIO o ADMIN
+	private String rol;
 
 	public UsuarioDTO() {
 	}
 
-	public UsuarioDTO(String nombre, String correo, String proveedor) {
+	public UsuarioDTO(String nombre, String correo, String proveedor, String rol) {
 		super();
 		this.nombre = nombre;
 		this.correo = correo;
 		this.proveedor = proveedor;
+		this.rol = rol;
 	}
 
 	public String getNombre() {
@@ -40,9 +43,17 @@ public class UsuarioDTO {
 		this.proveedor = proveedor;
 	}
 
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
 	@Override
 	public String toString() {
-		return "UsuarioDTO [nombre=" + nombre + ", correo=" + correo + ", proveedor=" + proveedor + "]";
+		return "UsuarioDTO [nombre=" + nombre + ", correo=" + correo + ", proveedor=" + proveedor + ", rol=" + rol + "]";
 	}
 
 }

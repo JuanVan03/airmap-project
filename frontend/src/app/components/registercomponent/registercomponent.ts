@@ -29,6 +29,9 @@ export class Registercomponent implements OnInit, AfterViewInit {
   cargando = signal(false);
   error = signal('');
   googleDisponible = signal(true);
+  // Correo al que se envio la confirmacion (cuando tiene valor se muestra el aviso de "revisa tu correo")
+  enviadoA = signal('');
+  aviso = signal('');
 
   // Minimo 8 caracteres, una mayuscula y un numero (igual que en el back)
   private readonly formatoContrasena = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -79,9 +82,22 @@ export class Registercomponent implements OnInit, AfterViewInit {
     this.auth
       .registrar({ nombre: this.nombre, correo: this.correo, contrasena: this.contrasena })
       .subscribe({
-        next: () => this.router.navigateByUrl('/inicio'),
+        next: () => {
+          this.enviadoA.set(this.correo.trim());
+          this.cargando.set(false);
+        },
         error: (error: HttpErrorResponse) => this.mostrarError(error),
       });
+  }
+
+  // Por si el correo no llego: el back envia otro enlace
+  reenviar(): void {
+    this.aviso.set('');
+    this.error.set('');
+    this.auth.reenviarVerificacion(this.enviadoA()).subscribe({
+      next: (respuesta) => this.aviso.set(respuesta.mensaje),
+      error: (error: HttpErrorResponse) => this.error.set(this.auth.mensajeDeError(error)),
+    });
   }
 
   // Con Google el back crea la cuenta si no existe

@@ -9,7 +9,10 @@ import { Viajesterrestrescomponent } from './components/viajes/viajesterrestresc
 import { Asistentecomponent } from './components/asistente/asistentecomponent/asistentecomponent';
 import { Perfilcomponent } from './components/perfil/perfilcomponent/perfilcomponent';
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
-import { authGuard, invitadoGuard } from './guards/auth.guard';
+import { Restablecercomponent } from './components/restablecercomponent/restablecercomponent';
+import { Verificarcomponent } from './components/verificarcomponent/verificarcomponent';
+import { Admincomponent } from './components/admincomponent/admincomponent';
+import { adminGuard, authGuard, invitadoGuard } from './guards/auth.guard';
 import { Notfoundcomponent } from './components/principal/notfoundcomponent/notfoundcomponent';
 
 const routes: Routes = [
@@ -20,10 +23,17 @@ const routes: Routes = [
   { path: 'vuelos', component: Vuelocomponent },
   { path: 'informacion', component: Informacioncomponent },
   { path: 'informacion/:id', component: Informacioncomponent },
-  { path: 'viajes-terrestres', component: Viajesterrestrescomponent },
+  // Calcular rutas pide sesion: sin ella manda al login y despues vuelve aqui
+  { path: 'viajes-terrestres', component: Viajesterrestrescomponent, canActivate: [authGuard] },
   { path: 'asistente', component: Asistentecomponent, canActivate: [authGuard] },
   { path: 'perfil', component: Perfilcomponent, canActivate: [authGuard] },
+  // Panel del administrador (auditoria): solo con el rol ADMIN
+  { path: 'admin', component: Admincomponent, canActivate: [adminGuard] },
   { path: 'recuperar', component: Recuperarcomponent },
+  // Enlace que llega por correo para crear una contraseña nueva
+  { path: 'restablecer', component: Restablecercomponent },
+  // Enlace que llega por correo para confirmar la cuenta
+  { path: 'verificar', component: Verificarcomponent },
   // Cualquier otra direccion muestra la pagina 404
   { path: '**', component: Notfoundcomponent },
 ];

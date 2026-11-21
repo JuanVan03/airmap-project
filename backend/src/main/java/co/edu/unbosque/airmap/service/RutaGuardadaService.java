@@ -23,6 +23,9 @@ public class RutaGuardadaService {
 	@Autowired
 	private UsuarioRepository usuarioRepo;
 
+	@Autowired
+	private AuditoriaService auditoria;
+
 	public RutaGuardadaService() {
 	}
 
@@ -40,7 +43,10 @@ public class RutaGuardadaService {
 		RutaGuardada ruta = new RutaGuardada(usuarioId, datos.getNombre().trim(), datos.getOrigenLat(),
 				datos.getOrigenLon(), datos.getDestinoCodigo(), datos.getDestinoNombre(), datos.getDestinoLat(),
 				datos.getDestinoLon(), datos.getModo(), datos.getDistanciaKm(), datos.getDuracionMin());
-		return aDTO(rutaRepo.save(ruta));
+		RutaGuardadaDTO guardada = aDTO(rutaRepo.save(ruta));
+		auditoria.registrar("RUTA_GUARDADA", correo, AuditoriaService.EXITO,
+				"Ruta \"" + ruta.getNombre() + "\" hacia " + ruta.getDestinoCodigo());
+		return guardada;
 	}
 
 	public void eliminar(String correo, Long id) {
@@ -49,6 +55,7 @@ public class RutaGuardadaService {
 		RutaGuardada ruta = rutaRepo.findByIdAndUsuarioId(id, usuarioId)
 				.orElseThrow(() -> new NegocioException("La ruta no existe.", 404, "RUTA_NO_ENCONTRADA"));
 		rutaRepo.delete(ruta);
+		auditoria.registrar("RUTA_ELIMINADA", correo, AuditoriaService.EXITO, "Ruta \"" + ruta.getNombre() + "\"");
 	}
 
 	// El correo sale del token JWT, asi cada usuario solo ve lo suyo

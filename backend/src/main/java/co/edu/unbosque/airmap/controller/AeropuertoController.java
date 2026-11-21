@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unbosque.airmap.dto.AeropuertoDTO;
 import co.edu.unbosque.airmap.service.AeropuertoService;
+import co.edu.unbosque.airmap.service.AuditoriaService;
 
 @RestController
 @RequestMapping("/api/aeropuertos")
@@ -22,13 +23,19 @@ public class AeropuertoController {
 	@Autowired
 	private AeropuertoService aeropuertoServ;
 
+	@Autowired
+	private AuditoriaService auditoria;
+
 	public AeropuertoController() {
 	}
 
 	// Busca por codigo, nombre o ciudad: /api/aeropuertos?q=bogota
 	@GetMapping
 	ResponseEntity<List<AeropuertoDTO>> buscar(@RequestParam String q) {
-		return new ResponseEntity<>(aeropuertoServ.buscar(q), HttpStatus.OK);
+		List<AeropuertoDTO> encontrados = aeropuertoServ.buscar(q);
+		auditoria.registrar("BUSQUEDA_AEROPUERTO", AuditoriaService.EXITO,
+				"Buscó \"" + q + "\" (" + encontrados.size() + " resultados)");
+		return new ResponseEntity<>(encontrados, HttpStatus.OK);
 	}
 
 }

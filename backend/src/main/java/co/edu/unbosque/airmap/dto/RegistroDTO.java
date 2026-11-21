@@ -12,7 +12,10 @@ public class RegistroDTO {
 	private String nombre;
 
 	@NotBlank(message = "Ingresa tu correo.")
-	@Email(message = "Ingresa un correo valido.")
+	@Email(message = "Ingresa un correo válido, por ejemplo nombre@correo.com.")
+	// Debe tener @ y un punto con su terminacion despues (.com, .co, .edu.co...)
+	@Pattern(regexp = "^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$", message = "Ingresa un correo válido, por ejemplo nombre@correo.com.")
+	@Size(max = 150, message = "El correo es muy largo.")
 	private String correo;
 
 	// Minimo 8 caracteres, una mayuscula y un numero
