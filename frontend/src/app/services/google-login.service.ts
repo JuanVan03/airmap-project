@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-// Client ID de Google Cloud (es publico, no es un secreto): pegalo aqui
-const GOOGLE_CLIENT_ID = '';
+// Client ID de Google Cloud
+const GOOGLE_CLIENT_ID = '30490112862-t404lpts1b5qmkpicidmnad8n3pfskl4.apps.googleusercontent.com';
 
 type TextoBoton = 'signin_with' | 'signup_with' | 'continue_with';
 

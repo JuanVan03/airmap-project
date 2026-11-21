@@ -1,42 +1,14 @@
-import { Component, computed, signal } from '@angular/core';
-import { Aeropuerto } from '../../../models/aeropuerto';
-import { RutaGuardada } from '../../../models/ruta-guardada';
+import { Component, OnInit, computed, effect, signal, untracked } from '@angular/core';
+import { Favorito } from '../../../models/favorito';
 import { ModoViaje } from '../../../models/ruta';
-import { AuthService } from '../../../services/auth.service';
+import { RutaGuardada } from '../../../models/ruta-guardada';
 import { Vuelo } from '../../../models/vuelo';
+import { AuthService } from '../../../services/auth.service';
+import { FavoritoService } from '../../../services/favorito.service';
+import { RutaGuardadaService } from '../../../services/ruta-guardada.service';
+import { VueloService } from '../../../services/vuelo.service';
 
 type Pestana = 'favoritos' | 'historial' | 'rutas' | 'ajustes';
-
-// ---------- DATOS DE EJEMPLO ----------
-// Favoritos y rutas guardadas: se borran cuando el back entregue los datos reales
-const BOG: Aeropuerto = { codigo: 'BOG', nombre: 'El Dorado', ciudad: 'Bogotá', pais: 'Colombia', latitud: 4.70159, longitud: -74.1469 };
-const MAD: Aeropuerto = { codigo: 'MAD', nombre: 'Barajas', ciudad: 'Madrid', pais: 'España', latitud: 40.4936, longitud: -3.56676 };
-const LIM: Aeropuerto = { codigo: 'LIM', nombre: 'Jorge Chávez', ciudad: 'Lima', pais: 'Perú', latitud: -12.0219, longitud: -77.1143 };
-const SCL: Aeropuerto = { codigo: 'SCL', nombre: 'Arturo Merino Benítez', ciudad: 'Santiago', pais: 'Chile', latitud: -33.393, longitud: -70.7858 };
-
-const FAVORITOS_EJEMPLO: Vuelo[] = [
-  {
-    id: 'ejemplo1', numeroVuelo: 'AV010', aerolinea: 'Avianca', estado: 'EN_VUELO',
-    latitud: 25, longitud: -50, rumbo: 52, altitud: 10670, velocidad: 880,
-    origen: BOG, destino: MAD, horaSalida: '2026-11-20T08:35:00', horaLlegada: '2026-11-20T22:10:00',
-  },
-  {
-    id: 'ejemplo2', numeroVuelo: 'LA533', aerolinea: 'LATAM', estado: 'EN_VUELO',
-    latitud: -20, longitud: -75, rumbo: 170, altitud: 10670, velocidad: 880,
-    origen: LIM, destino: SCL, horaSalida: '2026-11-20T13:00:00', horaLlegada: '2026-11-20T15:45:00',
-  },
-  {
-    id: 'ejemplo3', numeroVuelo: 'IB6830', aerolinea: 'Iberia', estado: 'ATERRIZANDO',
-    latitud: 5, longitud: -74, rumbo: 250, altitud: 10670, velocidad: 880,
-    origen: MAD, destino: BOG, horaSalida: '2026-11-20T02:00:00', horaLlegada: '2026-11-20T14:20:00',
-  },
-];
-
-const RUTAS_EJEMPLO: RutaGuardada[] = [
-  { id: 1, nombre: 'Casa → Aeropuerto El Dorado', duracionMin: 32, distanciaKm: 24, modo: 'auto' },
-  { id: 2, nombre: 'Oficina → Aeropuerto El Dorado', duracionMin: 48, distanciaKm: 27, modo: 'auto' },
-  { id: 3, nombre: 'Casa → Aeropuerto El Dorado', duracionMin: 95, distanciaKm: 24, modo: 'bici' },
-];
 
 @Component({
   selector: 'app-perfilcomponent',
@@ -44,17 +16,77 @@ const RUTAS_EJEMPLO: RutaGuardada[] = [
   styleUrl: './perfilcomponent.css',
   templateUrl: './perfilcomponent.html',
 })
-export class Perfilcomponent {
+export class Perfilcomponent implements OnInit {
   // Pestana que se esta viendo
   pestana = signal<Pestana>('favoritos');
 
   // Usuario que inicio sesion (el guard evita llegar aqui sin sesion)
   usuario = computed(() => this.auth.usuario() ?? { nombre: '', correo: '', proveedor: 'LOCAL' as const });
-  favoritos = signal<Vuelo[]>(FAVORITOS_EJEMPLO);
-  historial = signal<Vuelo[]>([]);
-  rutasGuardadas = signal<RutaGuardada[]>(RUTAS_EJEMPLO);
 
-  constructor(private auth: AuthService) {}
+  // Favoritos: la lista sale del FavoritoService
+  favoritos = computed(() => this.favoritosServ.favoritos());
+  // Datos en vivo de cada favorito: el Vuelo si sigue en el aire, null si ya no, y nada mientras carga
+  vuelosVivos = signal<Record<string, Vuelo | null>>({});
+  private pidiendo = new Set<string>();
+
+  // Rutas guardadas
+  rutasGuardadas = signal<RutaGuardada[]>([]);
+  cargandoRutas = signal(true);
+  errorRutas = signal('');
+
+  constructor(
+    private auth: AuthService,
+    private favoritosServ: FavoritoService,
+    private rutaGuardadaServ: RutaGuardadaService,
+    private vueloService: VueloService,
+  ) {
+    // Cada vez que cambia la lista de favoritos se piden los datos en vivo de los nuevos
+    effect(() => {
+      const lista = this.favoritosServ.favoritos();
+      untracked(() => lista.forEach((favorito) => this.cargarVuelo(favorito.vueloId)));
+    });
+  }
+
+  ngOnInit(): void {
+    this.rutaGuardadaServ.listar().subscribe({
+      next: (lista) => {
+        this.rutasGuardadas.set(lista);
+        this.cargandoRutas.set(false);
+      },
+      error: () => {
+        this.errorRutas.set('No se pudieron cargar tus rutas guardadas.');
+        this.cargandoRutas.set(false);
+      },
+    });
+  }
+
+  private cargarVuelo(id: string): void {
+    if (this.pidiendo.has(id)) {
+      return;
+    }
+    this.pidiendo.add(id);
+    this.vueloService.getVuelo(id).subscribe({
+      next: (vuelo) => this.vuelosVivos.update((datos) => ({ ...datos, [id]: vuelo })),
+      error: () => this.vuelosVivos.update((datos) => ({ ...datos, [id]: null })),
+    });
+  }
+
+  // Vuelo en vivo del favorito: Vuelo, null (ya no esta en el aire) o undefined (cargando)
+  vueloDe(favorito: Favorito): Vuelo | null | undefined {
+    return this.vuelosVivos()[favorito.vueloId];
+  }
+
+  quitarFavorito(favorito: Favorito): void {
+    this.favoritosServ.quitar(favorito.vueloId).subscribe({ error: () => {} });
+  }
+
+  eliminarRuta(ruta: RutaGuardada): void {
+    this.errorRutas.set('');
+    this.rutaGuardadaServ.eliminar(ruta.id).subscribe({
+      next: () => this.rutasGuardadas.update((lista) => lista.filter((r) => r.id !== ruta.id)),
+      error: () => this.errorRutas.set('No se pudo eliminar la ruta.'),
+    });
+  }
 
   cerrarSesion(): void {
     this.auth.cerrarSesion();

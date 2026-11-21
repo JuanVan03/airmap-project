@@ -18,63 +18,41 @@
   @if (pestana() === 'favoritos') {
     <h2>Vuelos favoritos</h2>
     @if (favoritos().length === 0) {
-      <p class="vacio">Aún no tienes vuelos favoritos. Guarda uno desde su página de información.</p>
+      <p class="vacio">Aún no tienes vuelos favoritos. Toca la estrella ☆ de un vuelo para guardarlo aquí.</p>
     } @else {
       <div class="vuelos">
-        @for (vuelo of favoritos(); track vuelo.id) {
-          <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+        @for (favorito of favoritos(); track favorito.vueloId) {
+          @let vuelo = vueloDe(favorito);
+          @if (vuelo) {
+            <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
+          } @else if (vuelo === null) {
+            <article class="inactivo">
+              <strong>{{ favorito.numeroVuelo || 'Vuelo' }}</strong>
+              <span>Este vuelo ya no está en el aire.</span>
+              <button type="button" class="btn btn-secundario" (click)="quitarFavorito(favorito)">Quitar de favoritos</button>
+            </article>
+          } @else {
+            <article class="inactivo">
+              <strong>{{ favorito.numeroVuelo || 'Vuelo' }}</strong>
+              <span>Cargando datos del vuelo...</span>
+            </article>
+          }
         }
       </div>
     }
 
     <h2>Rutas guardadas</h2>
-    @if (rutasGuardadas().length === 0) {
-      <p class="vacio">Aún no has guardado rutas al aeropuerto.</p>
-    } @else {
-      <div class="rutas">
-        @for (ruta of rutasGuardadas(); track ruta.id) {
-          <div class="ruta">
-            <div class="ruta-texto">
-              <strong>{{ ruta.nombre }}</strong>
-              <span>{{ formatoTiempo(ruta.duracionMin) }} · {{ ruta.distanciaKm }} km · {{ textoModo(ruta.modo) }}</span>
-            </div>
-            <a class="btn btn-secundario" routerLink="/viajes-terrestres">Abrir</a>
-          </div>
-        }
-      </div>
-    }
+    <ng-container *ngTemplateOutlet="listaRutas"></ng-container>
   }
 
   @if (pestana() === 'historial') {
     <h2>Historial de vuelos</h2>
-    @if (historial().length === 0) {
-      <p class="vacio">Aún no has consultado vuelos. Los que abras aparecerán aquí.</p>
-    } @else {
-      <div class="vuelos">
-        @for (vuelo of historial(); track vuelo.id) {
-          <app-tarjetavuelocomponent [vuelo]="vuelo"></app-tarjetavuelocomponent>
-        }
-      </div>
-    }
+    <p class="vacio">El historial de vuelos consultados estará disponible pronto.</p>
   }
 
   @if (pestana() === 'rutas') {
     <h2>Rutas guardadas</h2>
-    @if (rutasGuardadas().length === 0) {
-      <p class="vacio">Aún no has guardado rutas al aeropuerto.</p>
-    } @else {
-      <div class="rutas">
-        @for (ruta of rutasGuardadas(); track ruta.id) {
-          <div class="ruta">
-            <div class="ruta-texto">
-              <strong>{{ ruta.nombre }}</strong>
-              <span>{{ formatoTiempo(ruta.duracionMin) }} · {{ ruta.distanciaKm }} km · {{ textoModo(ruta.modo) }}</span>
-            </div>
-            <a class="btn btn-secundario" routerLink="/viajes-terrestres">Abrir</a>
-          </div>
-        }
-      </div>
-    }
+    <ng-container *ngTemplateOutlet="listaRutas"></ng-container>
   }
 
   @if (pestana() === 'ajustes') {
@@ -101,3 +79,32 @@
     </form>
   }
 </section>
+
+<!-- Lista de rutas guardadas (se usa en dos pestanas) -->
+<ng-template #listaRutas>
+  @if (errorRutas()) {
+    <p class="error-general">{{ errorRutas() }}</p>
+  }
+
+  @if (cargandoRutas()) {
+    <p class="vacio">Cargando tus rutas...</p>
+  } @else if (rutasGuardadas().length === 0) {
+    <p class="vacio">Aún no has guardado rutas. Calcula una en "Viajes terrestres" y toca "Guardar ruta".</p>
+  } @else {
+    <div class="rutas">
+      @for (ruta of rutasGuardadas(); track ruta.id) {
+        <div class="ruta">
+          <div class="ruta-texto">
+            <strong>{{ ruta.nombre }}</strong>
+            <span>{{ ruta.destinoNombre }} · {{ formatoTiempo(ruta.duracionMin) }} · {{ ruta.distanciaKm }} km · {{ textoModo(ruta.modo) }}</span>
+          </div>
+          <div class="ruta-acciones">
+            <a class="btn btn-secundario" routerLink="/viajes-terrestres"
+               [queryParams]="{ origenLat: ruta.origenLat, origenLon: ruta.origenLon, destino: ruta.destinoCodigo, modo: ruta.modo }">Abrir</a>
+            <button type="button" class="btn btn-secundario" (click)="eliminarRuta(ruta)">Eliminar</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</ng-template>

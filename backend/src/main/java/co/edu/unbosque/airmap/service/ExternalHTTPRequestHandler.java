@@ -28,9 +28,15 @@ public class ExternalHTTPRequestHandler {
 
 	// POST con cuerpo JSON y la clave de la API en el encabezado Authorization
 	public static <T> T doPostAndConvertToDto(String url, String apiKey, Object body, Class<T> clazz) {
+		return doPostAndConvertToDto(url, "Authorization", apiKey, body, clazz);
+	}
+
+	// Igual, pero el nombre del encabezado de la clave cambia segun la API (Gemini usa x-goog-api-key)
+	public static <T> T doPostAndConvertToDto(String url, String headerName, String apiKey, Object body,
+			Class<T> clazz) {
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
 				.header("Content-Type", "application/json").header("Accept", "application/json, application/geo+json")
-				.header("Authorization", apiKey).timeout(Duration.ofSeconds(30))
+				.header(headerName, apiKey).timeout(Duration.ofSeconds(30))
 				.POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(body))).build();
 		return convert(getBody(request), clazz, url);
 	}

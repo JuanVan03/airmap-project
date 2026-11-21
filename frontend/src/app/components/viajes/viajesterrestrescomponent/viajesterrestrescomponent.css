@@ -153,6 +153,31 @@ h1 {
   font-size: 13px;
 }
 
+/* ---------- Guardar ruta ---------- */
+.guardada {
+  color: #34D399;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.guardar-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.guardar-formulario input {
+  flex: 1 1 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  background: var(--elevado);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  color: var(--texto);
+  font-family: inherit;
+  font-size: 14px;
+}
+
 /* ---------- Mapa ---------- */
 .zona-mapa {
   position: relative;

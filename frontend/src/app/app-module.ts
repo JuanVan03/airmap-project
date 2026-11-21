@@ -19,6 +19,7 @@ import { Maparutacomponent } from './components/viajes/maparutacomponent/maparut
 import { Perfilcomponent } from './components/perfil/perfilcomponent/perfilcomponent';
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { Favoritocomponent } from './components/vuelos/favoritocomponent/favoritocomponent';
 import { Asistentecomponent } from './components/asistente/asistentecomponent/asistentecomponent';
 
 @NgModule({
@@ -39,6 +40,7 @@ import { Asistentecomponent } from './components/asistente/asistentecomponent/as
     Asistentecomponent,
     Perfilcomponent,
     Recuperarcomponent,
+    Favoritocomponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient(withInterceptors([authInterceptor]))],

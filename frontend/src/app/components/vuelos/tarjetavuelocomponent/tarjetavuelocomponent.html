@@ -1,7 +1,10 @@
 <article class="tarjeta">
   <div class="fila">
     <span class="aerolinea">{{ vuelo.aerolinea || 'Sin aerolínea' }} · {{ vuelo.numeroVuelo }}</span>
-    <span [class]="'estado ' + vuelo.estado">{{ vuelo.estado.replace('_', ' ') }}</span>
+    <span class="derecha">
+      <span [class]="'estado ' + vuelo.estado">{{ vuelo.estado.replace('_', ' ') }}</span>
+      <app-favoritocomponent [vuelo]="vuelo"></app-favoritocomponent>
+    </span>
   </div>
 
   <div class="ruta">

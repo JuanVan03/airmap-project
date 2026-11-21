@@ -21,6 +21,12 @@
   gap: 12px;
 }
 
+.derecha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .aerolinea {
   color: var(--texto-suave);
   font-size: 13px;

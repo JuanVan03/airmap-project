@@ -16,6 +16,7 @@
     <div class="titulo">
       <h1>{{ v.aerolinea ? v.aerolinea + ' ' : '' }}{{ v.numeroVuelo }}</h1>
       <span [class]="'estado ' + v.estado">{{ v.estado.replace('_', ' ') }}</span>
+      <app-favoritocomponent [vuelo]="v"></app-favoritocomponent>
       <a class="btn btn-secundario boton-ruta" routerLink="/asistente" [queryParams]="{ vuelo: v.id }">Preguntar al asistente IA</a>
       <a class="btn btn-primario" routerLink="/viajes-terrestres" [queryParams]="{ vuelo: v.id }">Cómo llegar al aeropuerto</a>
     </div>

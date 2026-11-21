@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'informacion', component: Informacioncomponent },
   { path: 'informacion/:id', component: Informacioncomponent },
   { path: 'viajes-terrestres', component: Viajesterrestrescomponent },
-  { path: 'asistente', component: Asistentecomponent },
+  { path: 'asistente', component: Asistentecomponent, canActivate: [authGuard] },
   { path: 'perfil', component: Perfilcomponent, canActivate: [authGuard] },
   { path: 'recuperar', component: Recuperarcomponent },
   // Cualquier otra direccion muestra la pagina 404

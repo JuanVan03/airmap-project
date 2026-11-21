@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Aeropuerto } from '../../../models/aeropuerto';
 import { ModoViaje, Ruta } from '../../../models/ruta';
 import { Ubicacion } from '../../../models/ubicacion';
 import { Vuelo } from '../../../models/vuelo';
 import { AeropuertoService } from '../../../services/aeropuerto.service';
+import { AuthService } from '../../../services/auth.service';
+import { RutaGuardadaService } from '../../../services/ruta-guardada.service';
 import { RutaService } from '../../../services/ruta.service';
 import { VueloService } from '../../../services/vuelo.service';
 
@@ -32,22 +34,65 @@ export class Viajesterrestrescomponent implements OnInit {
   mensaje = signal('');
   // Texto que escribe el usuario en el buscador de aeropuertos
   texto = '';
+  // true cuando el punto de salida viene de una ruta guardada y no del GPS
+  origenGuardado = signal(false);
+  // Guardar ruta: formulario abierto, nombre escrito y aviso de "ya guardada"
+  guardando = signal(false);
+  rutaGuardada = signal(false);
+  nombreRuta = '';
 
   constructor(
     private route: ActivatedRoute,
     private vueloService: VueloService,
     private aeropuertoService: AeropuertoService,
     private rutaService: RutaService,
+    private rutaGuardadaService: RutaGuardadaService,
+    private auth: AuthService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
+    const params = this.route.snapshot.queryParamMap;
+
+    // Ruta guardada: /viajes-terrestres?origenLat=..&origenLon=..&destino=BOG&modo=auto
+    const origenLat = Number(params.get('origenLat'));
+    const origenLon = Number(params.get('origenLon'));
+    const codigo = params.get('destino');
+    if (params.get('origenLat') && params.get('origenLon') && codigo && Number.isFinite(origenLat) && Number.isFinite(origenLon)) {
+      this.abrirRutaGuardada({ latitud: origenLat, longitud: origenLon }, codigo, params.get('modo'));
+      return;
+    }
+
     this.pedirUbicacion();
 
     // Si llegamos desde un vuelo, la URL trae su id: /viajes-terrestres?vuelo=ID
-    const idVuelo = this.route.snapshot.queryParamMap.get('vuelo');
+    const idVuelo = params.get('vuelo');
     if (idVuelo) {
       this.cargarVuelo(idVuelo);
     }
+  }
+
+  // Carga la salida, el aeropuerto y el medio de una ruta guardada
+  private abrirRutaGuardada(origen: Ubicacion, codigo: string, modo: string | null): void {
+    this.ubicacion.set(origen);
+    this.origenGuardado.set(true);
+    this.estadoUbicacion.set('Ubicación de tu ruta guardada');
+    if (modo === 'auto' || modo === 'pie' || modo === 'bici') {
+      this.modo.set(modo);
+    }
+
+    this.aeropuertoService.buscar(codigo).subscribe({
+      next: (lista) => {
+        const aeropuerto = lista.find((a) => a.codigo === codigo.toUpperCase());
+        if (aeropuerto) {
+          this.destino.set(aeropuerto);
+          this.calcularRuta();
+        } else {
+          this.mensaje.set('No se encontró el aeropuerto de esta ruta. Elige uno a mano.');
+        }
+      },
+      error: () => this.mensaje.set('No se pudo conectar con el servidor.'),
+    });
   }
 
   // Pide permiso al navegador para conocer la ubicacion
@@ -61,6 +106,7 @@ export class Viajesterrestrescomponent implements OnInit {
     navigator.geolocation.getCurrentPosition(
       (posicion) => {
         this.ubicacion.set({ latitud: posicion.coords.latitude, longitud: posicion.coords.longitude });
+        this.origenGuardado.set(false);
         this.estadoUbicacion.set('Ubicación detectada');
         this.calcularRuta();
       },
@@ -121,6 +167,8 @@ export class Viajesterrestrescomponent implements OnInit {
     }
 
     this.cargando.set(true);
+    this.guardando.set(false);
+    this.rutaGuardada.set(false);
     this.rutaService.getRuta(origen, destino.latitud, destino.longitud, this.modo()).subscribe({
       next: (ruta) => {
         this.ruta.set(ruta);
@@ -134,6 +182,62 @@ export class Viajesterrestrescomponent implements OnInit {
         this.cargando.set(false);
       },
     });
+  }
+
+  // "Guardar ruta": pide iniciar sesion si hace falta y abre el campo del nombre
+  abrirGuardado(): void {
+    if (!this.auth.haySesion()) {
+      this.router.navigate(['/login'], { queryParams: { redirigir: this.enlaceDeEstaRuta() } });
+      return;
+    }
+    this.nombreRuta = `Mi ubicación → ${this.destino()?.nombre ?? ''}`.slice(0, 100);
+    this.guardando.set(true);
+  }
+
+  confirmarGuardado(): void {
+    const origen = this.ubicacion();
+    const destino = this.destino();
+    const ruta = this.ruta();
+    const nombre = this.nombreRuta.trim();
+    if (!origen || !destino || !ruta || nombre === '') {
+      this.mensaje.set('Escribe un nombre para la ruta.');
+      return;
+    }
+
+    this.rutaGuardadaService
+      .guardar({
+        nombre,
+        origenLat: origen.latitud,
+        origenLon: origen.longitud,
+        destinoCodigo: destino.codigo,
+        destinoNombre: destino.nombre,
+        destinoLat: destino.latitud,
+        destinoLon: destino.longitud,
+        modo: this.modo(),
+        distanciaKm: ruta.distanciaKm,
+        duracionMin: ruta.duracionMin,
+      })
+      .subscribe({
+        next: () => {
+          this.guardando.set(false);
+          this.rutaGuardada.set(true);
+        },
+        error: (e: HttpErrorResponse) => this.mensaje.set(e.error?.mensaje ?? 'No se pudo guardar la ruta.'),
+      });
+  }
+
+  // Direccion de esta misma ruta, para volver a ella despues de iniciar sesion
+  private enlaceDeEstaRuta(): string {
+    const origen = this.ubicacion();
+    const destino = this.destino();
+    if (!origen || !destino) {
+      return this.router.url;
+    }
+    return this.router
+      .createUrlTree(['/viajes-terrestres'], {
+        queryParams: { origenLat: origen.latitud, origenLon: origen.longitud, destino: destino.codigo, modo: this.modo() },
+      })
+      .toString();
   }
 
   // 95 min -> "1 h 35 min"

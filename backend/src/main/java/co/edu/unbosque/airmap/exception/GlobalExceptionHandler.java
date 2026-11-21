@@ -30,6 +30,12 @@ public class GlobalExceptionHandler {
 		return crearError(HttpStatus.valueOf(ex.getStatusCode()), ex.getCodigo(), ex.getMessage(), List.of());
 	}
 
+	// Algo no existe o se paso un limite (favoritos, rutas guardadas)
+	@ExceptionHandler(NegocioException.class)
+	public ResponseEntity<Map<String, Object>> handleNegocio(NegocioException ex) {
+		return crearError(HttpStatus.valueOf(ex.getStatusCode()), ex.getCodigo(), ex.getMessage(), List.of());
+	}
+
 	// Datos del formulario que no cumplen las validaciones (@NotBlank, @Email, etc.)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, Object>> handleValidacion(MethodArgumentNotValidException ex) {

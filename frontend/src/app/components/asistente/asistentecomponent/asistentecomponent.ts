@@ -24,10 +24,10 @@ export class Asistentecomponent implements OnInit {
 
   // Preguntas para empezar con un clic
   sugerencias = [
-    '¿Qué vuelos hay de Bogotá a Madrid?',
+    '¿Cuánto antes debo llegar al aeropuerto?',
     '¿Cómo llego al aeropuerto El Dorado?',
-    '¿Qué aerolíneas vuelan a Panamá?',
-    '¿Qué equipaje puedo llevar en un vuelo?',
+    '¿Qué puedo llevar en el equipaje de mano?',
+    '¿Cómo uso AirMap para seguir un vuelo?',
   ];
 
   @ViewChild('chat') chat!: ElementRef<HTMLDivElement>;

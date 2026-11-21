@@ -11,7 +11,7 @@
     <div class="grupo">
       <span class="etiqueta">Tu ubicación</span>
       <div class="caja">{{ estadoUbicacion() }}</div>
-      @if (!ubicacion()) {
+      @if (!ubicacion() || origenGuardado()) {
         <button type="button" class="btn btn-secundario" (click)="pedirUbicacion()">Usar mi ubicación</button>
       }
     </div>
@@ -53,7 +53,19 @@
     @if (ruta(); as r) {
       <div class="resultado">
         <span class="resumen">{{ formatoTiempo(r.duracionMin) }} · {{ r.distanciaKm }} km</span>
-        <span class="detalle">Ruta más corta calculada desde tu ubicación.</span>
+        <span class="detalle">Ruta más corta calculada desde {{ origenGuardado() ? 'la ubicación guardada' : 'tu ubicación' }}.</span>
+
+        @if (rutaGuardada()) {
+          <span class="guardada">✓ Ruta guardada. La encuentras en tu perfil.</span>
+        } @else if (guardando()) {
+          <form class="guardar-formulario" (ngSubmit)="confirmarGuardado()">
+            <input name="nombreRuta" [(ngModel)]="nombreRuta" maxlength="100" placeholder="Nombre de la ruta">
+            <button type="submit" class="btn btn-primario">Guardar</button>
+            <button type="button" class="btn btn-secundario" (click)="guardando.set(false)">Cancelar</button>
+          </form>
+        } @else {
+          <button type="button" class="btn btn-secundario" (click)="abrirGuardado()">Guardar ruta</button>
+        }
       </div>
     }
   </aside>
