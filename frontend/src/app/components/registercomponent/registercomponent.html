@@ -12,46 +12,69 @@
     <h1>Crea tu cuenta</h1>
     <p class="auth-subtitulo">Es gratis y toma menos de un minuto.</p>
 
-    <form class="formulario">
-      <p class="error-general" hidden>No se pudo crear la cuenta. Intenta de nuevo.</p>
+    <form class="formulario" #formulario="ngForm" (ngSubmit)="registrar(formulario)">
+      @if (error()) {
+        <p class="error-general">{{ error() }}</p>
+      }
 
       <div class="campo">
         <label for="nombre">Nombre completo</label>
-        <input id="nombre" name="nombre" type="text" placeholder="Juan Pérez" autocomplete="name" required>
-        <small class="error" hidden>Ingresa tu nombre.</small>
+        <input id="nombre" name="nombre" type="text" placeholder="Juan Pérez" autocomplete="name"
+               [(ngModel)]="nombre" #nombreCampo="ngModel" required maxlength="100">
+        @if (intentado() && nombreCampo.invalid) {
+          <small class="error">Ingresa tu nombre.</small>
+        }
       </div>
 
       <div class="campo">
         <label for="correo">Correo electrónico</label>
-        <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
-        <small class="error" hidden>Ingresa un correo válido o usa otro: este ya está registrado.</small>
+        <input id="correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email"
+               [(ngModel)]="correo" #correoCampo="ngModel" required email>
+        @if (intentado() && correoCampo.invalid) {
+          <small class="error">Ingresa un correo válido.</small>
+        }
       </div>
 
       <div class="campo">
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" name="contrasena" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" required>
-        <small class="error" hidden>Debe tener mínimo 8 caracteres, una mayúscula y un número.</small>
+        <input id="contrasena" name="contrasena" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password"
+               [(ngModel)]="contrasena" required>
+        @if (intentado() && !contrasenaValida()) {
+          <small class="error">Debe tener mínimo 8 caracteres, una mayúscula y un número.</small>
+        }
       </div>
 
       <div class="campo">
         <label for="confirmar">Confirmar contraseña</label>
-        <input id="confirmar" name="confirmar" type="password" placeholder="Repite tu contraseña" autocomplete="new-password" required>
-        <small class="error" hidden>Las contraseñas no coinciden.</small>
+        <input id="confirmar" name="confirmar" type="password" placeholder="Repite tu contraseña" autocomplete="new-password"
+               [(ngModel)]="confirmar" required>
+        @if (intentado() && !contrasenasCoinciden()) {
+          <small class="error">Las contraseñas no coinciden.</small>
+        }
       </div>
 
       <div class="opciones">
         <label>
-          <input type="checkbox" name="terminos" required>
+          <input type="checkbox" name="terminos" [(ngModel)]="terminos" #terminosCampo="ngModel" required>
           Acepto los términos y la política de privacidad
         </label>
       </div>
+      @if (intentado() && terminosCampo.invalid) {
+        <small class="error">Debes aceptar los términos para continuar.</small>
+      }
 
-      <button type="submit" class="btn btn-primario btn-bloque">Crear cuenta</button>
+      <button type="submit" class="btn btn-primario btn-bloque" [disabled]="cargando()">
+        {{ cargando() ? 'Creando cuenta...' : 'Crear cuenta' }}
+      </button>
     </form>
 
     <div class="separador">o</div>
 
-    <button type="button" class="btn btn-secundario btn-bloque">Registrarse con Google</button>
+    <!-- Google dibuja aqui su boton "Registrarse con Google" -->
+    <div class="boton-google" #botonGoogle></div>
+    @if (!googleDisponible()) {
+      <p class="nota-google">El registro con Google no está disponible por ahora.</p>
+    }
 
     <p class="auth-alterno">¿Ya tienes cuenta? <a routerLink="/login">Ingresa</a></p>
   </div>

@@ -90,11 +90,13 @@
         <input id="correo" name="correo" type="email" [value]="usuario().correo" readonly>
       </div>
 
-      <p class="nota">Si te registraste con Google, tu contraseña se gestiona desde tu cuenta de Google.</p>
+      @if (usuario().proveedor === 'GOOGLE') {
+        <p class="nota">Ingresaste con Google, así que tu contraseña se gestiona desde tu cuenta de Google.</p>
+      }
 
       <div class="botones">
         <button type="submit" class="btn btn-primario">Guardar cambios</button>
-        <button type="button" class="btn btn-secundario">Cerrar sesión</button>
+        <button type="button" class="btn btn-secundario" (click)="cerrarSesion()">Cerrar sesión</button>
       </div>
     </form>
   }

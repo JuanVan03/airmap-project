@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-navbarcomponent',
@@ -6,4 +7,15 @@ import { Component } from '@angular/core';
   styleUrl: './navbarcomponent.css',
   templateUrl: './navbarcomponent.html',
 })
-export class Navbarcomponent {}
+export class Navbarcomponent {
+  private auth = inject(AuthService);
+
+  autenticado = this.auth.autenticado;
+
+  // "Juan Pérez" -> "Juan"
+  primerNombre = computed(() => this.auth.usuario()?.nombre.split(' ')[0] ?? '');
+
+  cerrarSesion(): void {
+    this.auth.cerrarSesion();
+  }
+}

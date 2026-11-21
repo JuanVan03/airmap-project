@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,6 +18,7 @@ import { Viajesterrestrescomponent } from './components/viajes/viajesterrestresc
 import { Maparutacomponent } from './components/viajes/maparutacomponent/maparutacomponent';
 import { Perfilcomponent } from './components/perfil/perfilcomponent/perfilcomponent';
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
+import { authInterceptor } from './interceptors/auth.interceptor';
 import { Asistentecomponent } from './components/asistente/asistentecomponent/asistentecomponent';
 
 @NgModule({
@@ -40,7 +41,7 @@ import { Asistentecomponent } from './components/asistente/asistentecomponent/as
     Recuperarcomponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
-  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
+  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient(withInterceptors([authInterceptor]))],
   bootstrap: [App],
 })
 export class AppModule {}

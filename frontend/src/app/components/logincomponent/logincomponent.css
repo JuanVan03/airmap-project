@@ -1,0 +1,13 @@
+
+/* Boton de Google (lo dibuja Google dentro de este contenedor) */
+.boton-google {
+  display: flex;
+  justify-content: center;
+}
+
+.nota-google {
+  margin: 0;
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 13px;
+}

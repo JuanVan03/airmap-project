@@ -1,14 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { Aeropuerto } from '../../../models/aeropuerto';
 import { RutaGuardada } from '../../../models/ruta-guardada';
 import { ModoViaje } from '../../../models/ruta';
-import { Usuario } from '../../../models/usuario';
+import { AuthService } from '../../../services/auth.service';
 import { Vuelo } from '../../../models/vuelo';
 
 type Pestana = 'favoritos' | 'historial' | 'rutas' | 'ajustes';
 
 // ---------- DATOS DE EJEMPLO ----------
-// Se borran cuando el back entregue los datos reales del usuario
+// Favoritos y rutas guardadas: se borran cuando el back entregue los datos reales
 const BOG: Aeropuerto = { codigo: 'BOG', nombre: 'El Dorado', ciudad: 'Bogotá', pais: 'Colombia', latitud: 4.70159, longitud: -74.1469 };
 const MAD: Aeropuerto = { codigo: 'MAD', nombre: 'Barajas', ciudad: 'Madrid', pais: 'España', latitud: 40.4936, longitud: -3.56676 };
 const LIM: Aeropuerto = { codigo: 'LIM', nombre: 'Jorge Chávez', ciudad: 'Lima', pais: 'Perú', latitud: -12.0219, longitud: -77.1143 };
@@ -48,10 +48,17 @@ export class Perfilcomponent {
   // Pestana que se esta viendo
   pestana = signal<Pestana>('favoritos');
 
-  usuario = signal<Usuario>({ nombre: 'Tu nombre', correo: 'tu@correo.com' });
+  // Usuario que inicio sesion (el guard evita llegar aqui sin sesion)
+  usuario = computed(() => this.auth.usuario() ?? { nombre: '', correo: '', proveedor: 'LOCAL' as const });
   favoritos = signal<Vuelo[]>(FAVORITOS_EJEMPLO);
   historial = signal<Vuelo[]>([]);
   rutasGuardadas = signal<RutaGuardada[]>(RUTAS_EJEMPLO);
+
+  constructor(private auth: AuthService) {}
+
+  cerrarSesion(): void {
+    this.auth.cerrarSesion();
+  }
 
   cambiarPestana(pestana: Pestana): void {
     this.pestana.set(pestana);

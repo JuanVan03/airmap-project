@@ -9,19 +9,20 @@ import { Viajesterrestrescomponent } from './components/viajes/viajesterrestresc
 import { Asistentecomponent } from './components/asistente/asistentecomponent/asistentecomponent';
 import { Perfilcomponent } from './components/perfil/perfilcomponent/perfilcomponent';
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
+import { authGuard, invitadoGuard } from './guards/auth.guard';
 import { Notfoundcomponent } from './components/principal/notfoundcomponent/notfoundcomponent';
 
 const routes: Routes = [
   { path: '', component: Iniciocomponent },
   { path: 'inicio', component: Iniciocomponent },
-  { path: 'login', component: Logincomponent },
-  { path: 'register', component: Registercomponent },
+  { path: 'login', component: Logincomponent, canActivate: [invitadoGuard] },
+  { path: 'register', component: Registercomponent, canActivate: [invitadoGuard] },
   { path: 'vuelos', component: Vuelocomponent },
   { path: 'informacion', component: Informacioncomponent },
   { path: 'informacion/:id', component: Informacioncomponent },
   { path: 'viajes-terrestres', component: Viajesterrestrescomponent },
   { path: 'asistente', component: Asistentecomponent },
-  { path: 'perfil', component: Perfilcomponent },
+  { path: 'perfil', component: Perfilcomponent, canActivate: [authGuard] },
   { path: 'recuperar', component: Recuperarcomponent },
   // Cualquier otra direccion muestra la pagina 404
   { path: '**', component: Notfoundcomponent },
