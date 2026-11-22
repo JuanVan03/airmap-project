@@ -6,6 +6,7 @@ import { AuthRespuesta } from '../models/auth-respuesta';
 import { MensajeRespuesta } from '../models/mensaje-respuesta';
 import { DatosLogin, DatosRegistro } from '../models/datos-auth';
 import { Usuario } from '../models/usuario';
+import { environment } from '../../environments/environment';
 
 // Nombres con los que se guarda la sesion en el navegador
 const CLAVE_TOKEN = 'airmap_token';
@@ -15,7 +16,7 @@ const CLAVE_USUARIO = 'airmap_usuario';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly url = 'http://localhost:8080/api/auth';
+  private readonly url = `${environment.apiUrl}/api/auth`;
 
   // Sesion actual: null cuando nadie ha ingresado
   readonly token = signal<string | null>(null);

@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HistorialVuelo } from '../models/historial';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HistorialService {
-  private readonly url = 'http://localhost:8080/api/historial';
+  private readonly url = `${environment.apiUrl}/api/historial`;
 
   constructor(private http: HttpClient) {}
 

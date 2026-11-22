@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ModoViaje, Ruta } from '../models/ruta';
 import { Ubicacion } from '../models/ubicacion';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RutaService {
-  private readonly url = 'http://localhost:8080/api/rutas';
+  private readonly url = `${environment.apiUrl}/api/rutas`;
 
   constructor(private http: HttpClient) {}
 

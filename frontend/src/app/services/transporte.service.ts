@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TiempoReal, Transporte } from '../models/transporte';
 import { Ubicacion } from '../models/ubicacion';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransporteService {
-  private readonly url = 'http://localhost:8080/api/transporte';
+  private readonly url = `${environment.apiUrl}/api/transporte`;
 
   constructor(private http: HttpClient) {}
 

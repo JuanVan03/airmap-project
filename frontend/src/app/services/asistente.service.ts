@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MensajeChat } from '../models/mensaje-chat';
 import { RespuestaAsistente } from '../models/respuesta-asistente';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AsistenteService {
-  private readonly url = 'http://localhost:8080/api/asistente';
+  private readonly url = `${environment.apiUrl}/api/asistente`;
 
   constructor(private http: HttpClient) {}
 

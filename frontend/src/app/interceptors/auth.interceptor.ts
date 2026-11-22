@@ -2,9 +2,10 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 // Direccion del back de AirMap
-const URL_BACK = 'http://localhost:8080';
+const URL_BACK = environment.apiUrl;
 
 // Agrega el token a cada peticion que va al back de AirMap
 export const authInterceptor: HttpInterceptorFn = (peticion, siguiente) => {
