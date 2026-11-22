@@ -16,15 +16,10 @@
   color: var(--texto);
 }
 
-.logo-icono {
-  width: 36px;
-  height: 36px;
+.logo-imagen {
+  height: 44px;
+  width: auto;
   display: block;
-}
-
-.logo-texto {
-  font-size: calc(20px * var(--escala));
-  font-weight: 800;
 }
 
 .enlaces {

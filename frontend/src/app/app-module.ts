@@ -7,6 +7,7 @@ import { App } from './app';
 import { Iniciocomponent } from './components/principal/iniciocomponent/iniciocomponent';
 import { Navbarcomponent } from './components/principal/navbarcomponent/navbarcomponent';
 import { Footercomponent } from './components/principal/footercomponent/footercomponent';
+import { Logocomponent } from './components/principal/logocomponent/logocomponent';
 import { Notfoundcomponent } from './components/principal/notfoundcomponent/notfoundcomponent';
 import { Logincomponent } from './components/logincomponent/logincomponent';
 import { Registercomponent } from './components/registercomponent/registercomponent';
@@ -33,6 +34,7 @@ import { Asistentecomponent } from './components/asistente/asistentecomponent/as
     Iniciocomponent,
     Navbarcomponent,
     Footercomponent,
+    Logocomponent,
     Notfoundcomponent,
     Logincomponent,
     Registercomponent,
