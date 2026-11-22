@@ -11,6 +11,12 @@ import co.edu.unbosque.airmap.exception.NegocioException;
 import co.edu.unbosque.airmap.repository.RutaGuardadaRepository;
 import co.edu.unbosque.airmap.repository.UsuarioRepository;
 
+/**
+ * Servicio de las rutas terrestres que guarda cada usuario.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Service
 public class RutaGuardadaService {
 
@@ -26,14 +32,31 @@ public class RutaGuardadaService {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public RutaGuardadaService() {
 	}
 
+	/**
+	 * Lista las rutas guardadas del usuario.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @return rutas de la más nueva a la más vieja
+	 */
 	public List<RutaGuardadaDTO> listar(String correo) {
 		Long usuarioId = buscarUsuarioId(correo);
 		return rutaRepo.findByUsuarioIdOrderByFechaGuardadoDesc(usuarioId).stream().map(this::aDTO).toList();
 	}
 
+	/**
+	 * Guarda una ruta nueva del usuario.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param datos datos de la ruta
+	 * @return ruta guardada
+	 * @throws NegocioException si llegó al límite de rutas
+	 */
 	public RutaGuardadaDTO guardar(String correo, RutaGuardadaDTO datos) {
 		Long usuarioId = buscarUsuarioId(correo);
 		if (rutaRepo.countByUsuarioId(usuarioId) >= MAXIMO_RUTAS) {
@@ -49,6 +72,13 @@ public class RutaGuardadaService {
 		return guardada;
 	}
 
+	/**
+	 * Borra una ruta. Se busca por id y por dueño, así nadie puede borrar rutas de otro usuario.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param id id de la ruta
+	 * @throws NegocioException si la ruta no existe o no es del usuario
+	 */
 	public void eliminar(String correo, Long id) {
 		Long usuarioId = buscarUsuarioId(correo);
 		// Se busca por id Y por dueno: nadie puede borrar rutas de otro usuario

@@ -17,7 +17,13 @@ import co.edu.unbosque.airmap.entity.Usuario;
 import co.edu.unbosque.airmap.exception.NegocioException;
 import co.edu.unbosque.airmap.repository.TokenCorreoRepository;
 
-// Crea y valida los enlaces de un solo uso que se mandan por correo
+/**
+ * Servicio que crea y valida los enlaces de un solo uso que se mandan por correo. En la base
+ * de datos solo se guarda el hash del token.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Service
 public class TokenCorreoService {
 
@@ -29,10 +35,22 @@ public class TokenCorreoService {
 
 	private final SecureRandom random = new SecureRandom();
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public TokenCorreoService() {
 	}
 
-	// Crea un token nuevo y lo devuelve (solo aqui existe completo: en la base queda su hash)
+	/**
+	 * Crea un token nuevo. Solo aquí existe completo: en la base queda su hash. Los tokens
+	 * anteriores del mismo tipo se borran.
+	 *
+	 * @param usuario dueño del token
+	 * @param tipo VERIFICACION o RESTABLECER
+	 * @param minutosDeVida minutos que dura el enlace
+	 * @return token para poner en el enlace
+	 * @throws NegocioException si pidió otro correo hace menos de un minuto
+	 */
 	@Transactional
 	public String crear(Usuario usuario, String tipo, int minutosDeVida) {
 		tokenRepo.findFirstByUsuarioAndTipoOrderByCreadoDesc(usuario, tipo).ifPresent(anterior -> {
@@ -52,7 +70,14 @@ public class TokenCorreoService {
 		return token;
 	}
 
-	// Valida el token, lo marca como usado y devuelve el usuario al que pertenece
+	/**
+	 * Valida el token, lo marca como usado y devuelve el usuario al que pertenece.
+	 *
+	 * @param token token que llegó en el enlace
+	 * @param tipo tipo que se espera
+	 * @return usuario dueño del token
+	 * @throws NegocioException si el enlace no sirve, ya se usó o venció
+	 */
 	@Transactional
 	public Usuario consumir(String token, String tipo) {
 		NegocioException invalido = new NegocioException("El enlace no es válido o ya fue usado.", 400,

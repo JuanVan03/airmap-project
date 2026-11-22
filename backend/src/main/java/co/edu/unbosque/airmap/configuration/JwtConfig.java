@@ -16,6 +16,13 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
+/**
+ * Configura cómo se firman y se leen los tokens JWT. Se usa la misma clave secreta
+ * (JWT_SECRET) para firmar y verificar con el algoritmo HS256.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Configuration
 public class JwtConfig {
 
@@ -27,11 +34,21 @@ public class JwtConfig {
 		return new SecretKeySpec(secreto.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
 	}
 
+	/**
+	 * Crea el objeto que firma los tokens JWT.
+	 *
+	 * @return encoder de JWT con la clave secreta
+	 */
 	@Bean
 	JwtEncoder jwtEncoder() {
 		return new NimbusJwtEncoder(new ImmutableSecret<>(clave()));
 	}
 
+	/**
+	 * Crea el objeto que valida los tokens JWT que llegan en cada petición.
+	 *
+	 * @return decoder de JWT con la clave secreta
+	 */
 	@Bean
 	JwtDecoder jwtDecoder() {
 		return NimbusJwtDecoder.withSecretKey(clave()).macAlgorithm(MacAlgorithm.HS256).build();

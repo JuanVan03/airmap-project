@@ -34,3 +34,6 @@ build/
 
 ### Variables de entorno (credenciales) ###
 .env
+
+### Datos de TransMilenio (se descargan solos al iniciar el back) ###
+gtfs/

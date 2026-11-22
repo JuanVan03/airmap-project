@@ -2,7 +2,12 @@ package co.edu.unbosque.airmap.dto;
 
 import java.util.List;
 
-// Una pagina de resultados de la auditoria
+/**
+ * Una página de registros de auditoría con los datos para paginar.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class PaginaAuditoriaDTO {
 
 	private List<AuditoriaDTO> contenido;
@@ -11,9 +16,21 @@ public class PaginaAuditoriaDTO {
 	private long totalElementos;
 	private int totalPaginas;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public PaginaAuditoriaDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param contenido registros de la página
+	 * @param pagina número de la página (empieza en 0)
+	 * @param tamano cantidad de registros por página
+	 * @param totalElementos cantidad total de registros
+	 * @param totalPaginas cantidad total de páginas
+	 */
 	public PaginaAuditoriaDTO(List<AuditoriaDTO> contenido, int pagina, int tamano, long totalElementos,
 			int totalPaginas) {
 		super();

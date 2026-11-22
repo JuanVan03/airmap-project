@@ -14,7 +14,12 @@ import co.edu.unbosque.airmap.exception.NegocioException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-// Envia los correos de AirMap con la libreria JavaMail (spring-boot-starter-mail)
+/**
+ * Servicio que envía los correos de AirMap con JavaMail (spring-boot-starter-mail).
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Service
 public class CorreoService {
 
@@ -32,9 +37,18 @@ public class CorreoService {
 	@Value("${app.front-url}")
 	private String frontUrl;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public CorreoService() {
 	}
 
+	/**
+	 * Envía el correo con el enlace para confirmar la cuenta.
+	 *
+	 * @param usuario usuario que se registró
+	 * @param token token que va en el enlace
+	 */
 	public void enviarVerificacion(Usuario usuario, String token) {
 		String enlace = frontUrl + "/verificar?token=" + token;
 		String titulo = "Confirma tu correo";
@@ -47,6 +61,12 @@ public class CorreoService {
 				PlantillaCorreo.crearTexto(titulo, saludo, mensaje, enlace, nota));
 	}
 
+	/**
+	 * Envía el correo con el enlace para cambiar la contraseña.
+	 *
+	 * @param usuario usuario que pidió el cambio
+	 * @param token token que va en el enlace
+	 */
 	public void enviarRestablecer(Usuario usuario, String token) {
 		String enlace = frontUrl + "/restablecer?token=" + token;
 		String titulo = "Restablece tu contraseña";
@@ -59,7 +79,15 @@ public class CorreoService {
 				PlantillaCorreo.crearTexto(titulo, saludo, mensaje, enlace, nota));
 	}
 
-	// Envia un correo con version HTML y version en texto plano
+	/**
+	 * Envía un correo con versión HTML y versión en texto plano.
+	 *
+	 * @param destino correo de quien lo recibe
+	 * @param asunto asunto del correo
+	 * @param html contenido en HTML
+	 * @param texto contenido en texto plano
+	 * @throws NegocioException si el correo no está configurado o no se pudo enviar
+	 */
 	public void enviar(String destino, String asunto, String html, String texto) {
 		if (remitente == null || remitente.isBlank()) {
 			throw new NegocioException("El envío de correos no está configurado (MAIL_USER y MAIL_PASSWORD en el .env del back).",

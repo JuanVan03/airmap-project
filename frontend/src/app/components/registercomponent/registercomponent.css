@@ -9,7 +9,7 @@
   margin: 0;
   text-align: center;
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 /* ---------- Aviso de "revisa tu correo" ---------- */
@@ -35,7 +35,7 @@
   background: rgba(47, 128, 237, 0.15);
   border-radius: 50%;
   color: var(--primario);
-  font-size: 34px;
+  font-size: calc(34px * var(--escala));
 }
 
 .aviso-ok {
@@ -45,7 +45,7 @@
   border: 1px solid var(--acento);
   border-radius: 12px;
   color: var(--acento);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 /* Los enlaces con aspecto de boton */

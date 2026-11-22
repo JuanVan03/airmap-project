@@ -13,12 +13,22 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.airmap.dto.AeropuertoDTO;
 
+/**
+ * Servicio de aeropuertos. Al iniciar lee el archivo aeropuertos.csv y permite buscar por
+ * código IATA, nombre o ciudad.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Service
 public class AeropuertoService {
 
 	// Aeropuertos con codigo IATA, se leen del archivo aeropuertos.csv al iniciar
 	private List<AeropuertoDTO> aeropuertos = new ArrayList<>();
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public AeropuertoService() {
 		try (BufferedReader lector = new BufferedReader(
 				new InputStreamReader(getClass().getResourceAsStream("/aeropuertos.csv"), StandardCharsets.UTF_8))) {
@@ -39,6 +49,13 @@ public class AeropuertoService {
 		}
 	}
 
+	/**
+	 * Busca aeropuertos. Primero va el que tiene exactamente ese código y después los que tienen
+	 * el texto en el nombre o la ciudad. No importan tildes ni mayúsculas.
+	 *
+	 * @param texto texto que se busca
+	 * @return hasta 8 aeropuertos
+	 */
 	public List<AeropuertoDTO> buscar(String texto) {
 		List<AeropuertoDTO> encontrados = new ArrayList<>();
 		String buscado = limpiar(texto);

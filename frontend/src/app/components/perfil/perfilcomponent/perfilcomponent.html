@@ -12,6 +12,7 @@
     <button type="button" class="chip" [class.activo]="pestana() === 'favoritos'" (click)="cambiarPestana('favoritos')">Favoritos</button>
     <button type="button" class="chip" [class.activo]="pestana() === 'historial'" (click)="cambiarPestana('historial')">Historial</button>
     <button type="button" class="chip" [class.activo]="pestana() === 'rutas'" (click)="cambiarPestana('rutas')">Rutas guardadas</button>
+    <button type="button" class="chip" [class.activo]="pestana() === 'apariencia'" (click)="cambiarPestana('apariencia')">Apariencia</button>
     <button type="button" class="chip" [class.activo]="pestana() === 'ajustes'" (click)="cambiarPestana('ajustes')">Ajustes</button>
   </div>
 
@@ -80,6 +81,11 @@
   @if (pestana() === 'rutas') {
     <h2>Rutas guardadas</h2>
     <ng-container *ngTemplateOutlet="listaRutas"></ng-container>
+  }
+
+  @if (pestana() === 'apariencia') {
+    <h2>Apariencia</h2>
+    <app-aparienciacomponent></app-aparienciacomponent>
   }
 
   @if (pestana() === 'ajustes') {

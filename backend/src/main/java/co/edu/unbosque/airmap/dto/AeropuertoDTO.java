@@ -2,6 +2,12 @@ package co.edu.unbosque.airmap.dto;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Datos de un aeropuerto. Se usa en la búsqueda y como origen o destino de un vuelo.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class AeropuertoDTO {
 
 	@SerializedName("iata_code")
@@ -17,9 +23,22 @@ public class AeropuertoDTO {
 	@SerializedName("longitude")
 	private double longitud;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public AeropuertoDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param codigo código IATA del aeropuerto (por ejemplo BOG)
+	 * @param nombre nombre del aeropuerto
+	 * @param ciudad ciudad del aeropuerto
+	 * @param pais país del aeropuerto
+	 * @param latitud latitud
+	 * @param longitud longitud
+	 */
 	public AeropuertoDTO(String codigo, String nombre, String ciudad, String pais, double latitud, double longitud) {
 		super();
 		this.codigo = codigo;

@@ -1,0 +1,43 @@
+<div class="transporte">
+  <div class="bloque">
+    <span class="titulo">1. Camina hasta el paradero</span>
+    <span class="paradero">{{ transporte.paradero.nombre }}</span>
+    <span class="detalle">
+      A {{ transporte.paradero.distanciaM }} m
+      @if (transporte.caminata; as c) {
+        · {{ c.duracionMin }} min caminando
+      }
+    </span>
+  </div>
+
+  <div class="bloque">
+    <span class="titulo">2. Toma una de estas rutas</span>
+    @for (r of transporte.rutas; track r.codigo) {
+      <div class="ruta">
+        <span class="codigo">{{ r.codigo }}</span>
+        <div class="texto">
+          <span>{{ r.nombre }}</span>
+          <span class="detalle">Bájate en {{ r.bajada }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="bloque">
+    <span class="titulo">Próximos buses</span>
+    @for (l of transporte.llegadas; track $index) {
+      <div class="llegada">
+        <span class="codigo">{{ l.ruta }}</span>
+        <span class="minutos">
+          {{ l.minutos === 0 ? 'Llegando' : l.minutos + ' min' }}
+          @if (l.aproximado) {
+            <span class="aprox">aprox.</span>
+          }
+        </span>
+      </div>
+    } @empty {
+      <span class="detalle">No hay buses de estas rutas cerca en este momento.</span>
+    }
+    <span class="nota">Se actualiza cada 30 segundos con datos de TransMilenio.</span>
+  </div>
+</div>

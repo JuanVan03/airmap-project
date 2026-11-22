@@ -1,13 +1,28 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Ruta que devuelve openrouteservice (formato GeoJSON).
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class OrsFeatureDTO {
 
 	private OrsPropiedadesDTO properties;
 	private OrsGeometriaDTO geometry;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public OrsFeatureDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param properties resumen de la ruta
+	 * @param geometry puntos de la ruta
+	 */
 	public OrsFeatureDTO(OrsPropiedadesDTO properties, OrsGeometriaDTO geometry) {
 		super();
 		this.properties = properties;

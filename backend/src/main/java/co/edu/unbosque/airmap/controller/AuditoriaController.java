@@ -17,7 +17,13 @@ import co.edu.unbosque.airmap.dto.PaginaAuditoriaDTO;
 import co.edu.unbosque.airmap.service.AuditoriaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
-// Solo el administrador entra aqui: SecurityConfig exige el rol ADMIN para todo /api/admin/**
+/**
+ * Controlador REST de la auditoría. Solo lo puede usar el administrador, porque SecurityConfig
+ * exige el rol ADMIN para todo /api/admin/**.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/admin/auditoria")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -27,10 +33,24 @@ public class AuditoriaController {
 	@Autowired
 	private AuditoriaService auditoriaServ;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public AuditoriaController() {
 	}
 
-	// Lista paginada, de lo mas nuevo a lo mas viejo, con filtros opcionales: GET /api/admin/auditoria
+	/**
+	 * Lista los registros de auditoría del más nuevo al más viejo, con filtros opcionales.
+	 *
+	 * @param pagina número de página (empieza en 0)
+	 * @param tamano registros por página
+	 * @param accion filtra por acción (vacío para todas)
+	 * @param resultado filtra por EXITO o FALLO (vacío para ambos)
+	 * @param usuario filtra por correo del usuario
+	 * @param desde fecha inicial (opcional)
+	 * @param hasta fecha final, incluye todo ese día (opcional)
+	 * @return página de registros
+	 */
 	@GetMapping
 	ResponseEntity<PaginaAuditoriaDTO> listar(@RequestParam(defaultValue = "0") int pagina,
 			@RequestParam(defaultValue = "20") int tamano, @RequestParam(defaultValue = "") String accion,
@@ -41,7 +61,11 @@ public class AuditoriaController {
 				HttpStatus.OK);
 	}
 
-	// Acciones que ya hay en el registro, para llenar el filtro: GET /api/admin/auditoria/acciones
+	/**
+	 * Devuelve las acciones que ya existen en la auditoría, para llenar el filtro del front.
+	 *
+	 * @return lista de acciones sin repetir
+	 */
 	@GetMapping("/acciones")
 	ResponseEntity<List<String>> acciones() {
 		return new ResponseEntity<>(auditoriaServ.acciones(), HttpStatus.OK);

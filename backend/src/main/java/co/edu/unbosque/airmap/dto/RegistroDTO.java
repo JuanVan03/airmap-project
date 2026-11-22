@@ -5,6 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Datos para crear una cuenta nueva.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class RegistroDTO {
 
 	@NotBlank(message = "Ingresa tu nombre.")
@@ -23,9 +29,19 @@ public class RegistroDTO {
 	@Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).{8,}$", message = "Debe tener mínimo 8 caracteres, una mayuscula y un numero.")
 	private String contrasena;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public RegistroDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param nombre nombre completo
+	 * @param correo correo electrónico
+	 * @param contrasena contraseña
+	 */
 	public RegistroDTO(String nombre, String correo, String contrasena) {
 		super();
 		this.nombre = nombre;

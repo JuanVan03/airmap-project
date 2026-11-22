@@ -11,9 +11,26 @@ import org.springframework.data.repository.query.Param;
 
 import co.edu.unbosque.airmap.entity.Auditoria;
 
+/**
+ * Repositorio JPA de los registros de auditoría.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public interface AuditoriaRepository extends JpaRepository<Auditoria, Long> {
 
-	// Los filtros vacios ('') no filtran; las fechas siempre llegan (el servicio pone un rango amplio si no hay)
+	/**
+	 * Busca registros con filtros, del más nuevo al más viejo. Los filtros vacíos no filtran y las
+	 * fechas siempre llegan: si no se eligieron, el servicio pone un rango amplio.
+	 *
+	 * @param accion acción exacta (vacío para todas)
+	 * @param resultado EXITO o FALLO (vacío para ambos)
+	 * @param usuario parte del correo del usuario
+	 * @param desde fecha y hora inicial
+	 * @param hasta fecha y hora final
+	 * @param pageable página, tamaño y orden
+	 * @return página de registros
+	 */
 	@Query("select a from Auditoria a where (:accion = '' or a.accion = :accion) "
 			+ "and (:resultado = '' or a.resultado = :resultado) "
 			+ "and (:usuario = '' or lower(a.usuario) like lower(concat('%', :usuario, '%'))) "
@@ -22,7 +39,11 @@ public interface AuditoriaRepository extends JpaRepository<Auditoria, Long> {
 			@Param("usuario") String usuario, @Param("desde") LocalDateTime desde,
 			@Param("hasta") LocalDateTime hasta, Pageable pageable);
 
-	// Las acciones que ya aparecen en el registro (para el filtro de la pantalla)
+	/**
+	 * Lista las acciones distintas que hay guardadas.
+	 *
+	 * @return acciones ordenadas
+	 */
 	@Query("select distinct a.accion from Auditoria a order by a.accion")
 	List<String> acciones();
 

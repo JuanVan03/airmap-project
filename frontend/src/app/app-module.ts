@@ -16,7 +16,9 @@ import { Vuelocomponent } from './components/vuelos/vuelocomponent/vuelocomponen
 import { Informacioncomponent } from './components/vuelos/informacioncomponent/informacioncomponent';
 import { Viajesterrestrescomponent } from './components/viajes/viajesterrestrescomponent/viajesterrestrescomponent';
 import { Maparutacomponent } from './components/viajes/maparutacomponent/maparutacomponent';
+import { Infotransportecomponent } from './components/viajes/infotransportecomponent/infotransportecomponent';
 import { Perfilcomponent } from './components/perfil/perfilcomponent/perfilcomponent';
+import { Aparienciacomponent } from './components/perfil/aparienciacomponent/aparienciacomponent';
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
 import { Admincomponent } from './components/admincomponent/admincomponent';
 import { Restablecercomponent } from './components/restablecercomponent/restablecercomponent';
@@ -40,8 +42,10 @@ import { Asistentecomponent } from './components/asistente/asistentecomponent/as
     Informacioncomponent,
     Viajesterrestrescomponent,
     Maparutacomponent,
+    Infotransportecomponent,
     Asistentecomponent,
     Perfilcomponent,
+    Aparienciacomponent,
     Recuperarcomponent,
     Verificarcomponent,
     Restablecercomponent,

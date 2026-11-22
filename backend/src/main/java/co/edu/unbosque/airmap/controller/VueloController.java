@@ -17,6 +17,13 @@ import co.edu.unbosque.airmap.dto.VueloDTO;
 import co.edu.unbosque.airmap.service.AuditoriaService;
 import co.edu.unbosque.airmap.service.VueloService;
 
+/**
+ * Controlador REST de los vuelos. Entrega los vuelos que se dibujan en el mapa, la búsqueda por
+ * indicativo y el detalle de un vuelo. Ruta base: /api/vuelos (pública).
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/vuelos")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -28,16 +35,28 @@ public class VueloController {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public VueloController() {
 	}
 
-	// Vuelos para dibujar en el mapa
+	/**
+	 * Devuelve los vuelos que se dibujan en el mapa.
+	 *
+	 * @return vuelos activos y hora de la consulta
+	 */
 	@GetMapping
 	ResponseEntity<RespuestaVuelosDTO> getAll() {
 		return new ResponseEntity<>(vueloServ.getVuelosActivos(), HttpStatus.OK);
 	}
 
-	// Busca vuelos por indicativo: /api/vuelos?q=AVA010
+	/**
+	 * Busca vuelos por indicativo. Ejemplo: /api/vuelos?q=AVA010
+	 *
+	 * @param q indicativo o parte de él
+	 * @return vuelos encontrados (máximo 20)
+	 */
 	@GetMapping(params = "q")
 	ResponseEntity<List<VueloDTO>> buscar(@RequestParam String q) {
 		List<VueloDTO> encontrados = vueloServ.buscar(q);
@@ -46,7 +65,12 @@ public class VueloController {
 		return new ResponseEntity<>(encontrados, HttpStatus.OK);
 	}
 
-	// Informacion completa de un vuelo
+	/**
+	 * Devuelve la información completa de un vuelo.
+	 *
+	 * @param id id del vuelo
+	 * @return detalle del vuelo
+	 */
 	@GetMapping("/{id}")
 	ResponseEntity<VueloDTO> getById(@PathVariable String id) {
 		VueloDTO vuelo = vueloServ.getVuelo(id);

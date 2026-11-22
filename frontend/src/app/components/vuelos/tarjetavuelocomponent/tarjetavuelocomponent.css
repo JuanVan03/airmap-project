@@ -29,14 +29,14 @@
 
 .aerolinea {
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   font-weight: 500;
 }
 
 .estado {
   padding: 4px 10px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
   font-weight: 600;
   white-space: nowrap;
 }
@@ -73,19 +73,19 @@
 }
 
 .codigo {
-  font-size: 28px;
+  font-size: calc(28px * var(--escala));
   font-weight: 700;
 }
 
 .avion {
   color: var(--acento);
-  font-size: 22px;
+  font-size: calc(22px * var(--escala));
 }
 
 .detalle {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 .datos {
@@ -101,18 +101,18 @@
 
 .etiqueta {
   color: var(--texto-suave);
-  font-size: 11px;
+  font-size: calc(11px * var(--escala));
 }
 
 .valor {
-  font-size: 15px;
+  font-size: calc(15px * var(--escala));
   font-weight: 600;
 }
 
 .enlace {
   align-self: flex-start;
   color: var(--acento);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   font-weight: 600;
   text-decoration: none;
 }

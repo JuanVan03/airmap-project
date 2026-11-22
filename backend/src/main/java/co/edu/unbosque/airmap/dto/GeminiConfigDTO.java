@@ -1,14 +1,28 @@
 package co.edu.unbosque.airmap.dto;
 
-// Ajustes de la respuesta de Gemini
+/**
+ * Configuración de la respuesta de Gemini (temperatura y largo máximo).
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class GeminiConfigDTO {
 
 	private double temperature;
 	private int maxOutputTokens;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public GeminiConfigDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param temperature temperatura (qué tan creativa es la respuesta)
+	 * @param maxOutputTokens largo máximo de la respuesta
+	 */
 	public GeminiConfigDTO(double temperature, int maxOutputTokens) {
 		super();
 		this.temperature = temperature;

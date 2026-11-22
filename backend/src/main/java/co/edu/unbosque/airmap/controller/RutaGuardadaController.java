@@ -21,6 +21,13 @@ import co.edu.unbosque.airmap.service.RutaGuardadaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
+/**
+ * Controlador REST de las rutas terrestres que el usuario guardó para usarlas después.
+ * Ruta base: /api/rutas-guardadas.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/rutas-guardadas")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -30,23 +37,43 @@ public class RutaGuardadaController {
 	@Autowired
 	private RutaGuardadaService rutaServ;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public RutaGuardadaController() {
 	}
 
-	// Rutas del usuario del token: GET /api/rutas-guardadas
+	/**
+	 * Lista las rutas guardadas del usuario.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @return rutas del más nuevo al más viejo
+	 */
 	@GetMapping
 	ResponseEntity<List<RutaGuardadaDTO>> listar(@AuthenticationPrincipal Jwt jwt) {
 		return new ResponseEntity<>(rutaServ.listar(jwt.getSubject()), HttpStatus.OK);
 	}
 
-	// Guarda una ruta: POST /api/rutas-guardadas
+	/**
+	 * Guarda una ruta terrestre.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @param datos datos de la ruta
+	 * @return ruta guardada (201)
+	 */
 	@PostMapping
 	ResponseEntity<RutaGuardadaDTO> guardar(@AuthenticationPrincipal Jwt jwt,
 			@Valid @RequestBody RutaGuardadaDTO datos) {
 		return new ResponseEntity<>(rutaServ.guardar(jwt.getSubject(), datos), HttpStatus.CREATED);
 	}
 
-	// Borra una ruta propia: DELETE /api/rutas-guardadas/{id}
+	/**
+	 * Borra una ruta del usuario.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @param id id de la ruta
+	 * @return respuesta vacía (204)
+	 */
 	@DeleteMapping("/{id}")
 	ResponseEntity<Void> eliminar(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
 		rutaServ.eliminar(jwt.getSubject(), id);

@@ -41,9 +41,12 @@
     }
 
     <div class="modos">
-      <button type="button" class="chip" [class.activo]="modo() === 'auto'" (click)="cambiarModo('auto')">Auto</button>
-      <button type="button" class="chip" [class.activo]="modo() === 'pie'" (click)="cambiarModo('pie')">A pie</button>
-      <button type="button" class="chip" [class.activo]="modo() === 'bici'" (click)="cambiarModo('bici')">Bici</button>
+      <button type="button" class="chip" [class.activo]="!transmilenio() && modo() === 'auto'" (click)="cambiarModo('auto')">Auto</button>
+      <button type="button" class="chip" [class.activo]="!transmilenio() && modo() === 'pie'" (click)="cambiarModo('pie')">A pie</button>
+      <button type="button" class="chip" [class.activo]="!transmilenio() && modo() === 'bici'" (click)="cambiarModo('bici')">Bici</button>
+      @if (destino()?.codigo === 'BOG') {
+        <button type="button" class="chip" [class.activo]="transmilenio()" (click)="usarTransmilenio()">TransMilenio</button>
+      }
     </div>
 
     @if (cargando()) {
@@ -68,13 +71,19 @@
         }
       </div>
     }
+
+    @if (transporte(); as t) {
+      <app-infotransportecomponent [transporte]="t"></app-infotransportecomponent>
+    }
   </aside>
 
   <div class="zona-mapa">
     <app-maparutacomponent
       [origen]="ubicacion()"
       [destino]="destino()"
-      [ruta]="ruta()?.coordenadas ?? []"
+      [ruta]="(transmilenio() ? transporte()?.caminata?.coordenadas : ruta()?.coordenadas) ?? []"
+      [paradero]="transporte()?.paradero ?? null"
+      [buses]="transporte()?.buses ?? []"
     ></app-maparutacomponent>
 
     @if (ruta(); as r) {
@@ -90,6 +99,21 @@
         <div class="dato">
           <span class="etiqueta">Destino</span>
           <span class="valor">{{ destino()?.nombre }}</span>
+        </div>
+      </div>
+    } @else if (transporte(); as t) {
+      <div class="resumen-mapa">
+        <div class="dato">
+          <span class="etiqueta">Paradero</span>
+          <span class="valor">{{ t.paradero.nombre }}</span>
+        </div>
+        <div class="dato">
+          <span class="etiqueta">Caminata</span>
+          <span class="valor">{{ t.paradero.distanciaM }} m</span>
+        </div>
+        <div class="dato">
+          <span class="etiqueta">Próximo bus</span>
+          <span class="valor">{{ t.llegadas.length > 0 ? t.llegadas[0].ruta + ' · ' + t.llegadas[0].minutos + ' min' : 'Sin buses' }}</span>
         </div>
       </div>
     }

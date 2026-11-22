@@ -9,7 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-// Vuelo que un usuario abrio. Hay una sola fila por usuario y vuelo: si lo vuelve a abrir, solo cambia la fecha.
+/**
+ * Entidad de la tabla historial_vuelos. Guarda los vuelos que el usuario ha abierto.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Entity
 @Table(name = "historial_vuelos")
 public class HistorialVuelo {
@@ -33,9 +38,19 @@ public class HistorialVuelo {
 	@Column(nullable = false)
 	private LocalDateTime fechaVista;
 
+	/**
+	 * Constructor vacío que necesita JPA.
+	 */
 	public HistorialVuelo() {
 	}
 
+	/**
+	 * Crea el registro con sus datos. El id lo pone la base de datos. La fecha se toma del momento actual.
+	 *
+	 * @param usuarioId id del usuario dueño del registro
+	 * @param vueloId id del vuelo
+	 * @param numeroVuelo número o indicativo del vuelo (por ejemplo AVA010)
+	 */
 	public HistorialVuelo(Long usuarioId, String vueloId, String numeroVuelo) {
 		super();
 		this.usuarioId = usuarioId;

@@ -17,6 +17,13 @@ import co.edu.unbosque.airmap.dto.VueloDTO;
 import co.edu.unbosque.airmap.dto.VueloResumenDTO;
 import co.edu.unbosque.airmap.exception.ExternalApiException;
 
+/**
+ * Servicio de vuelos. Consulta las posiciones en OpenSky y completa aerolínea, origen y destino
+ * con adsbdb.
+ *
+ * @author Sharick Catalina Borda Martinez
+ * @version 1.0
+ */
 @Service
 public class VueloService {
 
@@ -36,9 +43,17 @@ public class VueloService {
 	private List<List<Object>> estados = new ArrayList<>();
 	private long ultimaConsulta = 0;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public VueloService() {
 	}
 
+	/**
+	 * Vuelos que se dibujan en el mapa. Quita los aviones en tierra o sin posición.
+	 *
+	 * @return vuelos repartidos por todo el mundo y la hora de la consulta
+	 */
 	public RespuestaVuelosDTO getVuelosActivos() {
 		List<List<Object>> enElAire = new ArrayList<>();
 
@@ -62,6 +77,13 @@ public class VueloService {
 		return new RespuestaVuelosDTO(Instant.ofEpochMilli(ultimaConsulta).toString(), vuelos.size(), vuelos);
 	}
 
+	/**
+	 * Información completa de un vuelo, con aerolínea, origen y destino de adsbdb.
+	 *
+	 * @param id id del vuelo
+	 * @return detalle del vuelo
+	 * @throws ExternalApiException si el vuelo no está en el aire
+	 */
 	public VueloDTO getVuelo(String id) {
 		for (List<Object> e : obtenerEstados()) {
 			if (leerTexto(e, 0).equalsIgnoreCase(id.trim())) {
@@ -73,6 +95,12 @@ public class VueloService {
 		throw new ExternalApiException("No se encontro el vuelo " + id, 404);
 	}
 
+	/**
+	 * Busca vuelos cuyo indicativo contiene el texto.
+	 *
+	 * @param texto indicativo o parte de él
+	 * @return hasta 20 vuelos
+	 */
 	public List<VueloDTO> buscar(String texto) {
 		List<VueloDTO> encontrados = new ArrayList<>();
 		if (texto.isBlank()) {

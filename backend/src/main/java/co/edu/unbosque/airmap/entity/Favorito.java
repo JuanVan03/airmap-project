@@ -9,6 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad de la tabla favoritos. Guarda los vuelos que el usuario marcó con la estrella.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Entity
 @Table(name = "favoritos")
 public class Favorito {
@@ -30,9 +36,19 @@ public class Favorito {
 
 	private LocalDateTime fechaGuardado;
 
+	/**
+	 * Constructor vacío que necesita JPA.
+	 */
 	public Favorito() {
 	}
 
+	/**
+	 * Crea el registro con sus datos. El id lo pone la base de datos. La fecha se toma del momento actual.
+	 *
+	 * @param usuarioId id del usuario dueño del registro
+	 * @param vueloId id del vuelo
+	 * @param numeroVuelo número o indicativo del vuelo (por ejemplo AVA010)
+	 */
 	public Favorito(Long usuarioId, String vueloId, String numeroVuelo) {
 		super();
 		this.usuarioId = usuarioId;

@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.airmap.exception.AuthException;
 
+/**
+ * Servicio que valida el token que entrega el botón "Continuar con Google".
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Service
 public class GoogleService {
 
@@ -24,6 +30,9 @@ public class GoogleService {
 	private NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
 			.build();
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public GoogleService() {
 		decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(JwtValidators.createDefault(), validarDatos()));
 	}
@@ -43,7 +52,13 @@ public class GoogleService {
 		};
 	}
 
-	// Devuelve los datos del token (email, name) o lanza AuthException si no sirve
+	/**
+	 * Revisa que el token sea de Google, de nuestra app y con el correo verificado.
+	 *
+	 * @param credencial token que entrega el botón de Google
+	 * @return datos del token (email, name)
+	 * @throws AuthException si falta el Client ID o el token no es válido
+	 */
 	public Jwt verificar(String credencial) {
 		if (clientId == null || clientId.isBlank()) {
 			throw new AuthException("Falta el Client ID de Google (GOOGLE_CLIENT_ID en el .env del back).", 503,

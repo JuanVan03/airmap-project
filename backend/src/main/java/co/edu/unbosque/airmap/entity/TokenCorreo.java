@@ -11,12 +11,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-// Enlace de un solo uso que se envia por correo (confirmar cuenta o restablecer contrasena)
+/**
+ * Entidad de la tabla tokens_correo. Guarda los enlaces de confirmación de cuenta y de
+ * restablecimiento de contraseña.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Entity
 @Table(name = "tokens_correo")
 public class TokenCorreo {
 
+	/** Tipo de token para confirmar el correo. */
 	public static final String VERIFICACION = "VERIFICACION";
+	/** Tipo de token para restablecer la contraseña. */
 	public static final String RESTABLECER = "RESTABLECER";
 
 	@Id
@@ -44,9 +52,20 @@ public class TokenCorreo {
 	@Column(nullable = false)
 	private boolean usado;
 
+	/**
+	 * Constructor vacío que necesita JPA.
+	 */
 	public TokenCorreo() {
 	}
 
+	/**
+	 * Crea el registro con sus datos. El id lo pone la base de datos. La fecha se toma del momento actual.
+	 *
+	 * @param tokenHash hash SHA-256 del token
+	 * @param tipo tipo de token (VERIFICACION o RESTABLECER)
+	 * @param usuario usuario al que pertenece el token
+	 * @param expira fecha y hora en que vence el enlace
+	 */
 	public TokenCorreo(String tokenHash, String tipo, Usuario usuario, LocalDateTime expira) {
 		super();
 		this.tokenHash = tokenHash;

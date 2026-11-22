@@ -1,5 +1,11 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Registro de auditoría tal como lo ve el administrador.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class AuditoriaDTO {
 
 	private Long id;
@@ -12,9 +18,24 @@ public class AuditoriaDTO {
 	private String ip;
 	private String navegador;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public AuditoriaDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param id id del registro
+	 * @param fecha fecha y hora del registro
+	 * @param usuario correo del usuario que hizo la acción
+	 * @param accion nombre de la acción (por ejemplo LOGIN_EXITOSO)
+	 * @param resultado resultado de la acción (EXITO o FALLO)
+	 * @param detalle descripción de lo que pasó
+	 * @param ip dirección IP desde donde se hizo la petición
+	 * @param navegador navegador desde donde se hizo la petición
+	 */
 	public AuditoriaDTO(Long id, String fecha, String usuario, String accion, String resultado, String detalle,
 			String ip, String navegador) {
 		super();

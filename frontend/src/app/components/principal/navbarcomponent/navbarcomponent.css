@@ -17,15 +17,13 @@
 }
 
 .logo-icono {
-  background: var(--primario);
-  color: white;
-  padding: 6px 9px;
-  border-radius: 12px;
-  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  display: block;
 }
 
 .logo-texto {
-  font-size: 20px;
+  font-size: calc(20px * var(--escala));
   font-weight: 800;
 }
 
@@ -40,7 +38,7 @@
 .enlaces a {
   color: var(--texto-suave);
   text-decoration: none;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-weight: 500;
 }
 
@@ -57,7 +55,7 @@
 .btn {
   padding: 12px 20px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-weight: 600;
   text-decoration: none;
   color: var(--texto);
