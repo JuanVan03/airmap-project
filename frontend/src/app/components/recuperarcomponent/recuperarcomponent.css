@@ -9,6 +9,6 @@
 .nota {
   margin: 20px 0 0;
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   line-height: 1.5;
 }

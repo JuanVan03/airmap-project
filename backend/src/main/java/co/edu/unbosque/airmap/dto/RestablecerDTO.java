@@ -3,6 +3,12 @@ package co.edu.unbosque.airmap.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+/**
+ * Token del enlace y contraseña nueva para restablecer la contraseña.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class RestablecerDTO {
 
 	@NotBlank(message = "Falta el enlace de recuperacion.")
@@ -13,9 +19,18 @@ public class RestablecerDTO {
 	@Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).{8,}$", message = "Debe tener mínimo 8 caracteres, una mayuscula y un numero.")
 	private String contrasena;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public RestablecerDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param token token que llegó en el enlace del correo
+	 * @param contrasena contraseña nueva
+	 */
 	public RestablecerDTO(String token, String contrasena) {
 		super();
 		this.token = token;

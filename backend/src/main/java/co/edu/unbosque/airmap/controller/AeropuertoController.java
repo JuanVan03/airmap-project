@@ -15,6 +15,13 @@ import co.edu.unbosque.airmap.dto.AeropuertoDTO;
 import co.edu.unbosque.airmap.service.AeropuertoService;
 import co.edu.unbosque.airmap.service.AuditoriaService;
 
+/**
+ * Controlador REST para buscar aeropuertos por código, nombre o ciudad.
+ * Ruta base: /api/aeropuertos (pública).
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/aeropuertos")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -26,10 +33,18 @@ public class AeropuertoController {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public AeropuertoController() {
 	}
 
-	// Busca por codigo, nombre o ciudad: /api/aeropuertos?q=bogota
+	/**
+	 * Busca aeropuertos por código, nombre o ciudad. Ejemplo: /api/aeropuertos?q=bogota
+	 *
+	 * @param q texto que escribió el usuario
+	 * @return lista de aeropuertos encontrados (máximo 8)
+	 */
 	@GetMapping
 	ResponseEntity<List<AeropuertoDTO>> buscar(@RequestParam String q) {
 		List<AeropuertoDTO> encontrados = aeropuertoServ.buscar(q);

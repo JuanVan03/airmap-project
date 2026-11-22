@@ -3,6 +3,12 @@ package co.edu.unbosque.airmap.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Vuelo favorito que se envía y se recibe del front.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class FavoritoDTO {
 
 	private Long id;
@@ -14,9 +20,19 @@ public class FavoritoDTO {
 	@Size(max = 20, message = "El numero de vuelo es muy largo.")
 	private String numeroVuelo;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public FavoritoDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param id id del favorito
+	 * @param vueloId id del vuelo
+	 * @param numeroVuelo número o indicativo del vuelo (por ejemplo AVA010)
+	 */
 	public FavoritoDTO(Long id, String vueloId, String numeroVuelo) {
 		super();
 		this.id = id;

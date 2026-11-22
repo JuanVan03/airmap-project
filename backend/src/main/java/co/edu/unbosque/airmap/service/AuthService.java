@@ -20,6 +20,13 @@ import co.edu.unbosque.airmap.exception.AuthException;
 import co.edu.unbosque.airmap.exception.NegocioException;
 import co.edu.unbosque.airmap.repository.UsuarioRepository;
 
+/**
+ * Servicio de autenticación y cuentas: registro, confirmación del correo, ingreso con contraseña
+ * o con Google, restablecimiento de contraseña y cambios del perfil.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Service
 public class AuthService {
 
@@ -50,11 +57,20 @@ public class AuthService {
 	// Minutos que dura el enlace para restablecer la contrasena (1 hora)
 	private static final int MINUTOS_RESTABLECER = 60;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public AuthService() {
 	}
 
-	// Crea la cuenta sin verificar y manda el correo de confirmacion. No devuelve token:
-	// la persona solo puede ingresar despues de confirmar su correo.
+	/**
+	 * Crea la cuenta sin verificar y envía el correo de confirmación. No devuelve token: la persona
+	 * solo puede ingresar después de confirmar su correo.
+	 *
+	 * @param datos nombre, correo y contraseña
+	 * @return mensaje para revisar el correo
+	 * @throws AuthException si el correo ya está registrado
+	 */
 	public MensajeDTO registrar(RegistroDTO datos) {
 		String correo = limpiarCorreo(datos.getCorreo());
 		if (usuarioRepo.existsByCorreo(correo)) {
@@ -72,7 +88,13 @@ public class AuthService {
 		return new MensajeDTO("Te enviamos un correo a " + correo + " para confirmar tu cuenta.");
 	}
 
-	// Confirma el correo con el enlace que llego a la bandeja de entrada
+	/**
+	 * Confirma el correo con el token del enlace.
+	 *
+	 * @param token token que llegó en el correo
+	 * @return mensaje de cuenta confirmada
+	 * @throws NegocioException si el enlace no sirve o ya venció
+	 */
 	@Transactional
 	public MensajeDTO verificarCorreo(String token) {
 		Usuario usuario;
@@ -89,8 +111,13 @@ public class AuthService {
 		return new MensajeDTO("¡Correo confirmado! Ya puedes ingresar a AirMap.");
 	}
 
-	// Vuelve a enviar el enlace. La respuesta es la misma exista o no el correo,
-	// para que nadie pueda averiguar quien tiene cuenta.
+	/**
+	 * Vuelve a enviar el enlace de confirmación. La respuesta es la misma exista o no el correo,
+	 * para que nadie pueda averiguar quién tiene cuenta.
+	 *
+	 * @param correo correo de la cuenta
+	 * @return mensaje genérico
+	 */
 	public MensajeDTO reenviarVerificacion(String correo) {
 		String correoLimpio = limpiarCorreo(correo);
 		Usuario usuario = usuarioRepo.findByCorreo(correoLimpio).orElse(null);
@@ -105,8 +132,13 @@ public class AuthService {
 		return new MensajeDTO("Si el correo está pendiente de confirmar, te enviamos un nuevo enlace.");
 	}
 
-	// Envia el enlace para cambiar la contrasena. La respuesta es siempre la misma, exista o no
-	// el correo, para que nadie pueda averiguar quien tiene cuenta.
+	/**
+	 * Envía el enlace para cambiar la contraseña. La respuesta es siempre la misma, exista o no
+	 * el correo. Las cuentas de Google y el administrador no reciben enlace.
+	 *
+	 * @param correo correo de la cuenta
+	 * @return mensaje genérico
+	 */
 	public MensajeDTO solicitarRestablecer(String correo) {
 		String correoLimpio = limpiarCorreo(correo);
 		Usuario usuario = usuarioRepo.findByCorreo(correoLimpio).orElse(null);
@@ -138,7 +170,14 @@ public class AuthService {
 		return new MensajeDTO("Si el correo está registrado, te enviamos un enlace para cambiar tu contraseña.");
 	}
 
-	// Guarda la contrasena nueva con el enlace que llego al correo
+	/**
+	 * Guarda la contraseña nueva con el token del enlace. Como el enlace llegó al correo, la cuenta
+	 * queda confirmada.
+	 *
+	 * @param datos token y contraseña nueva
+	 * @return mensaje de contraseña cambiada
+	 * @throws NegocioException si el enlace no sirve o ya venció
+	 */
 	@Transactional
 	public MensajeDTO restablecerContrasena(RestablecerDTO datos) {
 		Usuario usuario;
@@ -157,6 +196,14 @@ public class AuthService {
 		return new MensajeDTO("Tu contraseña se cambió. Ya puedes ingresar con la nueva.");
 	}
 
+	/**
+	 * Ingresa con correo y contraseña. El mensaje es el mismo si el correo no existe o si la
+	 * contraseña está mal.
+	 *
+	 * @param datos correo y contraseña
+	 * @return token JWT y datos del usuario
+	 * @throws AuthException si los datos no son correctos, la cuenta es de Google o falta confirmar el correo
+	 */
 	public AuthRespuestaDTO ingresar(LoginDTO datos) {
 		String correo = limpiarCorreo(datos.getCorreo());
 
@@ -189,6 +236,14 @@ public class AuthService {
 		return respuesta(usuario);
 	}
 
+	/**
+	 * Ingresa con Google. Si es la primera vez se crea la cuenta (ya verificada, porque Google
+	 * comprobó el correo).
+	 *
+	 * @param datos credencial del botón de Google
+	 * @return token JWT y datos del usuario
+	 * @throws AuthException si la credencial no es válida o es la cuenta del administrador
+	 */
 	public AuthRespuestaDTO ingresarConGoogle(GoogleLoginDTO datos) {
 		Jwt google;
 		try {
@@ -223,7 +278,13 @@ public class AuthService {
 		return respuesta(usuario);
 	}
 
-	// Cambia el nombre del usuario del token. El correo no se puede cambiar.
+	/**
+	 * Cambia el nombre del usuario. El correo no se puede cambiar.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param datos nombre nuevo
+	 * @return datos actualizados del usuario
+	 */
 	public UsuarioDTO actualizarPerfil(String correo, ActualizarPerfilDTO datos) {
 		Usuario usuario = usuarioRepo.findByCorreo(correo)
 				.orElseThrow(() -> new AuthException("El usuario ya no existe.", 401, "USUARIO_NO_ENCONTRADO"));
@@ -239,11 +300,20 @@ public class AuthService {
 		return aDTO(usuario);
 	}
 
-	// El front avisa cuando alguien cierra sesion (el token sigue valiendo hasta que vence)
+	/**
+	 * Deja en la auditoría que el usuario cerró sesión.
+	 */
 	public void registrarCierreSesion() {
 		auditoria.registrar("CIERRE_SESION", AuditoriaService.EXITO, "Cerró sesión");
 	}
 
+	/**
+	 * Busca los datos públicos de un usuario.
+	 *
+	 * @param correo correo del usuario
+	 * @return datos del usuario
+	 * @throws AuthException si el usuario ya no existe
+	 */
 	public UsuarioDTO buscarPorCorreo(String correo) {
 		Usuario usuario = usuarioRepo.findByCorreo(correo)
 				.orElseThrow(() -> new AuthException("El usuario ya no existe.", 401, "USUARIO_NO_ENCONTRADO"));

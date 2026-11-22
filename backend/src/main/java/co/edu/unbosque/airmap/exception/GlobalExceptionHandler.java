@@ -12,9 +12,22 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Atrapa las excepciones de todos los controladores y las convierte en una respuesta JSON
+ * con el mismo formato: estado, código, mensaje, fecha y errores.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	/**
+	 * Responde cuando falla una API externa. Si el vuelo no existe responde 404, si no 502.
+	 *
+	 * @param ex excepción lanzada
+	 * @return respuesta de error en formato JSON
+	 */
 	@ExceptionHandler(ExternalApiException.class)
 	public ResponseEntity<Map<String, Object>> handleExternalApi(ExternalApiException ex) {
 		// Si no existe el vuelo respondemos 404, cualquier otro fallo de la API externa es un 502
@@ -24,19 +37,34 @@ public class GlobalExceptionHandler {
 				List.of());
 	}
 
-	// Errores de registro e ingreso (correo repetido, contrasena incorrecta, Google invalido)
+	/**
+	 * Responde los errores de registro e ingreso.
+	 *
+	 * @param ex excepción lanzada
+	 * @return respuesta de error en formato JSON
+	 */
 	@ExceptionHandler(AuthException.class)
 	public ResponseEntity<Map<String, Object>> handleAuth(AuthException ex) {
 		return crearError(HttpStatus.valueOf(ex.getStatusCode()), ex.getCodigo(), ex.getMessage(), List.of());
 	}
 
-	// Algo no existe o se paso un limite (favoritos, rutas guardadas)
+	/**
+	 * Responde los errores de reglas de la aplicación.
+	 *
+	 * @param ex excepción lanzada
+	 * @return respuesta de error en formato JSON
+	 */
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<Map<String, Object>> handleNegocio(NegocioException ex) {
 		return crearError(HttpStatus.valueOf(ex.getStatusCode()), ex.getCodigo(), ex.getMessage(), List.of());
 	}
 
-	// Datos del formulario que no cumplen las validaciones (@NotBlank, @Email, etc.)
+	/**
+	 * Responde cuando los datos del formulario no cumplen las validaciones (@NotBlank, @Email, etc.).
+	 *
+	 * @param ex excepción con los campos que fallaron
+	 * @return respuesta 400 con la lista de errores por campo
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, Object>> handleValidacion(MethodArgumentNotValidException ex) {
 		List<Map<String, String>> errores = new ArrayList<>();

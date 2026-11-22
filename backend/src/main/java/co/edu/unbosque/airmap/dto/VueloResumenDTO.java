@@ -1,5 +1,11 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Datos mínimos de un vuelo para dibujarlo en el mapa.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class VueloResumenDTO {
 
 	private String id;
@@ -9,9 +15,22 @@ public class VueloResumenDTO {
 	private double rumbo;
 	private boolean enTierra;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public VueloResumenDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param id id del vuelo (código icao24 del avión)
+	 * @param numeroVuelo número o indicativo del vuelo (por ejemplo AVA010)
+	 * @param latitud latitud
+	 * @param longitud longitud
+	 * @param rumbo rumbo del avión en grados
+	 * @param enTierra true si el avión está en tierra
+	 */
 	public VueloResumenDTO(String id, String numeroVuelo, double latitud, double longitud, double rumbo, boolean enTierra) {
 		super();
 		this.id = id;

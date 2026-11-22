@@ -21,6 +21,13 @@ import co.edu.unbosque.airmap.service.FavoritoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
+/**
+ * Controlador REST de los vuelos favoritos del usuario que tiene la sesión abierta.
+ * Ruta base: /api/favoritos.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/favoritos")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -30,22 +37,42 @@ public class FavoritoController {
 	@Autowired
 	private FavoritoService favoritoServ;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public FavoritoController() {
 	}
 
-	// Favoritos del usuario del token: GET /api/favoritos
+	/**
+	 * Lista los vuelos favoritos del usuario.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @return favoritos del más nuevo al más viejo
+	 */
 	@GetMapping
 	ResponseEntity<List<FavoritoDTO>> listar(@AuthenticationPrincipal Jwt jwt) {
 		return new ResponseEntity<>(favoritoServ.listar(jwt.getSubject()), HttpStatus.OK);
 	}
 
-	// Marca un vuelo como favorito: POST /api/favoritos
+	/**
+	 * Marca un vuelo como favorito.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @param datos id y número del vuelo
+	 * @return favorito guardado (201)
+	 */
 	@PostMapping
 	ResponseEntity<FavoritoDTO> agregar(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody FavoritoDTO datos) {
 		return new ResponseEntity<>(favoritoServ.agregar(jwt.getSubject(), datos), HttpStatus.CREATED);
 	}
 
-	// Quita el favorito por el id del vuelo: DELETE /api/favoritos/{vueloId}
+	/**
+	 * Quita un vuelo de los favoritos.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @param vueloId id del vuelo que se quita
+	 * @return respuesta vacía (204)
+	 */
 	@DeleteMapping("/{vueloId}")
 	ResponseEntity<Void> quitar(@AuthenticationPrincipal Jwt jwt, @PathVariable String vueloId) {
 		favoritoServ.quitar(jwt.getSubject(), vueloId);

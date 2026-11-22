@@ -24,7 +24,7 @@
 
 .buscador label {
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   font-weight: 500;
 }
 
@@ -44,7 +44,7 @@
   background: transparent;
   border: none;
   color: var(--texto);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-family: inherit;
 }
 
@@ -55,19 +55,19 @@
 .contador {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 .mensaje {
   margin: 0;
   color: #FBBF24;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 .ayuda {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   line-height: 1.5;
 }
 

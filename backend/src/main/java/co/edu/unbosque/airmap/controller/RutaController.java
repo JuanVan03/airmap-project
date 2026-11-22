@@ -14,6 +14,13 @@ import co.edu.unbosque.airmap.service.AuditoriaService;
 import co.edu.unbosque.airmap.service.RutaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+/**
+ * Controlador REST de las rutas terrestres hasta el aeropuerto (en auto, a pie o en bici).
+ * Ruta base: /api/rutas.
+ *
+ * @author Juan David Vanegas Peña
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/rutas")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -26,10 +33,22 @@ public class RutaController {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public RutaController() {
 	}
 
-	// Ruta terrestre entre dos puntos (solo usuarios con sesion). modo: auto, pie o bici
+	/**
+	 * Calcula la ruta terrestre entre dos puntos. Solo para usuarios con sesión.
+	 *
+	 * @param latOrigen latitud de salida
+	 * @param lonOrigen longitud de salida
+	 * @param latDestino latitud del aeropuerto
+	 * @param lonDestino longitud del aeropuerto
+	 * @param modo auto, pie o bici
+	 * @return distancia, duración y puntos de la ruta
+	 */
 	@GetMapping
 	ResponseEntity<RutaDTO> calcular(@RequestParam double latOrigen, @RequestParam double lonOrigen,
 			@RequestParam double latDestino, @RequestParam double lonDestino,

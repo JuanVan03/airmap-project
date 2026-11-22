@@ -12,6 +12,12 @@ import co.edu.unbosque.airmap.exception.NegocioException;
 import co.edu.unbosque.airmap.repository.FavoritoRepository;
 import co.edu.unbosque.airmap.repository.UsuarioRepository;
 
+/**
+ * Servicio de los vuelos favoritos de cada usuario.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Service
 public class FavoritoService {
 
@@ -27,14 +33,31 @@ public class FavoritoService {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public FavoritoService() {
 	}
 
+	/**
+	 * Lista los favoritos del usuario, del más nuevo al más viejo.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @return favoritos del usuario
+	 */
 	public List<FavoritoDTO> listar(String correo) {
 		Long usuarioId = buscarUsuarioId(correo);
 		return favoritoRepo.findByUsuarioIdOrderByFechaGuardadoDesc(usuarioId).stream().map(this::aDTO).toList();
 	}
 
+	/**
+	 * Agrega un vuelo a favoritos. Si ya estaba, devuelve el mismo sin repetirlo.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param datos id y número del vuelo
+	 * @return favorito guardado
+	 * @throws NegocioException si llegó al límite de favoritos
+	 */
 	public FavoritoDTO agregar(String correo, FavoritoDTO datos) {
 		Long usuarioId = buscarUsuarioId(correo);
 
@@ -53,6 +76,13 @@ public class FavoritoService {
 		return guardado;
 	}
 
+	/**
+	 * Quita un vuelo de los favoritos.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param vueloId id del vuelo
+	 * @throws NegocioException si el vuelo no estaba en favoritos
+	 */
 	public void quitar(String correo, String vueloId) {
 		Long usuarioId = buscarUsuarioId(correo);
 		Favorito favorito = favoritoRepo.findByUsuarioIdAndVueloId(usuarioId, vueloId).orElseThrow(

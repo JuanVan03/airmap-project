@@ -3,7 +3,12 @@ package co.edu.unbosque.airmap.dto;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-// Un mensaje de la conversacion: rol es "usuario" o "asistente"
+/**
+ * Mensaje anterior de la conversación con el asistente.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class MensajeChatDTO {
 
 	@Pattern(regexp = "^(usuario|asistente)$", message = "El rol debe ser usuario o asistente.")
@@ -11,9 +16,18 @@ public class MensajeChatDTO {
 	@Size(max = 2000, message = "Un mensaje del historial es muy largo.")
 	private String texto;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public MensajeChatDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param rol quién escribió el mensaje (usuario o asistente)
+	 * @param texto texto del mensaje
+	 */
 	public MensajeChatDTO(String rol, String texto) {
 		super();
 		this.rol = rol;

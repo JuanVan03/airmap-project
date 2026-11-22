@@ -21,6 +21,13 @@ import co.edu.unbosque.airmap.service.HistorialService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
+/**
+ * Controlador REST del historial de vuelos que ha abierto el usuario.
+ * Ruta base: /api/historial.
+ *
+ * @author Juan David Vanegas Peña
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/historial")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -30,30 +37,55 @@ public class HistorialController {
 	@Autowired
 	private HistorialService historialServ;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public HistorialController() {
 	}
 
-	// Vuelos que abrio el usuario del token, del mas reciente al mas viejo: GET /api/historial
+	/**
+	 * Lista los vuelos que abrió el usuario, del más reciente al más viejo.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @return historial del usuario
+	 */
 	@GetMapping
 	ResponseEntity<List<HistorialDTO>> listar(@AuthenticationPrincipal Jwt jwt) {
 		return new ResponseEntity<>(historialServ.listar(jwt.getSubject()), HttpStatus.OK);
 	}
 
-	// Anota que abrio un vuelo: POST /api/historial
+	/**
+	 * Anota que el usuario abrió un vuelo.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @param datos id y número del vuelo
+	 * @return respuesta vacía (204)
+	 */
 	@PostMapping
 	ResponseEntity<Void> registrar(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody HistorialDTO datos) {
 		historialServ.registrar(jwt.getSubject(), datos);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	// Quita un vuelo del historial: DELETE /api/historial/{vueloId}
+	/**
+	 * Quita un vuelo del historial.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @param vueloId id del vuelo que se quita
+	 * @return respuesta vacía (204)
+	 */
 	@DeleteMapping("/{vueloId}")
 	ResponseEntity<Void> quitar(@AuthenticationPrincipal Jwt jwt, @PathVariable String vueloId) {
 		historialServ.quitar(jwt.getSubject(), vueloId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	// Borra todo el historial: DELETE /api/historial
+	/**
+	 * Borra todo el historial del usuario.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @return respuesta vacía (204)
+	 */
 	@DeleteMapping
 	ResponseEntity<Void> vaciar(@AuthenticationPrincipal Jwt jwt) {
 		historialServ.vaciar(jwt.getSubject());

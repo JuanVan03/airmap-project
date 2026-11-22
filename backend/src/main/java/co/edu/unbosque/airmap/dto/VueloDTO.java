@@ -1,5 +1,11 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Información completa de un vuelo.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class VueloDTO {
 
 	private String id;
@@ -16,9 +22,29 @@ public class VueloDTO {
 	private String horaSalida;
 	private String horaLlegada;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public VueloDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param id id del vuelo (código icao24 del avión)
+	 * @param numeroVuelo número o indicativo del vuelo (por ejemplo AVA010)
+	 * @param aerolinea nombre de la aerolínea
+	 * @param estado estado del vuelo
+	 * @param latitud latitud
+	 * @param longitud longitud
+	 * @param rumbo rumbo del avión en grados
+	 * @param altitud altitud en metros
+	 * @param velocidad velocidad en km/h
+	 * @param origen aeropuerto de origen
+	 * @param destino aeropuerto de destino
+	 * @param horaSalida hora de salida
+	 * @param horaLlegada hora estimada de llegada
+	 */
 	public VueloDTO(String id, String numeroVuelo, String aerolinea, String estado, double latitud, double longitud, double rumbo, int altitud, int velocidad, AeropuertoDTO origen, AeropuertoDTO destino, String horaSalida, String horaLlegada) {
 		super();
 		this.id = id;

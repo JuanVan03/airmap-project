@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Aeropuerto } from '../../../models/aeropuerto';
 import { ModoViaje, Ruta } from '../../../models/ruta';
+import { Transporte } from '../../../models/transporte';
 import { Ubicacion } from '../../../models/ubicacion';
 import { Vuelo } from '../../../models/vuelo';
 import { AeropuertoService } from '../../../services/aeropuerto.service';
 import { AuthService } from '../../../services/auth.service';
 import { RutaGuardadaService } from '../../../services/ruta-guardada.service';
 import { RutaService } from '../../../services/ruta.service';
+import { TransporteService } from '../../../services/transporte.service';
 import { VueloService } from '../../../services/vuelo.service';
 
 @Component({
@@ -17,35 +19,34 @@ import { VueloService } from '../../../services/vuelo.service';
   styleUrl: './viajesterrestrescomponent.css',
   templateUrl: './viajesterrestrescomponent.html',
 })
-export class Viajesterrestrescomponent implements OnInit {
-  // Vuelo del que venimos (si el usuario llego desde un vuelo)
+export class Viajesterrestrescomponent implements OnInit, OnDestroy {
+
   vuelo = signal<Vuelo | null>(null);
-  // Donde esta el usuario, segun el navegador
+
   ubicacion = signal<Ubicacion | null>(null);
   estadoUbicacion = signal('Detectando tu ubicación...');
-  // Aeropuerto al que quiere llegar
+
   destino = signal<Aeropuerto | null>(null);
-  // Aeropuertos que devuelve el buscador
   sugerencias = signal<Aeropuerto[]>([]);
   modo = signal<ModoViaje>('auto');
   ruta = signal<Ruta | null>(null);
   cargando = signal(false);
-  // Texto de aviso o error
   mensaje = signal('');
-  // Texto que escribe el usuario en el buscador de aeropuertos
   texto = '';
-  // true cuando el punto de salida viene de una ruta guardada y no del GPS
   origenGuardado = signal(false);
-  // Guardar ruta: formulario abierto, nombre escrito y aviso de "ya guardada"
   guardando = signal(false);
   rutaGuardada = signal(false);
   nombreRuta = '';
+  transmilenio = signal(false);
+  transporte = signal<Transporte | null>(null);
+  private temporizador?: ReturnType<typeof setInterval>;
 
   constructor(
     private route: ActivatedRoute,
     private vueloService: VueloService,
     private aeropuertoService: AeropuertoService,
     private rutaService: RutaService,
+    private transporteService: TransporteService,
     private rutaGuardadaService: RutaGuardadaService,
     private auth: AuthService,
     private router: Router,
@@ -53,8 +54,6 @@ export class Viajesterrestrescomponent implements OnInit {
 
   ngOnInit(): void {
     const params = this.route.snapshot.queryParamMap;
-
-    // Ruta guardada: /viajes-terrestres?origenLat=..&origenLon=..&destino=BOG&modo=auto
     const origenLat = Number(params.get('origenLat'));
     const origenLon = Number(params.get('origenLon'));
     const codigo = params.get('destino');
@@ -65,14 +64,16 @@ export class Viajesterrestrescomponent implements OnInit {
 
     this.pedirUbicacion();
 
-    // Si llegamos desde un vuelo, la URL trae su id: /viajes-terrestres?vuelo=ID
     const idVuelo = params.get('vuelo');
     if (idVuelo) {
       this.cargarVuelo(idVuelo);
     }
   }
 
-  // Carga la salida, el aeropuerto y el medio de una ruta guardada
+  ngOnDestroy(): void {
+    this.detenerTiempoReal();
+  }
+
   private abrirRutaGuardada(origen: Ubicacion, codigo: string, modo: string | null): void {
     this.ubicacion.set(origen);
     this.origenGuardado.set(true);
@@ -95,7 +96,6 @@ export class Viajesterrestrescomponent implements OnInit {
     });
   }
 
-  // Pide permiso al navegador para conocer la ubicacion
   pedirUbicacion(): void {
     if (!navigator.geolocation) {
       this.estadoUbicacion.set('Tu navegador no permite obtener la ubicación.');
@@ -119,7 +119,6 @@ export class Viajesterrestrescomponent implements OnInit {
       next: (vuelo) => {
         this.vuelo.set(vuelo);
 
-        // Con destino conocido se usa solo; si no, el usuario lo elige
         if (vuelo.destino) {
           this.destino.set(vuelo.destino);
           this.calcularRuta();
@@ -154,17 +153,30 @@ export class Viajesterrestrescomponent implements OnInit {
   }
 
   cambiarModo(modo: ModoViaje): void {
+    this.transmilenio.set(false);
     this.modo.set(modo);
     this.calcularRuta();
   }
 
-  // Pide la ruta cuando ya se conocen la ubicacion y el destino
+  usarTransmilenio(): void {
+    this.transmilenio.set(true);
+    this.calcularRuta();
+  }
+
   private calcularRuta(): void {
     const origen = this.ubicacion();
     const destino = this.destino();
     if (!origen || !destino) {
       return;
     }
+
+    if (this.transmilenio() && destino.codigo === 'BOG') {
+      this.calcularTransporte(origen);
+      return;
+    }
+    this.transmilenio.set(false);
+    this.detenerTiempoReal();
+    this.transporte.set(null);
 
     this.cargando.set(true);
     this.guardando.set(false);
@@ -177,14 +189,50 @@ export class Viajesterrestrescomponent implements OnInit {
       },
       error: (e: HttpErrorResponse) => {
         this.ruta.set(null);
-        // El back explica que paso en el campo mensaje
         this.mensaje.set(e.error?.mensaje ?? 'No se pudo calcular la ruta.');
         this.cargando.set(false);
       },
     });
   }
 
-  // "Guardar ruta": pide iniciar sesion si hace falta y abre el campo del nombre
+  private calcularTransporte(origen: Ubicacion): void {
+    this.detenerTiempoReal();
+    this.ruta.set(null);
+    this.guardando.set(false);
+    this.cargando.set(true);
+    this.transporteService.getTransporte(origen).subscribe({
+      next: (transporte) => {
+        this.transporte.set(transporte);
+        this.mensaje.set('');
+        this.cargando.set(false);
+        this.temporizador = setInterval(() => this.actualizarBuses(), 30000);
+      },
+      error: (e: HttpErrorResponse) => {
+        this.transporte.set(null);
+        this.mensaje.set(e.error?.mensaje ?? 'No se pudo consultar TransMilenio.');
+        this.cargando.set(false);
+      },
+    });
+  }
+
+  private actualizarBuses(): void {
+    const actual = this.transporte();
+    if (!actual) {
+      return;
+    }
+    this.transporteService.getTiempoReal(actual.paradero.id).subscribe({
+      next: (vivo) => this.transporte.set({ ...actual, llegadas: vivo.llegadas, buses: vivo.buses }),
+      error: () => {},
+    });
+  }
+
+  private detenerTiempoReal(): void {
+    if (this.temporizador) {
+      clearInterval(this.temporizador);
+      this.temporizador = undefined;
+    }
+  }
+
   abrirGuardado(): void {
     if (!this.auth.haySesion()) {
       this.router.navigate(['/login'], { queryParams: { redirigir: this.enlaceDeEstaRuta() } });
@@ -226,7 +274,6 @@ export class Viajesterrestrescomponent implements OnInit {
       });
   }
 
-  // Direccion de esta misma ruta, para volver a ella despues de iniciar sesion
   private enlaceDeEstaRuta(): string {
     const origen = this.ubicacion();
     const destino = this.destino();
@@ -240,7 +287,6 @@ export class Viajesterrestrescomponent implements OnInit {
       .toString();
   }
 
-  // 95 min -> "1 h 35 min"
   formatoTiempo(minutos: number): string {
     if (minutos < 60) {
       return `${minutos} min`;

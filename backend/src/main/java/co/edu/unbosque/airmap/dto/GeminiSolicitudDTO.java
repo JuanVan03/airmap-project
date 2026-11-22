@@ -2,16 +2,31 @@ package co.edu.unbosque.airmap.dto;
 
 import java.util.List;
 
-// Cuerpo de POST /models/{modelo}:generateContent
+/**
+ * Petición que se le manda a Gemini: instrucciones, conversación y configuración.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class GeminiSolicitudDTO {
 
 	private GeminiContenidoDTO systemInstruction;
 	private List<GeminiContenidoDTO> contents;
 	private GeminiConfigDTO generationConfig;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public GeminiSolicitudDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param systemInstruction instrucciones fijas del asistente
+	 * @param contents mensajes de la conversación
+	 * @param generationConfig configuración de la respuesta
+	 */
 	public GeminiSolicitudDTO(GeminiContenidoDTO systemInstruction, List<GeminiContenidoDTO> contents, GeminiConfigDTO generationConfig) {
 		super();
 		this.systemInstruction = systemInstruction;

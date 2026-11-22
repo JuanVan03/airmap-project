@@ -7,13 +7,15 @@
   --acento: #22D3EE;
   --texto: #F1F5F9;
   --texto-suave: #94A3B8;
+  --fuente: 'Inter', Arial, sans-serif;
+  --escala: 1;
 }
 
 body {
   margin: 0;
   background: var(--fondo);
   color: var(--texto);
-  font-family: Inter, Arial, sans-serif;
+  font-family: var(--fuente);
 }
 
 /* Layout de login y register */
@@ -53,13 +55,13 @@ body {
 
 .auth-mensaje h3 {
   margin: 0 0 8px;
-  font-size: 20px;
+  font-size: calc(20px * var(--escala));
 }
 
 .auth-mensaje p {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 .auth-card {
@@ -73,13 +75,13 @@ body {
 
 .auth-card h1 {
   margin: 0 0 8px;
-  font-size: 28px;
+  font-size: calc(28px * var(--escala));
 }
 
 .auth-subtitulo {
   margin: 0 0 24px;
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 /* Formularios */
@@ -97,7 +99,7 @@ body {
 
 .campo label {
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   font-weight: 500;
 }
 
@@ -107,7 +109,7 @@ body {
   border: 1px solid var(--borde);
   border-radius: 12px;
   color: var(--texto);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-family: inherit;
 }
 
@@ -123,7 +125,7 @@ body {
 /* Mensajes de error  */
 .error {
   color: #F87171;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
 }
 
 .error-general {
@@ -133,14 +135,14 @@ body {
   border: 1px solid #F87171;
   border-radius: 12px;
   color: #F87171;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 .opciones {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   color: var(--texto-suave);
 }
 
@@ -166,7 +168,7 @@ body {
   padding: 12px 20px;
   border-radius: 12px;
   border: 1px solid transparent;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-weight: 600;
   font-family: inherit;
   color: var(--texto);
@@ -198,7 +200,7 @@ body {
   gap: 12px;
   margin: 20px 0;
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
 }
 
 .separador::before,
@@ -213,11 +215,25 @@ body {
   margin: 20px 0 0;
   text-align: center;
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 @media (max-width: 1000px) {
   .auth { padding: 24px 16px; }
   .auth-ilustracion { display: none; }
   .auth-card { width: 100%; max-width: 480px; }
+}
+
+.icono-vuelo span {
+  display: block;
+  color: var(--acento);
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  text-shadow: 0 0 3px #0B1220;
+}
+
+.icono-vuelo.seleccionado span {
+  color: var(--primario);
+  font-size: 26px;
 }

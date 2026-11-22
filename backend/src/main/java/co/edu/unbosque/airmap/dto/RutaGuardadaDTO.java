@@ -8,6 +8,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Ruta guardada que se envía y se recibe del front.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class RutaGuardadaDTO {
 
 	private Long id;
@@ -55,9 +61,27 @@ public class RutaGuardadaDTO {
 	@PositiveOrZero(message = "Duracion no valida.")
 	private Integer duracionMin;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public RutaGuardadaDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param id id de la ruta guardada
+	 * @param nombre nombre que le puso el usuario a la ruta
+	 * @param origenLat latitud del punto de salida
+	 * @param origenLon longitud del punto de salida
+	 * @param destinoCodigo código IATA del aeropuerto de destino
+	 * @param destinoNombre nombre del aeropuerto de destino
+	 * @param destinoLat latitud del aeropuerto de destino
+	 * @param destinoLon longitud del aeropuerto de destino
+	 * @param modo medio de transporte (auto, pie o bici)
+	 * @param distanciaKm distancia en kilómetros
+	 * @param duracionMin duración en minutos
+	 */
 	public RutaGuardadaDTO(Long id, String nombre, Double origenLat, Double origenLon, String destinoCodigo,
 			String destinoNombre, Double destinoLat, Double destinoLon, String modo, Double distanciaKm,
 			Integer duracionMin) {

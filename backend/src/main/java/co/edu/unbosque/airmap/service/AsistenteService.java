@@ -16,6 +16,13 @@ import co.edu.unbosque.airmap.dto.MensajeChatDTO;
 import co.edu.unbosque.airmap.dto.VueloDTO;
 import co.edu.unbosque.airmap.exception.ExternalApiException;
 
+/**
+ * Servicio del asistente de IA. Arma la conversación con los datos en vivo de los vuelos que
+ * menciona el usuario y se la pasa a Gemini.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Service
 public class AsistenteService {
 
@@ -47,9 +54,20 @@ public class AsistenteService {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public AsistenteService() {
 	}
 
+	/**
+	 * Responde una pregunta del usuario con Gemini, usando los datos en vivo del vuelo de la página
+	 * y de los vuelos que se mencionen en la pregunta.
+	 *
+	 * @param datos pregunta, vuelo de la página e historial
+	 * @return respuesta del asistente y vuelos para mostrar como tarjetas
+	 * @throws NegocioException si Gemini no está configurado o no responde
+	 */
 	public AsistenteRespuestaDTO preguntar(AsistentePreguntaDTO datos) {
 		// Vuelos que el usuario menciona en su pregunta (se muestran como tarjetas)
 		List<VueloDTO> mencionados = buscarMencionados(datos.getMensaje());

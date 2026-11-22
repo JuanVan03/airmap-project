@@ -14,6 +14,12 @@ import co.edu.unbosque.airmap.exception.NegocioException;
 import co.edu.unbosque.airmap.repository.HistorialVueloRepository;
 import co.edu.unbosque.airmap.repository.UsuarioRepository;
 
+/**
+ * Servicio del historial de vuelos que abre cada usuario.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Service
 public class HistorialService {
 
@@ -29,16 +35,30 @@ public class HistorialService {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public HistorialService() {
 	}
 
-	// Del mas reciente al mas viejo
+	/**
+	 * Lista el historial del usuario, del más reciente al más viejo.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @return vuelos del historial
+	 */
 	public List<HistorialDTO> listar(String correo) {
 		Long usuarioId = buscarUsuarioId(correo);
 		return historialRepo.findByUsuarioIdOrderByFechaVistaDesc(usuarioId).stream().map(this::aDTO).toList();
 	}
 
-	// Anota que el usuario abrio un vuelo. Si ya estaba, solo actualiza la fecha (no se repite)
+	/**
+	 * Anota que el usuario abrió un vuelo. Si ya estaba solo actualiza la fecha, y si se pasa
+	 * del máximo borra los más viejos.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param datos id y número del vuelo
+	 */
 	@Transactional
 	public void registrar(String correo, HistorialDTO datos) {
 		Long usuarioId = buscarUsuarioId(correo);
@@ -58,6 +78,12 @@ public class HistorialService {
 		}
 	}
 
+	/**
+	 * Quita un vuelo del historial.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param vueloId id del vuelo
+	 */
 	@Transactional
 	public void quitar(String correo, String vueloId) {
 		Long usuarioId = buscarUsuarioId(correo);
@@ -65,6 +91,11 @@ public class HistorialService {
 		auditoria.registrar("HISTORIAL_ELIMINADO", correo, AuditoriaService.EXITO, "Quitó un vuelo de su historial");
 	}
 
+	/**
+	 * Borra todo el historial del usuario.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 */
 	@Transactional
 	public void vaciar(String correo) {
 		Long usuarioId = buscarUsuarioId(correo);
