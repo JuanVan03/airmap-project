@@ -3,6 +3,7 @@ import { Injectable, effect, signal, untracked } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ColorPrincipal, Letra, PREFERENCIAS_POR_DEFECTO, Preferencias, Tamano, Tema } from '../models/preferencias';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export const TEMAS: Record<Tema, Record<string, string>> = {
   OSCURO: {
@@ -58,7 +59,7 @@ export const TAMANOS: Record<Tamano, number> = {
   providedIn: 'root',
 })
 export class PreferenciasService {
-  private readonly url = 'http://localhost:8080/api/preferencias';
+  private readonly url = `${environment.apiUrl}/api/preferencias`;
 
   readonly guardadas = signal<Preferencias>(PREFERENCIAS_POR_DEFECTO);
   readonly actual = signal<Preferencias>(PREFERENCIAS_POR_DEFECTO);

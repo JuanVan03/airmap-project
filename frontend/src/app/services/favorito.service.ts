@@ -3,12 +3,13 @@ import { Injectable, computed, effect, signal, untracked } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Favorito } from '../models/favorito';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FavoritoService {
-  private readonly url = 'http://localhost:8080/api/favoritos';
+  private readonly url = `${environment.apiUrl}/api/favoritos`;
 
   // Favoritos del usuario que inicio sesion
   readonly favoritos = signal<Favorito[]>([]);
