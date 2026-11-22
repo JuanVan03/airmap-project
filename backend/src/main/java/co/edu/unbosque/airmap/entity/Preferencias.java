@@ -9,7 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-// Apariencia de la pagina que eligio cada usuario (una fila por usuario)
+/**
+ * Entidad de la tabla preferencias. Guarda la apariencia de la página que eligió cada usuario
+ * (una fila por usuario).
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Entity
 @Table(name = "preferencias")
 public class Preferencias {
@@ -38,9 +44,17 @@ public class Preferencias {
 
 	private LocalDateTime fechaActualizado;
 
+	/**
+	 * Constructor vacío que necesita JPA.
+	 */
 	public Preferencias() {
 	}
 
+	/**
+	 * Crea el registro con sus datos. El id lo pone la base de datos.
+	 *
+	 * @param usuarioId id del usuario dueño del registro
+	 */
 	public Preferencias(Long usuarioId) {
 		super();
 		this.usuarioId = usuarioId;

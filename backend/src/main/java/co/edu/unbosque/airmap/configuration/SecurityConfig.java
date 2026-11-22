@@ -11,11 +11,22 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Configuración de Spring Security: qué rutas son públicas, cuáles piden sesión y cuáles
+ * son solo del administrador. El token JWT se lee del encabezado Authorization.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-	// Las contrasenas se guardan cifradas con BCrypt
+	/**
+	 * Las contraseñas se guardan cifradas con BCrypt.
+	 *
+	 * @return codificador BCrypt
+	 */
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -31,6 +42,13 @@ public class SecurityConfig {
 		return convertidor;
 	}
 
+	/**
+	 * Define qué rutas son públicas, cuáles piden sesión y cuáles son solo del administrador.
+	 *
+	 * @param http configuración de seguridad de Spring
+	 * @return cadena de filtros de seguridad
+	 * @throws Exception si falla la configuración
+	 */
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()).cors(Customizer.withDefaults())

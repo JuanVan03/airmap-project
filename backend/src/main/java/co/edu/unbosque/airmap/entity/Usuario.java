@@ -9,6 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad de la tabla usuarios. Puede ser una cuenta normal (LOCAL), una cuenta de Google o
+ * el administrador.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -41,9 +48,20 @@ public class Usuario {
 	@Column(nullable = false, length = 10, columnDefinition = "varchar(10) not null default 'USUARIO'")
 	private String rol = "USUARIO";
 
+	/**
+	 * Constructor vacío que necesita JPA.
+	 */
 	public Usuario() {
 	}
 
+	/**
+	 * Crea el registro con sus datos. El id lo pone la base de datos. La fecha se toma del momento actual.
+	 *
+	 * @param nombre nombre completo del usuario
+	 * @param correo correo electrónico
+	 * @param contrasena contraseña cifrada con BCrypt (null en cuentas de Google)
+	 * @param proveedor forma de ingreso (LOCAL o GOOGLE)
+	 */
 	public Usuario(String nombre, String correo, String contrasena, String proveedor) {
 		super();
 		this.nombre = nombre;

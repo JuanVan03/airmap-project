@@ -1,5 +1,11 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Paradero o estación de TransMilenio.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class ParaderoDTO {
 
 	private String id;
@@ -8,9 +14,21 @@ public class ParaderoDTO {
 	private double longitud;
 	private int distanciaM;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public ParaderoDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param id id del paradero en el GTFS
+	 * @param nombre nombre del paradero
+	 * @param latitud latitud
+	 * @param longitud longitud
+	 * @param distanciaM metros desde la ubicación del usuario
+	 */
 	public ParaderoDTO(String id, String nombre, double latitud, double longitud, int distanciaM) {
 		super();
 		this.id = id;

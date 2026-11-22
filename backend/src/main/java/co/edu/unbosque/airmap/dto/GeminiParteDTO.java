@@ -1,13 +1,26 @@
 package co.edu.unbosque.airmap.dto;
 
-// Un pedazo de texto dentro de un mensaje de Gemini
+/**
+ * Parte de texto de un mensaje de Gemini.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class GeminiParteDTO {
 
 	private String text;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public GeminiParteDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param text texto
+	 */
 	public GeminiParteDTO(String text) {
 		super();
 		this.text = text;

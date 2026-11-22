@@ -2,14 +2,29 @@ package co.edu.unbosque.airmap.dto;
 
 import java.util.List;
 
+/**
+ * Datos de TransMilenio que cambian cada 30 segundos: próximos buses y dónde van.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public class TiempoRealDTO {
 
 	private List<LlegadaDTO> llegadas;
 	private List<BusDTO> buses;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public TiempoRealDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param llegadas próximos buses que llegan al paradero
+	 * @param buses buses en vivo cerca del paradero
+	 */
 	public TiempoRealDTO(List<LlegadaDTO> llegadas, List<BusDTO> buses) {
 		super();
 		this.llegadas = llegadas;

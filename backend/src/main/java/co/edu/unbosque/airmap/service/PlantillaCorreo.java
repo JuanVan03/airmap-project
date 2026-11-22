@@ -1,7 +1,12 @@
 package co.edu.unbosque.airmap.service;
 
-// Arma el HTML de los correos de AirMap. Usa tablas y estilos en linea porque
-// asi se ve igual en Gmail, Outlook y el celular.
+/**
+ * Arma el HTML de los correos de AirMap. Usa tablas y estilos en línea para que se vean
+ * igual en Gmail, Outlook y el celular.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 public final class PlantillaCorreo {
 
 	private static final String HTML = """
@@ -63,7 +68,17 @@ public final class PlantillaCorreo {
 	private PlantillaCorreo() {
 	}
 
-	// Devuelve el correo ya armado. Los textos se escapan para que nadie pueda meter HTML (por ejemplo desde el nombre)
+	/**
+	 * Arma el HTML del correo. Los textos se escapan para que nadie pueda meter HTML, por ejemplo desde el nombre.
+	 *
+	 * @param titulo título del correo
+	 * @param saludo saludo con el nombre
+	 * @param mensaje texto principal
+	 * @param textoBoton texto del botón
+	 * @param enlace dirección a la que lleva el botón
+	 * @param nota texto pequeño al final
+	 * @return correo en HTML
+	 */
 	public static String crear(String titulo, String saludo, String mensaje, String textoBoton, String enlace,
 			String nota) {
 		return HTML.replace("{{titulo}}", escapar(titulo)).replace("{{saludo}}", escapar(saludo))
@@ -71,11 +86,26 @@ public final class PlantillaCorreo {
 				.replace("{{nota}}", escapar(nota)).replace("{{enlace}}", escapar(enlace));
 	}
 
-	// Version en texto plano para los programas de correo que no muestran HTML
+	/**
+	 * Versión en texto plano del correo, para los programas que no muestran HTML.
+	 *
+	 * @param titulo título del correo
+	 * @param saludo saludo con el nombre
+	 * @param mensaje texto principal
+	 * @param enlace dirección del enlace
+	 * @param nota texto pequeño al final
+	 * @return correo en texto plano
+	 */
 	public static String crearTexto(String titulo, String saludo, String mensaje, String enlace, String nota) {
 		return titulo + "\n\n" + saludo + "\n\n" + mensaje + "\n\n" + enlace + "\n\n" + nota + "\n\n— AirMap";
 	}
 
+	/**
+	 * Reemplaza los caracteres especiales de HTML.
+	 *
+	 * @param texto texto original
+	 * @return texto seguro para poner en el HTML
+	 */
 	public static String escapar(String texto) {
 		if (texto == null) {
 			return "";

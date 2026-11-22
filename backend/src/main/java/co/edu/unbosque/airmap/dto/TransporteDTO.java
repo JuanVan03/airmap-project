@@ -2,6 +2,12 @@ package co.edu.unbosque.airmap.dto;
 
 import java.util.List;
 
+/**
+ * Cómo llegar al aeropuerto El Dorado en TransMilenio desde la ubicación del usuario.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class TransporteDTO {
 
 	private ParaderoDTO paradero;
@@ -10,9 +16,21 @@ public class TransporteDTO {
 	private List<LlegadaDTO> llegadas;
 	private List<BusDTO> buses;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public TransporteDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param paradero paradero más cercano con ruta al aeropuerto
+	 * @param caminata ruta caminando hasta el paradero (puede ser null)
+	 * @param rutas rutas que llegan al aeropuerto sin transbordo
+	 * @param llegadas próximos buses que llegan al paradero
+	 * @param buses buses en vivo cerca del paradero
+	 */
 	public TransporteDTO(ParaderoDTO paradero, RutaDTO caminata, List<RutaBusDTO> rutas, List<LlegadaDTO> llegadas, List<BusDTO> buses) {
 		super();
 		this.paradero = paradero;

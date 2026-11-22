@@ -1,14 +1,30 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Próximo bus que llega al paradero.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class LlegadaDTO {
 
 	private String ruta;
 	private int minutos;
 	private boolean aproximado;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public LlegadaDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param ruta código de la ruta del bus
+	 * @param minutos minutos que faltan para que llegue
+	 * @param aproximado true si el tiempo es un cálculo y no lo envió TransMilenio
+	 */
 	public LlegadaDTO(String ruta, int minutos, boolean aproximado) {
 		super();
 		this.ruta = ruta;

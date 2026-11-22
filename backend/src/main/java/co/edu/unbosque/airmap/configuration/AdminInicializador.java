@@ -13,8 +13,14 @@ import co.edu.unbosque.airmap.entity.Usuario;
 import co.edu.unbosque.airmap.repository.UsuarioRepository;
 import co.edu.unbosque.airmap.service.AuditoriaService;
 
-// Al iniciar el back crea (o actualiza) el unico administrador con los datos del .env.
-// Asi el administrador no se puede registrar desde la pagina: solo existe el que define el .env.
+/**
+ * Crea o actualiza el único administrador de AirMap cada vez que arranca el back.
+ * Los datos salen del .env (ADMIN_CORREO y ADMIN_CONTRASENA), por eso el administrador
+ * no se puede registrar desde la página.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Component
 public class AdminInicializador implements ApplicationRunner {
 
@@ -35,9 +41,18 @@ public class AdminInicializador implements ApplicationRunner {
 	@Autowired
 	private AuditoriaService auditoriaServ;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public AdminInicializador() {
 	}
 
+	/**
+	 * Crea el administrador si no existe, o le actualiza la contraseña si cambió en el .env.
+	 * Si el correo ya es de un usuario normal no hace nada y lo deja en el log.
+	 *
+	 * @param args argumentos con los que arrancó la aplicación
+	 */
 	@Override
 	public void run(ApplicationArguments args) {
 		if (correo == null || correo.isBlank() || contrasena == null || contrasena.isBlank()) {

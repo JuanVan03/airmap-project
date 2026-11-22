@@ -11,6 +11,12 @@ import co.edu.unbosque.airmap.exception.NegocioException;
 import co.edu.unbosque.airmap.repository.PreferenciasRepository;
 import co.edu.unbosque.airmap.repository.UsuarioRepository;
 
+/**
+ * Servicio de la apariencia de la página que elige cada usuario.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Service
 public class PreferenciasService {
 
@@ -23,15 +29,30 @@ public class PreferenciasService {
 	@Autowired
 	private AuditoriaService auditoria;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public PreferenciasService() {
 	}
 
-	// Si el usuario nunca ha cambiado nada, se devuelve el diseño original de AirMap
+	/**
+	 * Devuelve la apariencia del usuario. Si nunca la ha cambiado, devuelve el diseño original.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @return preferencias del usuario
+	 */
 	public PreferenciasDTO obtener(String correo) {
 		Long usuarioId = buscarUsuarioId(correo);
 		return preferenciasRepo.findByUsuarioId(usuarioId).map(this::aDTO).orElse(porDefecto());
 	}
 
+	/**
+	 * Guarda la apariencia del usuario (la crea la primera vez) y lo registra en la auditoría.
+	 *
+	 * @param correo correo del usuario (sale del token JWT)
+	 * @param datos tema, letra, tamaño, color e ícono del avión
+	 * @return preferencias guardadas
+	 */
 	public PreferenciasDTO guardar(String correo, PreferenciasDTO datos) {
 		Long usuarioId = buscarUsuarioId(correo);
 
@@ -51,6 +72,11 @@ public class PreferenciasService {
 		return guardadas;
 	}
 
+	/**
+	 * Diseño original de AirMap.
+	 *
+	 * @return OSCURO, INTER, NORMAL, AZUL y AVION
+	 */
 	public PreferenciasDTO porDefecto() {
 		return new PreferenciasDTO("OSCURO", "INTER", "NORMAL", "AZUL", "AVION");
 	}

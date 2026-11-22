@@ -5,7 +5,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-// Lo que envia el front a POST /api/asistente
+/**
+ * Pregunta que el usuario le hace al asistente, con el historial de la conversación.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class AsistentePreguntaDTO {
 
 	@NotBlank(message = "Escribe tu pregunta.")
@@ -17,9 +22,19 @@ public class AsistentePreguntaDTO {
 	@Valid
 	private List<MensajeChatDTO> historial;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public AsistentePreguntaDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param mensaje pregunta del usuario
+	 * @param vueloId id del vuelo de la página desde donde pregunta (puede ser null)
+	 * @param historial mensajes anteriores de la conversación
+	 */
 	public AsistentePreguntaDTO(String mensaje, String vueloId, List<MensajeChatDTO> historial) {
 		super();
 		this.mensaje = mensaje;

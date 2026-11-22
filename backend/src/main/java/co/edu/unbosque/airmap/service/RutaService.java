@@ -13,6 +13,12 @@ import co.edu.unbosque.airmap.dto.OrsResponseDTO;
 import co.edu.unbosque.airmap.dto.RutaDTO;
 import co.edu.unbosque.airmap.exception.ExternalApiException;
 
+/**
+ * Servicio que calcula la ruta terrestre hasta el aeropuerto con la API de openrouteservice.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Service
 public class RutaService {
 
@@ -22,9 +28,23 @@ public class RutaService {
 	@Value("${external.ors.apikey}")
 	private String apiKey;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public RutaService() {
 	}
 
+	/**
+	 * Calcula la ruta con openrouteservice y la deja lista para Leaflet.
+	 *
+	 * @param latOrigen latitud de salida
+	 * @param lonOrigen longitud de salida
+	 * @param latDestino latitud de llegada
+	 * @param lonDestino longitud de llegada
+	 * @param modo auto, pie o bici
+	 * @return distancia en km, duración en minutos y puntos de la ruta
+	 * @throws ExternalApiException si falta la clave o no se encontró una ruta
+	 */
 	public RutaDTO calcular(double latOrigen, double lonOrigen, double latDestino, double lonDestino, String modo) {
 		if (apiKey.isBlank()) {
 			throw new ExternalApiException("Falta la clave de openrouteservice (ORS_API_KEY en el .env del back).", 503);

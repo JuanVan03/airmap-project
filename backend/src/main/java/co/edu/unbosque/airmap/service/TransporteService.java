@@ -26,6 +26,13 @@ import co.edu.unbosque.airmap.dto.TransporteDTO;
 import co.edu.unbosque.airmap.exception.ExternalApiException;
 import co.edu.unbosque.airmap.exception.NegocioException;
 
+/**
+ * Servicio de TransMilenio. Busca el paradero más cercano con ruta directa al aeropuerto y
+ * consulta los datos en vivo (GTFS Realtime) para saber cuándo llega el próximo bus.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Service
 public class TransporteService {
 
@@ -53,9 +60,21 @@ public class TransporteService {
 	private FeedMessage posiciones;
 	private long ultimaConsulta = 0;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public TransporteService() {
 	}
 
+	/**
+	 * Busca el paradero con ruta directa al aeropuerto más cercano (hasta 1,5 km), la caminata
+	 * hasta él, las rutas que sirven y los próximos buses.
+	 *
+	 * @param lat latitud del usuario
+	 * @param lon longitud del usuario
+	 * @return todo lo necesario para llegar en TransMilenio
+	 * @throws NegocioException si los datos se están cargando o no hay paradero cerca
+	 */
 	public TransporteDTO planear(double lat, double lon) {
 		revisarDatos();
 		ParaderoDTO paradero = gtfs.paraderoMasCercano(lat, lon, RADIO_BUSQUEDA);
@@ -83,7 +102,14 @@ public class TransporteService {
 		return new TransporteDTO(paradero, caminata, rutas, vivo.getLlegadas(), vivo.getBuses());
 	}
 
-	// Proximos buses y su posicion; el front lo pide cada 30 segundos
+	/**
+	 * Próximos buses de un paradero y su posición. Si TransMilenio no envía la hora de llegada,
+	 * se calcula con la distancia del bus.
+	 *
+	 * @param idParadero id del paradero
+	 * @return hasta 6 llegadas y los buses cercanos
+	 * @throws NegocioException si el paradero no existe o los datos se están cargando
+	 */
 	public TiempoRealDTO tiempoReal(String idParadero) {
 		revisarDatos();
 		ParaderoDTO paradero = gtfs.paradero(idParadero);

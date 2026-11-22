@@ -25,6 +25,14 @@ import org.springframework.stereotype.Service;
 import co.edu.unbosque.airmap.dto.ParaderoDTO;
 import jakarta.annotation.PostConstruct;
 
+/**
+ * Servicio que lee el GTFS de TransMilenio (paraderos, rutas y recorridos) y guarda qué rutas
+ * llegan al aeropuerto El Dorado sin transbordo. El archivo se descarga una vez y se renueva
+ * cada 7 días.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Service
 public class GtfsEstaticoService {
 
@@ -46,9 +54,15 @@ public class GtfsEstaticoService {
 
 	private volatile boolean listo = false;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public GtfsEstaticoService() {
 	}
 
+	/**
+	 * Empieza a cargar el GTFS en otro hilo para no demorar el arranque del back.
+	 */
 	@PostConstruct
 	public void iniciar() {
 		new Thread(this::cargar).start();
@@ -202,6 +216,14 @@ public class GtfsEstaticoService {
 		return campos.toArray(new String[0]);
 	}
 
+	/**
+	 * Busca el paradero con ruta directa al aeropuerto más cercano al usuario.
+	 *
+	 * @param lat latitud del usuario
+	 * @param lon longitud del usuario
+	 * @param radioMetros distancia máxima en metros
+	 * @return el paradero con su distancia, o null si no hay ninguno en el radio
+	 */
 	public ParaderoDTO paraderoMasCercano(double lat, double lon, double radioMetros) {
 		ParaderoDTO mejor = null;
 		double menor = radioMetros;
@@ -224,33 +246,76 @@ public class GtfsEstaticoService {
 				(int) Math.round(menor));
 	}
 
+	/**
+	 * Indica si el GTFS ya se terminó de cargar.
+	 *
+	 * @return true si los datos están listos
+	 */
 	public boolean isListo() {
 		return listo;
 	}
 
+	/**
+	 * Busca un paradero por su id.
+	 *
+	 * @param id id del paradero
+	 * @return el paradero, o null si no existe
+	 */
 	public ParaderoDTO paradero(String id) {
 		return paraderos.get(id);
 	}
 
+	/**
+	 * Rutas que desde ese paradero llegan al aeropuerto sin transbordo.
+	 *
+	 * @param idParadero id del paradero
+	 * @return ids de las rutas (vacío si no hay)
+	 */
 	public Set<String> rutasDesde(String idParadero) {
 		return rutasAlAeropuerto.getOrDefault(idParadero, Set.of());
 	}
 
+	/**
+	 * Código visible de una ruta (por ejemplo K86).
+	 *
+	 * @param idRuta id de la ruta en el GTFS
+	 * @return código de la ruta
+	 */
 	public String codigoRuta(String idRuta) {
 		String[] ruta = rutas.get(idRuta);
 		return ruta == null ? idRuta : ruta[0];
 	}
 
+	/**
+	 * Nombre largo de una ruta.
+	 *
+	 * @param idRuta id de la ruta en el GTFS
+	 * @return nombre de la ruta
+	 */
 	public String nombreRuta(String idRuta) {
 		String[] ruta = rutas.get(idRuta);
 		return ruta == null ? "" : ruta[1];
 	}
 
+	/**
+	 * Paradero donde se baja esa ruta en el aeropuerto.
+	 *
+	 * @param idRuta id de la ruta en el GTFS
+	 * @return id del paradero de bajada
+	 */
 	public String bajada(String idRuta) {
 		return bajadaPorRuta.get(idRuta);
 	}
 
-	// Distancia en metros entre dos puntos (formula de Haversine)
+	/**
+	 * Calcula la distancia entre dos puntos con la fórmula de Haversine.
+	 *
+	 * @param lat1 latitud del primer punto
+	 * @param lon1 longitud del primer punto
+	 * @param lat2 latitud del segundo punto
+	 * @param lon2 longitud del segundo punto
+	 * @return distancia en metros
+	 */
 	public static double distanciaMetros(double lat1, double lon1, double lat2, double lon2) {
 		double dLat = Math.toRadians(lat2 - lat1);
 		double dLon = Math.toRadians(lon2 - lon1);

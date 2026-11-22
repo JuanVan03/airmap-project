@@ -1,14 +1,30 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Ruta de un vuelo según adsbdb: aerolínea, aeropuerto de origen y de destino.
+ *
+ * @author Juan David Vanegas Peña
+ * @version 1.0
+ */
 public class AdsbdbRutaDTO {
 
 	private AdsbdbAerolineaDTO airline;
 	private AeropuertoDTO origin;
 	private AeropuertoDTO destination;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public AdsbdbRutaDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param airline aerolínea del vuelo
+	 * @param origin aeropuerto de origen
+	 * @param destination aeropuerto de destino
+	 */
 	public AdsbdbRutaDTO(AdsbdbAerolineaDTO airline, AeropuertoDTO origin, AeropuertoDTO destination) {
 		super();
 		this.airline = airline;

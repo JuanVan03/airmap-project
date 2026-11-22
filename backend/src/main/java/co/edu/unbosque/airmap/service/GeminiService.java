@@ -14,6 +14,12 @@ import co.edu.unbosque.airmap.dto.GeminiSolicitudDTO;
 import co.edu.unbosque.airmap.exception.ExternalApiException;
 import co.edu.unbosque.airmap.exception.NegocioException;
 
+/**
+ * Servicio que se comunica con la API de Gemini para generar las respuestas del asistente.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 @Service
 public class GeminiService {
 
@@ -26,10 +32,20 @@ public class GeminiService {
 	@Value("${external.gemini.modelo}")
 	private String modelo;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public GeminiService() {
 	}
 
-	// Le manda las instrucciones y la conversacion a Gemini y devuelve su respuesta en texto
+	/**
+	 * Le manda las instrucciones y la conversación a Gemini y devuelve su respuesta en texto.
+	 *
+	 * @param instrucciones reglas fijas del asistente y datos en vivo
+	 * @param conversacion mensajes anteriores y la pregunta nueva
+	 * @return texto de la respuesta
+	 * @throws NegocioException si falta la clave o Gemini no pudo responder
+	 */
 	public String responder(String instrucciones, List<GeminiContenidoDTO> conversacion) {
 		if (apiKey == null || apiKey.isBlank()) {
 			throw new NegocioException("Falta la clave de Gemini (GEMINI_API_KEY en el .env del back).", 503,

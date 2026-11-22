@@ -2,15 +2,29 @@ package co.edu.unbosque.airmap.dto;
 
 import java.util.List;
 
-// Un mensaje de Gemini: role es "user" o "model" (queda null en las instrucciones del sistema)
+/**
+ * Un mensaje de la conversación en el formato de Gemini (rol y partes de texto).
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class GeminiContenidoDTO {
 
 	private String role;
 	private List<GeminiParteDTO> parts;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public GeminiContenidoDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param role rol del mensaje (user o model)
+	 * @param parts partes de texto del mensaje
+	 */
 	public GeminiContenidoDTO(String role, List<GeminiParteDTO> parts) {
 		super();
 		this.role = role;

@@ -9,7 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-// Un renglon por cada cosa que pasa en AirMap. Solo se escribe, nunca se edita ni se borra.
+/**
+ * Entidad de la tabla auditoria. Cada fila es una acción que pasó en AirMap.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Entity
 @Table(name = "auditoria")
 public class Auditoria {
@@ -43,9 +48,22 @@ public class Auditoria {
 	@Column(length = 200)
 	private String navegador;
 
+	/**
+	 * Constructor vacío que necesita JPA.
+	 */
 	public Auditoria() {
 	}
 
+	/**
+	 * Crea el registro con sus datos. El id lo pone la base de datos. La fecha se toma del momento actual.
+	 *
+	 * @param usuario correo del usuario que hizo la acción
+	 * @param accion nombre de la acción (por ejemplo LOGIN_EXITOSO)
+	 * @param resultado resultado de la acción (EXITO o FALLO)
+	 * @param detalle descripción de lo que pasó
+	 * @param ip dirección IP desde donde se hizo la petición
+	 * @param navegador navegador desde donde se hizo la petición
+	 */
 	public Auditoria(String usuario, String accion, String resultado, String detalle, String ip, String navegador) {
 		super();
 		this.fecha = LocalDateTime.now();

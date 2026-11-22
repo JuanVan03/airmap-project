@@ -17,6 +17,13 @@ import co.edu.unbosque.airmap.service.PreferenciasService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
+/**
+ * Controlador REST de la apariencia de la página (tema, letra, tamaño, color e ícono del avión)
+ * que eligió cada usuario. Ruta base: /api/preferencias.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/preferencias")
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -26,16 +33,30 @@ public class PreferenciasController {
 	@Autowired
 	private PreferenciasService preferenciasServ;
 
+	/**
+	 * Constructor vacío. Spring crea la instancia e inyecta las dependencias.
+	 */
 	public PreferenciasController() {
 	}
 
-	// Apariencia guardada del usuario del token: GET /api/preferencias
+	/**
+	 * Devuelve la apariencia guardada del usuario.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @return preferencias del usuario (o las de por defecto)
+	 */
 	@GetMapping
 	ResponseEntity<PreferenciasDTO> obtener(@AuthenticationPrincipal Jwt jwt) {
 		return new ResponseEntity<>(preferenciasServ.obtener(jwt.getSubject()), HttpStatus.OK);
 	}
 
-	// Guarda la apariencia (para restablecer, el front envia los valores por defecto): PUT /api/preferencias
+	/**
+	 * Guarda la apariencia. Para restablecer, el front envía los valores por defecto.
+	 *
+	 * @param jwt token del usuario que tiene la sesión abierta
+	 * @param datos tema, letra, tamaño, color e ícono del avión
+	 * @return preferencias guardadas
+	 */
 	@PutMapping
 	ResponseEntity<PreferenciasDTO> guardar(@AuthenticationPrincipal Jwt jwt,
 			@Valid @RequestBody PreferenciasDTO datos) {

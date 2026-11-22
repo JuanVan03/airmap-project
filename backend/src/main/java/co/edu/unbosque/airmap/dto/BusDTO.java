@@ -1,5 +1,11 @@
 package co.edu.unbosque.airmap.dto;
 
+/**
+ * Bus de TransMilenio en vivo cerca del paradero.
+ *
+ * @author Juan
+ * @version 1.0
+ */
 public class BusDTO {
 
 	private String ruta;
@@ -7,9 +13,20 @@ public class BusDTO {
 	private double longitud;
 	private int distanciaM;
 
+	/**
+	 * Constructor vacío, lo usa la conversión de JSON.
+	 */
 	public BusDTO() {
 	}
 
+	/**
+	 * Crea el objeto con todos sus datos.
+	 *
+	 * @param ruta código de la ruta del bus
+	 * @param latitud latitud
+	 * @param longitud longitud
+	 * @param distanciaM metros hasta el paradero
+	 */
 	public BusDTO(String ruta, double latitud, double longitud, int distanciaM) {
 		super();
 		this.ruta = ruta;

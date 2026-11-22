@@ -9,6 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad de la tabla rutas_guardadas. Guarda una ruta terrestre hasta un aeropuerto para
+ * abrirla después.
+ *
+ * @author SakiYoshida
+ * @version 1.0
+ */
 @Entity
 @Table(name = "rutas_guardadas")
 public class RutaGuardada {
@@ -47,9 +54,27 @@ public class RutaGuardada {
 
 	private LocalDateTime fechaGuardado;
 
+	/**
+	 * Constructor vacío que necesita JPA.
+	 */
 	public RutaGuardada() {
 	}
 
+	/**
+	 * Crea el registro con sus datos. El id lo pone la base de datos. La fecha se toma del momento actual.
+	 *
+	 * @param usuarioId id del usuario dueño del registro
+	 * @param nombre nombre que le puso el usuario a la ruta
+	 * @param origenLat latitud del punto de salida
+	 * @param origenLon longitud del punto de salida
+	 * @param destinoCodigo código IATA del aeropuerto de destino
+	 * @param destinoNombre nombre del aeropuerto de destino
+	 * @param destinoLat latitud del aeropuerto de destino
+	 * @param destinoLon longitud del aeropuerto de destino
+	 * @param modo medio de transporte (auto, pie o bici)
+	 * @param distanciaKm distancia en kilómetros
+	 * @param duracionMin duración en minutos
+	 */
 	public RutaGuardada(Long usuarioId, String nombre, double origenLat, double origenLon, String destinoCodigo,
 			String destinoNombre, double destinoLat, double destinoLon, String modo, double distanciaKm,
 			int duracionMin) {
