@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+svg {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+/* Pin, "AIR": color del texto del tema. Punto y "MAP": color principal que eligió el usuario */
+.principal {
+  fill: var(--texto);
+}
+
+.acento {
+  fill: var(--acento);
+}
