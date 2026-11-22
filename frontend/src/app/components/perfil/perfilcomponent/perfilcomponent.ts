@@ -11,7 +11,7 @@ import { HistorialService } from '../../../services/historial.service';
 import { RutaGuardadaService } from '../../../services/ruta-guardada.service';
 import { VueloService } from '../../../services/vuelo.service';
 
-type Pestana = 'favoritos' | 'historial' | 'rutas' | 'ajustes';
+type Pestana = 'favoritos' | 'historial' | 'rutas' | 'apariencia' | 'ajustes';
 
 @Component({
   selector: 'app-perfilcomponent',

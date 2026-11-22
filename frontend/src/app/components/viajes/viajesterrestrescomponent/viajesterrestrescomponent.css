@@ -18,14 +18,14 @@
 
 h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: calc(28px * var(--escala));
   font-weight: 800;
 }
 
 .subtitulo {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   line-height: 1.5;
 }
 
@@ -37,7 +37,7 @@ h1 {
 
 .etiqueta {
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   font-weight: 500;
 }
 
@@ -46,7 +46,7 @@ h1 {
   background: var(--fondo);
   border: 1px solid var(--borde);
   border-radius: 12px;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 .caja.vacio {
@@ -69,7 +69,7 @@ h1 {
   background: transparent;
   border: none;
   color: var(--texto);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-family: inherit;
 }
 
@@ -84,7 +84,7 @@ h1 {
   border-radius: 12px;
   color: var(--texto);
   font-family: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   text-align: left;
   cursor: pointer;
 }
@@ -101,14 +101,14 @@ h1 {
 .mensaje {
   margin: 0;
   color: #FBBF24;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   line-height: 1.4;
 }
 
 .ayuda {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 .modos {
@@ -123,7 +123,7 @@ h1 {
   border-radius: 999px;
   color: var(--texto-suave);
   font-family: inherit;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   cursor: pointer;
 }
 
@@ -144,19 +144,19 @@ h1 {
 }
 
 .resumen {
-  font-size: 20px;
+  font-size: calc(20px * var(--escala));
   font-weight: 700;
 }
 
 .detalle {
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 
 .guardada {
   color: #34D399;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-weight: 600;
 }
 
@@ -175,7 +175,7 @@ h1 {
   border-radius: 12px;
   color: var(--texto);
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 
@@ -204,11 +204,11 @@ h1 {
 }
 
 .dato .etiqueta {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala));
 }
 
 .dato .valor {
-  font-size: 17px;
+  font-size: calc(17px * var(--escala));
   font-weight: 700;
 }
 

@@ -3,7 +3,7 @@
   background: none;
   border: none;
   color: var(--texto-suave);
-  font-size: 22px;
+  font-size: calc(22px * var(--escala));
   line-height: 1;
   cursor: pointer;
 }

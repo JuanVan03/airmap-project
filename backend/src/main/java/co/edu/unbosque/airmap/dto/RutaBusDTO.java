@@ -1,6 +1,5 @@
 package co.edu.unbosque.airmap.dto;
 
-// Ruta que llega al aeropuerto sin transbordo, bajada es el paradero donde hay que bajarse
 public class RutaBusDTO {
 
 	private String codigo;

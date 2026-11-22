@@ -9,7 +9,7 @@
 .migas {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
 }
 
 .migas a {
@@ -24,7 +24,7 @@
 .mensaje {
   margin: 0;
   color: #FBBF24;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 .informacion > a.btn {
@@ -49,14 +49,14 @@
 
 h1 {
   margin: 0;
-  font-size: 44px;
+  font-size: calc(44px * var(--escala));
   font-weight: 800;
 }
 
 .estado {
   padding: 4px 10px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
   font-weight: 600;
   white-space: nowrap;
 }
@@ -112,22 +112,22 @@ h1 {
 
 .etiqueta {
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
 }
 
 .codigo {
-  font-size: 56px;
+  font-size: calc(56px * var(--escala));
   font-weight: 800;
   line-height: 1;
 }
 
 .lugar {
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 .hora {
-  font-size: 16px;
+  font-size: calc(16px * var(--escala));
   font-weight: 600;
 }
 
@@ -142,7 +142,7 @@ h1 {
 .faltan {
   min-height: 18px;
   color: var(--acento);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   font-weight: 600;
 }
 
@@ -165,12 +165,12 @@ h1 {
   top: 50%;
   transform: translate(-50%, -50%);
   color: var(--acento);
-  font-size: 22px;
+  font-size: calc(22px * var(--escala));
 }
 
 .km {
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
 }
 
 /* ---------- Datos ---------- */
@@ -192,13 +192,13 @@ h1 {
 }
 
 .dato .valor {
-  font-size: 28px;
+  font-size: calc(28px * var(--escala));
   font-weight: 700;
 }
 
 .pequeno {
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
 }
 
 /* ---------- Mapa y detalles ---------- */
@@ -226,7 +226,7 @@ h1 {
 
 .detalles h2 {
   margin: 0 0 16px;
-  font-size: 20px;
+  font-size: calc(20px * var(--escala));
 }
 
 .linea {
@@ -235,7 +235,7 @@ h1 {
   gap: 16px;
   padding: 10px 0;
   color: var(--texto-suave);
-  font-size: 15px;
+  font-size: calc(15px * var(--escala));
 }
 
 .linea strong {

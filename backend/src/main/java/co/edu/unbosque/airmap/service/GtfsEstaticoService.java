@@ -25,30 +25,23 @@ import org.springframework.stereotype.Service;
 import co.edu.unbosque.airmap.dto.ParaderoDTO;
 import jakarta.annotation.PostConstruct;
 
-// Lee el GTFS de TransMilenio (paraderos, rutas y recorridos) y guarda que rutas llegan al aeropuerto
 @Service
 public class GtfsEstaticoService {
 
 	private static final Logger log = LoggerFactory.getLogger(GtfsEstaticoService.class);
 
-	// Terminal del aeropuerto El Dorado
+
 	private static final double AEROPUERTO_LAT = 4.7016;
 	private static final double AEROPUERTO_LON = -74.1469;
-	// Un paradero a menos de 700 m de la terminal cuenta como "en el aeropuerto"
 	private static final double RADIO_AEROPUERTO = 700;
 
 	@Value("${external.transmilenio.gtfs}")
 	private String urlGtfs;
 
-	// id -> paradero
-	private Map<String, ParaderoDTO> paraderos = new HashMap<>();
-	// id de la ruta -> { codigo, nombre }
+		private Map<String, ParaderoDTO> paraderos = new HashMap<>();
 	private Map<String, String[]> rutas = new HashMap<>();
-	// Paraderos que quedan en el aeropuerto
 	private Set<String> paraderosAeropuerto = new HashSet<>();
-	// Paradero -> rutas que desde ahi llegan al aeropuerto sin transbordo
 	private Map<String, Set<String>> rutasAlAeropuerto = new HashMap<>();
-	// Ruta -> paradero donde se baja en el aeropuerto
 	private Map<String, String> bajadaPorRuta = new HashMap<>();
 
 	private volatile boolean listo = false;
@@ -58,7 +51,6 @@ public class GtfsEstaticoService {
 
 	@PostConstruct
 	public void iniciar() {
-		// Se carga en otro hilo para no demorar el arranque del back
 		new Thread(this::cargar).start();
 	}
 
@@ -79,7 +71,6 @@ public class GtfsEstaticoService {
 		}
 	}
 
-	// El archivo pesa mas de 100 MB: se descarga una vez y se renueva cada 7 dias
 	private void descargarSiHaceFalta(Path archivo) throws IOException {
 		if (Files.exists(archivo)) {
 			Instant modificado = Files.getLastModifiedTime(archivo).toInstant();
@@ -94,7 +85,6 @@ public class GtfsEstaticoService {
 		Files.move(temporal, archivo, StandardCopyOption.REPLACE_EXISTING);
 	}
 
-	// stops.txt: todos los paraderos y estaciones
 	private void leerParaderos(ZipFile zip) throws IOException {
 		try (BufferedReader lector = abrir(zip, "stops.txt")) {
 			Map<String, Integer> col = columnas(lector.readLine());
@@ -112,7 +102,6 @@ public class GtfsEstaticoService {
 		}
 	}
 
-	// routes.txt: codigo (ej. K86) y nombre de cada ruta
 	private void leerRutas(ZipFile zip) throws IOException {
 		try (BufferedReader lector = abrir(zip, "routes.txt")) {
 			Map<String, Integer> col = columnas(lector.readLine());
@@ -125,7 +114,6 @@ public class GtfsEstaticoService {
 		}
 	}
 
-	// trips.txt: a que ruta pertenece cada viaje
 	private Map<String, String> leerViajes(ZipFile zip) throws IOException {
 		Map<String, String> rutaPorViaje = new HashMap<>();
 		try (BufferedReader lector = abrir(zip, "trips.txt")) {
@@ -139,7 +127,6 @@ public class GtfsEstaticoService {
 		return rutaPorViaje;
 	}
 
-	// stop_times.txt es muy grande, por eso se recorre dos veces sin guardarlo entero
 	private void leerRecorridos(ZipFile zip, Map<String, String> rutaPorViaje) throws IOException {
 		// 1. En que parada (orden) cada viaje llega al aeropuerto
 		Map<String, Integer> ordenAeropuerto = new HashMap<>();
@@ -161,7 +148,6 @@ public class GtfsEstaticoService {
 			}
 		}
 
-		// 2. Los paraderos que ese viaje pasa ANTES del aeropuerto llegan con esa ruta
 		try (BufferedReader lector = abrir(zip, "stop_times.txt")) {
 			Map<String, Integer> col = columnas(lector.readLine());
 			String linea;
@@ -189,7 +175,6 @@ public class GtfsEstaticoService {
 		return new BufferedReader(new InputStreamReader(zip.getInputStream(zip.getEntry(nombre)), StandardCharsets.UTF_8));
 	}
 
-	// Primera linea del archivo: nombre de columna -> posicion
 	private Map<String, Integer> columnas(String encabezado) {
 		Map<String, Integer> col = new HashMap<>();
 		String[] nombres = separar(encabezado.replace("﻿", ""));
@@ -199,7 +184,6 @@ public class GtfsEstaticoService {
 		return col;
 	}
 
-	// Separa una linea del CSV respetando las comas que van dentro de comillas
 	private String[] separar(String linea) {
 		List<String> campos = new ArrayList<>();
 		StringBuilder actual = new StringBuilder();
@@ -218,7 +202,6 @@ public class GtfsEstaticoService {
 		return campos.toArray(new String[0]);
 	}
 
-	// Paradero con ruta directa al aeropuerto mas cercano al usuario, o null si no hay ninguno en el radio
 	public ParaderoDTO paraderoMasCercano(double lat, double lon, double radioMetros) {
 		ParaderoDTO mejor = null;
 		double menor = radioMetros;

@@ -25,17 +25,17 @@
   color: white;
   padding: 6px 9px;
   border-radius: 12px;
-  font-size: 18px;
+  font-size: calc(18px * var(--escala));
 }
 
 .logo-texto {
-  font-size: 20px;
+  font-size: calc(20px * var(--escala));
   font-weight: 800;
 }
 
 .marca p {
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   line-height: 1.5;
   margin: 0;
 }
@@ -48,14 +48,14 @@
 
 .columna h4 {
   margin: 0 0 4px;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   font-weight: 600;
 }
 
 .columna a,
 .columna span {
   color: var(--texto-suave);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   text-decoration: none;
 }
 
@@ -73,7 +73,7 @@ hr {
   display: flex;
   justify-content: space-between;
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
 }
 
 @media (max-width: 900px) {

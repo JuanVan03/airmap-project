@@ -1,6 +1,5 @@
 package co.edu.unbosque.airmap.dto;
 
-// Paradero o estacion de TransMilenio. distanciaM: metros desde el usuario
 public class ParaderoDTO {
 
 	private String id;

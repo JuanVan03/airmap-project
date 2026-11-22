@@ -14,7 +14,7 @@
   height: 72px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  font-size: 32px;
+  font-size: calc(32px * var(--escala));
   font-weight: bold;
 }
 
@@ -30,7 +30,7 @@
 
 .enlace-nuevo {
   color: var(--acento);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala));
   text-align: center;
 }
 

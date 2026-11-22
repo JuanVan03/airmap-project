@@ -20,13 +20,13 @@
   border: 1px solid var(--borde);
   border-radius: 999px;
   color: var(--acento);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
   font-weight: 500;
 }
 
 h1 {
   margin: 0;
-  font-size: 56px;
+  font-size: calc(56px * var(--escala));
   font-weight: 800;
   line-height: 1.1;
 }
@@ -35,7 +35,7 @@ h1 {
   margin: 0;
   max-width: 560px;
   color: var(--texto-suave);
-  font-size: 18px;
+  font-size: calc(18px * var(--escala));
   line-height: 1.5;
 }
 
@@ -56,7 +56,7 @@ h1 {
   background: transparent;
   border: none;
   color: var(--texto);
-  font-size: 15px;
+  font-size: calc(15px * var(--escala));
   font-family: inherit;
 }
 
@@ -67,7 +67,7 @@ h1 {
 .mensaje {
   margin: 0;
   color: #FBBF24;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
 }
 
 .botones {
@@ -108,7 +108,7 @@ h1 {
 
 .funciones h2 {
   margin: 0;
-  font-size: 32px;
+  font-size: calc(32px * var(--escala));
 }
 
 .funciones-subtitulo {
@@ -136,18 +136,18 @@ h1 {
   padding: 10px;
   background: var(--elevado);
   border-radius: 12px;
-  font-size: 22px;
+  font-size: calc(22px * var(--escala));
 }
 
 .funcion h3 {
   margin: 0 0 10px;
-  font-size: 20px;
+  font-size: calc(20px * var(--escala));
 }
 
 .funcion p {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   line-height: 1.5;
 }
 
@@ -165,7 +165,7 @@ h1 {
 
 .registro h2 {
   margin: 0 0 8px;
-  font-size: 26px;
+  font-size: calc(26px * var(--escala));
   color: white;
 }
 
@@ -190,7 +190,7 @@ h1 {
   }
 
   h1 {
-    font-size: 36px;
+    font-size: calc(36px * var(--escala));
   }
 
   .tarjetas {

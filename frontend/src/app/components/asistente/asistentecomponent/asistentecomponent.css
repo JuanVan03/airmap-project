@@ -21,7 +21,7 @@
 .titulo-lateral {
   margin-top: 8px;
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
   font-weight: 600;
 }
 
@@ -32,7 +32,7 @@
   border-radius: 12px;
   color: var(--texto-suave);
   font-family: inherit;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   text-align: left;
   cursor: pointer;
 }
@@ -82,7 +82,7 @@
   background: var(--primario);
   border-radius: 50%;
   color: white;
-  font-size: 16px;
+  font-size: calc(16px * var(--escala));
 }
 
 .contenido {
@@ -97,7 +97,7 @@
   padding: 14px 18px;
   background: var(--superficie);
   border-radius: 18px;
-  font-size: 15px;
+  font-size: calc(15px * var(--escala));
   line-height: 1.5;
   white-space: pre-line;
 }
@@ -130,7 +130,7 @@
   background: transparent;
   border: none;
   color: var(--texto);
-  font-size: 15px;
+  font-size: calc(15px * var(--escala));
   font-family: inherit;
 }
 
@@ -145,7 +145,7 @@
   border: none;
   border-radius: 12px;
   color: white;
-  font-size: 18px;
+  font-size: calc(18px * var(--escala));
   cursor: pointer;
 }
 
@@ -167,7 +167,7 @@
 
 .contexto h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: calc(18px * var(--escala));
 }
 
 .contexto a {
@@ -178,14 +178,14 @@
 .ayuda {
   margin: 0;
   color: var(--texto-suave);
-  font-size: 14px;
+  font-size: calc(14px * var(--escala));
   line-height: 1.5;
 }
 
 .aviso {
   margin: 8px 0 0;
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala));
   line-height: 1.5;
 }
 
