@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Path;
 import java.time.Duration;
 
 import com.google.gson.Gson;
@@ -39,6 +40,38 @@ public class ExternalHTTPRequestHandler {
 				.header(headerName, apiKey).timeout(Duration.ofSeconds(30))
 				.POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(body))).build();
 		return convert(getBody(request), clazz, url);
+	}
+
+	// GET que devuelve bytes: los datos en vivo de TransMilenio (.pb) no son JSON
+	public static byte[] doGetBytes(String url) {
+		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url)).timeout(Duration.ofSeconds(30))
+				.build();
+		HttpResponse<byte[]> response = enviar(request, HttpResponse.BodyHandlers.ofByteArray());
+		if (response.statusCode() >= 400) {
+			throw new ExternalApiException("La API respondio " + response.statusCode(), response.statusCode());
+		}
+		return response.body();
+	}
+
+	// Descarga un archivo directo al disco (el GTFS de TransMilenio pesa mas de 100 MB)
+	public static void descargarArchivo(String url, Path destino) {
+		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url)).timeout(Duration.ofMinutes(15))
+				.build();
+		HttpResponse<Path> response = enviar(request, HttpResponse.BodyHandlers.ofFile(destino));
+		if (response.statusCode() >= 400) {
+			throw new ExternalApiException("La descarga respondio " + response.statusCode(), response.statusCode());
+		}
+	}
+
+	private static <T> HttpResponse<T> enviar(HttpRequest request, HttpResponse.BodyHandler<T> manejador) {
+		try {
+			return HTTP_CLIENT.send(request, manejador);
+		} catch (IOException e) {
+			throw new ExternalApiException("No se pudo conectar con " + request.uri() + ": " + e.getMessage(), 503, e);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new ExternalApiException("Peticion interrumpida: " + request.uri(), 503, e);
+		}
 	}
 
 	private static String getBody(HttpRequest request) {

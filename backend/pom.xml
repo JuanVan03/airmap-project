@@ -69,6 +69,13 @@
 			<version>3.0.3</version>
 		</dependency>
 
+		<!-- Lee los datos en tiempo real de TransMilenio (formato GTFS Realtime) -->
+		<dependency>
+			<groupId>org.mobilitydata</groupId>
+			<artifactId>gtfs-realtime-bindings</artifactId>
+			<version>0.0.8</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
